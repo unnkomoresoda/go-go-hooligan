@@ -213,7 +213,7 @@ class GoGoHooligan {
         let success = false;
         let message = '';
 
-        // 簡単な成功判定ロジック
+        // 粗易的な成功判定ロジック
         if (method === 'love') {
             success = Math.random() > 0.3;
             message = success ? 
@@ -222,7 +222,7 @@ class GoGoHooligan {
         } else if (method === 'logic') {
             success = Math.random() > 0.4;
             message = success ? 
-                `${character.name}は理屈に納得し、仲間に加わった！` :
+                `${character.name}は理策に納得し、仲間に加わった！` :
                 `${character.name}は納得しなかった。別の方法を試してみよう。`;
         } else {
             success = Math.random() > 0.5;
@@ -245,7 +245,7 @@ class GoGoHooligan {
                     <div class="recruitment-result">
                         <p>${message}</p>
                         <div class="choices">
-                            <button class="btn btn-primary" onclick="game.renderDay()">戻る</button>
+                            <button class="btn btn-primary" onclick="game.renderAfternoon()">戻る</button>
                         </div>
                     </div>
                 </div>
