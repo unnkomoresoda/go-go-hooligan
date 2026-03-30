@@ -2242,6 +2242,20 @@ body.modal-open {
     margin-top: 20px;
 }
 
+.battle-live-side {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.battle-advance-choices {
+    margin: 0;
+}
+
+.battle-advance-choices .btn {
+    width: 100%;
+}
+
 .battle-live-panel {
     background: rgba(255, 255, 255, 0.16);
     border: 1px solid rgba(255, 255, 255, 0.16);

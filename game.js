@@ -1230,11 +1230,16 @@ class GoGoHooligan {
                                 <p>初期戦力比較: 味方 ${battleState.playerPower} / 敵 ${battleState.enemyPower}</p>
                                 <p>${enemyBalanceNote}</p>
                             </div>
-                            <div class="battle-live-panel">
-                                <h4>直近の実況</h4>
-                                <ul class="battle-live-list">
-                                    ${sceneLog}
-                                </ul>
+                            <div class="battle-live-side">
+                                <div class="choices battle-advance-choices">
+                                    <button class="btn btn-primary" onclick="window.game.advanceFinalBattle()">${actionLabel}</button>
+                                </div>
+                                <div class="battle-live-panel">
+                                    <h4>直近の実況</h4>
+                                    <ul class="battle-live-list">
+                                        ${sceneLog}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <div class="battle-log-panel">
@@ -1242,9 +1247,6 @@ class GoGoHooligan {
                             <ul class="battle-log-list">
                                 ${recentBattleLog || '<li>まだ乱闘は始まっていない。</li>'}
                             </ul>
-                        </div>
-                        <div class="choices">
-                            <button class="btn btn-primary" onclick="window.game.advanceFinalBattle()">${actionLabel}</button>
                         </div>
                     </div>
                 </div>
@@ -1404,7 +1406,7 @@ class GoGoHooligan {
         const defenseValue = options.ignoreDefense
             ? Math.round((target.defense + target.defenseBuff) * 0.16)
             : Math.round((target.defense + target.defenseBuff) * 0.32);
-        const mitigated = Math.max(8, Math.round(rawDamage - defenseValue));
+        const mitigated = Math.max(16, Math.round((rawDamage - defenseValue) * 2));
         target.hp = Math.max(0, target.hp - mitigated);
         const knockedOut = target.hp <= 0 && !target.knockedOut;
         if (knockedOut) {
