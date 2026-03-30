@@ -153,7 +153,7 @@ go-go-hooligan/
 
 ## 作成者
 
-Manus AI Agent
+Manus AI Agent unnko moresoda
 
 ---
 
