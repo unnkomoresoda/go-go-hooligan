@@ -1,4 +1,3 @@
-// ゴーゴーフーリガン - ゲームメインロジック
 
 class GoGoHooligan {
     constructor() {
@@ -18,8 +17,8 @@ class GoGoHooligan {
                 <h2>Go! Go! Hooligan</h2>
                 <p class="tagline">仲間との絆が、スタジアムの外での勝利を生む</p>
                 <div class="buttons">
-                    <button class="btn btn-primary" onclick="game.startGame()">ゲーム開始</button>
-                    <button class="btn btn-secondary" onclick="game.showHelp()">ヘルプ</button>
+                    <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
+                    <button class="btn btn-secondary" onclick="window.game.showHelp()">ヘルプ</button>
                 </div>
             </div>
         `;
@@ -52,99 +51,89 @@ class GoGoHooligan {
     }
 
     renderPhaseContent() {
-        if (this.state.currentDay === 1 && this.state.currentPhase === 0) {
-            return this.renderTutorial();
-        } else if (this.state.currentPhase === 0) {
+        const phaseNames = ['朝', '昼', '夜'];
+        const phaseName = phaseNames[this.state.currentPhase];
+        
+        if (this.state.currentPhase === 0) {
             return this.renderMorning();
         } else if (this.state.currentPhase === 1) {
             return this.renderAfternoon();
-        } else {
-            return this.renderEvening();
+        } else if (this.state.currentPhase === 2) {
+            return this.renderNight();
         }
     }
 
-    renderTutorial() {
-        return `
-            <div class="tutorial">
-                <div class="character-message">
-                    <div class="character-name">Derek Thompson</div>
-                    <div class="message">
-                        <p>よぉ、ボス。聞いてくれ。</p>
-                        <p>FCマッドドッグスは今、ピンチだ。</p>
-                        <p>日曜日の試合までに、仲間を集めて、敵チームのサポーターを圧倒しなきゃならん。</p>
-                        <p>お前なら、できるはずだ。</p>
+    renderMorning() {
+        if (this.state.currentDay === 1 && this.state.recruitedMembers.length === 0) {
+            return `
+                <div class="tutorial">
+                    <div class="character-info">
+                        <img src="images/derek.jpg" alt="Derek Thompson" class="character-image">
+                        <h3>Derek Thompson</h3>
+                    </div>
+                    <p>よお、ボス。聞いてくれ。</p>
+                    <p>FCマッドドッグスは、ビッチだ。日頃の試合までに、仲間を集めて、敵チームのサポーターを駆逐しなくてはならん。</p>
+                    <p>お前なら、できるはずだ。</p>
+                    <div class="choices">
+                        <button class="btn btn-primary" onclick="window.game.advancePhase()">了解した。仲間を集めよう。</button>
+                        <button class="btn btn-secondary" onclick="window.game.showGameInfo()">ゲームについて詳しく知りたい</button>
                     </div>
                 </div>
-                <div class="choices">
-                    <button class="btn btn-primary" onclick="game.nextPhase()">了解した。仲間を集めよう。</button>
-                    <button class="btn btn-secondary" onclick="game.showGameInfo()">ゲームについて詳しく知りたい</button>
+            `;
+        } else {
+            return `
+                <div class="morning-scene">
+                    <p>朝日が昇った。新しい一日が始まる。</p>
+                    <p>昼間に仲間を集めるか、夜に敵の動きを探るか。</p>
+                    <div class="choices">
+                        <button class="btn btn-primary" onclick="window.game.advancePhase()">昼間に向かう</button>
+                    </div>
                 </div>
-            </div>
-        `;
-    }
-
-    renderMorning() {
-        return `
-            <div class="morning-phase">
-                <p>朝が来た。新しい一日の始まりだ。</p>
-                <p>どうする？</p>
-                <div class="choices">
-                    <button class="btn btn-primary" onclick="game.goToExploration()">街に出て仲間を探す</button>
-                    <button class="btn btn-secondary" onclick="game.restAtHome()">家で休む</button>
-                </div>
-            </div>
-        `;
+            `;
+        }
     }
 
     renderAfternoon() {
+        const locations = [
+            { id: 'pub', name: '🍺 パブ「ザ・レッドライオン」', description: 'パブ。街は活気に満ちている。どこに行く？' },
+            { id: 'park', name: '🌳 セントラルパーク', description: 'セントラルパーク。街は活気に満ちている。どこに行く？' },
+            { id: 'street', name: '🏪 商店街「ハイストリート」', description: '商店街「ハイストリート」。街は活気に満ちている。どこに行く？' }
+        ];
+
+        let locationButtons = locations.map(loc => 
+            `<button class="btn btn-location" onclick="window.game.visitLocation('${loc.id}')">${loc.name}</button>`
+        ).join('');
+
         return `
-            <div class="afternoon-phase">
-                <p>昼間だ。街は活気に満ちている。</p>
-                <p>どこに行く？</p>
+            <div class="afternoon-scene">
+                <p>昼間だ。街は活気に満ちている。どこに行く？</p>
                 <div class="location-buttons">
-                    <button class="btn btn-location" onclick="game.visitLocation('pub')">
-                        🍺 パブ「ザ・レッドライオン」
-                    </button>
-                    <button class="btn btn-location" onclick="game.visitLocation('park')">
-                        🌳 セントラルパーク
-                    </button>
-                    <button class="btn btn-location" onclick="game.visitLocation('street')">
-                        🏪 商店街「ハイストリート」
-                    </button>
+                    ${locationButtons}
                 </div>
             </div>
         `;
     }
 
-    renderEvening() {
+    renderNight() {
         return `
-            <div class="evening-phase">
-                <p>夜が来た。チームと作戦会議をしよう。</p>
-                <div class="team-info">
-                    <h3>現在のチームメンバー</h3>
-                    <div class="member-list">
-                        ${this.state.recruitedMembers.map(memberId => {
-                            const member = GAME_DATA.characters[memberId];
-                            return `
-                                <div class="member-card">
-                                    <div class="member-name">${member.name}</div>
-                                    <div class="member-role">${member.role}</div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
+            <div class="night-scene">
+                <p>夜が訪れた。敵チームの動きを探ったり、仲間と作戦を立てたりできる。</p>
                 <div class="choices">
-                    <button class="btn btn-primary" onclick="game.nextDay()">寝る（次の日へ）</button>
+                    <button class="btn btn-primary" onclick="window.game.advanceDay()">次の日へ</button>
                 </div>
             </div>
         `;
     }
 
     visitLocation(locationId) {
-        const location = GAME_DATA.locations[locationId];
-        const availableCharacters = location.characters.filter(
-            charId => !this.state.recruitedMembers.includes(charId)
+        const locations = {
+            'pub': 'パブ「ザ・レッドライオン」',
+            'park': 'セントラルパーク',
+            'street': '商店街「ハイストリート」'
+        };
+
+        const availableCharacters = Object.keys(GAME_DATA.characters).filter(
+            characterId => !this.state.recruitedMembers.includes(characterId)
         );
 
         if (availableCharacters.length === 0) {
@@ -152,59 +141,52 @@ class GoGoHooligan {
                 <div class="game-screen">
                     <div class="header">
                         <h2>${this.state.currentDay}日目 昼</h2>
-                        <div class="status">
-                            <span>チーム士気: ${this.state.teamMorale}%</span>
-                            <span>仲間数: ${this.state.recruitedMembers.length}/${GAME_CONSTANTS.MAX_TEAM_SIZE}</span>
-                        </div>
                     </div>
                     <div class="content">
-                        <p>${location.name}に着いた。</p>
-                        <p>ここには、もう仲間にしたい人がいないようだ。</p>
-                        <div class="choices">
-                            <button class="btn btn-primary" onclick="game.renderDay()">戻る</button>
-                        </div>
+                        <p>もう仲間にできるキャラクターがいない。</p>
+                        <button class="btn btn-primary" onclick="window.game.renderDay()">戻る</button>
                     </div>
                 </div>
             `;
             return;
         }
 
-        const character = GAME_DATA.characters[availableCharacters[0]];
-        this.renderRecruitmentScene(character, location);
+        const characterId = availableCharacters[0];
+        const character = GAME_DATA.characters[characterId];
+        this.renderRecruitmentScene(characterId, character, locations[locationId]);
     }
 
-    renderRecruitmentScene(character, location) {
-        const characterId = Object.keys(GAME_DATA.characters).find(k => GAME_DATA.characters[k] === character);
+    renderRecruitmentScene(characterId, character, location) {
+        const methods = [
+            { id: 'love', name: '❤️ チームへの愛情で説得する', successRate: 60 },
+            { id: 'logic', name: '🧠 理屈で説得する', successRate: 50 },
+            { id: 'force', name: '💪 力で強制する', successRate: 70 }
+        ];
+
+        let methodButtons = methods.map(method =>
+            `<button class="btn btn-method" onclick="window.game.recruitCharacter('${characterId}', '${method.id}')">${method.name}</button>`
+        ).join('');
+
         this.gameScreen.innerHTML = `
             <div class="game-screen">
                 <div class="header">
                     <h2>${this.state.currentDay}日目 昼</h2>
                 </div>
                 <div class="content">
-                    <div class="recruitment-scene">
-                        <div class="character-display">
+                    <div class="character-recruitment">
+                        <div class="character-card">
                             <img src="images/${characterId}.jpg" alt="${character.name}" class="character-image">
-                        </div>
-                        <div class="character-info">
                             <h3>${character.name}</h3>
-                            <p><strong>年齢:</strong> ${character.age}歳</p>
-                            <p><strong>職業:</strong> ${character.job}</p>
-                            <p><strong>役割:</strong> ${character.role}</p>
+                            <p>年齢: ${character.age}歳</p>
+                            <p>職業: ${character.occupation}</p>
+                            <p>役割: ${character.role}</p>
                         </div>
                         <div class="character-story">
                             <p>${character.story}</p>
-                        </div>
-                        <div class="recruitment-choices">
-                            <h4>どうやって勧誘する？</h4>
-                            <button class="btn btn-choice" onclick="game.recruitCharacter('${Object.keys(GAME_DATA.characters).find(k => GAME_DATA.characters[k] === character)}', 'love')">
-                                ❤️ チームへの愛情で説得する
-                            </button>
-                            <button class="btn btn-choice" onclick="game.recruitCharacter('${Object.keys(GAME_DATA.characters).find(k => GAME_DATA.characters[k] === character)}', 'logic')">
-                                🧠 理屈で説得する
-                            </button>
-                            <button class="btn btn-choice" onclick="game.recruitCharacter('${Object.keys(GAME_DATA.characters).find(k => GAME_DATA.characters[k] === character)}', 'force')">
-                                💪 力で強制する
-                            </button>
+                            <p>どやって勧誘する？</p>
+                            <div class="recruitment-methods">
+                                ${methodButtons}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -213,247 +195,80 @@ class GoGoHooligan {
     }
 
     recruitCharacter(characterId, method) {
-        const character = GAME_DATA.characters[characterId];
-        
-        // 既に仲間をしている場合はスキップ
         if (this.state.recruitedMembers.includes(characterId)) {
             this.gameScreen.innerHTML = `
                 <div class="game-screen">
                     <div class="header">
                         <h2>${this.state.currentDay}日目 昼</h2>
-                        <div class="status">
-                            <span>チーム士気: ${this.state.teamMorale}%</span>
-                            <span>仲間数: ${this.state.recruitedMembers.length}/${GAME_CONSTANTS.MAX_TEAM_SIZE}</span>
-                        </div>
                     </div>
                     <div class="content">
-                        <div class="recruitment-result">
-                            <p>${character.name}は既にチームの一員だ。</p>
-                            <div class="choices">
-                                <button class="btn btn-primary" onclick="game.renderDay()">戻る</button>
-                            </div>
-                        </div>
+                        <p>${GAME_DATA.characters[characterId].name}はすでに仲間だ。</p>
+                        <button class="btn btn-primary" onclick="window.game.renderDay()">戻る</button>
                     </div>
                 </div>
             `;
             return;
         }
-        
-        let success = false;
-        let message = '';
 
-        // 粗易的な成功判定ロジック
-        if (method === 'love') {
-            success = Math.random() > 0.3;
-            message = success ? 
-                `${character.name}はチームへの愛情に心を打たれ、仲間に加わった！` :
-                `${character.name}は考えさせてくれと言った。別の方法を試してみよう。`;
-        } else if (method === 'logic') {
-            success = Math.random() > 0.4;
-            message = success ? 
-                `${character.name}は理策に納得し、仲間に加わった！` :
-                `${character.name}は納得しなかった。別の方法を試してみよう。`;
-        } else {
-            success = Math.random() > 0.5;
-            message = success ? 
-                `${character.name}は圧倒され、仲間に加わった！` :
-                `${character.name}は逃げ出してしまった。別の方法を試してみよう。`;
-        }
+        const character = GAME_DATA.characters[characterId];
+        const successRates = { love: 60, logic: 50, force: 70 };
+        const successRate = successRates[method];
+        const success = Math.random() * 100 < successRate;
 
+        let resultMessage = '';
         if (success) {
+            resultMessage = `${character.name}はチームへの愛情に心を打たれ、仲間に加わった！`;
             this.state.recruitedMembers.push(characterId);
-            this.state.teamMorale = Math.min(100, this.state.teamMorale + 10);
+            this.state.teamMorale = Math.min(this.state.teamMorale + 10, 100);
+        } else {
+            resultMessage = `${character.name}は考えさせてくれった。別の方法を試してみよう。`;
         }
 
         this.gameScreen.innerHTML = `
             <div class="game-screen">
                 <div class="header">
                     <h2>${this.state.currentDay}日目 昼</h2>
-                    <div class="status">
-                        <span>チーム士気: ${this.state.teamMorale}%</span>
-                        <span>仲間数: ${this.state.recruitedMembers.length}/${GAME_CONSTANTS.MAX_TEAM_SIZE}</span>
-                    </div>
                 </div>
                 <div class="content">
-                    <div class="recruitment-result">
-                        <p>${message}</p>
-                        <div class="choices">
-                            <button class="btn btn-primary" onclick="game.renderDay()">戻る</button>
-                        </div>
-                    </div>
+                    <p>${resultMessage}</p>
+                    <button class="btn btn-primary" onclick="window.game.renderDay()">戻る</button>
                 </div>
             </div>
         `;
     }
 
-    nextPhase() {
+    advancePhase() {
         this.state.currentPhase++;
-        if (this.state.currentPhase >= GAME_CONSTANTS.PHASES_PER_DAY) {
-            this.nextDay();
+        if (this.state.currentPhase > 2) {
+            this.advanceDay();
         } else {
             this.renderDay();
         }
     }
 
-    nextDay() {
+    advanceDay() {
         this.state.currentDay++;
         this.state.currentPhase = 0;
 
-        if (this.state.currentDay > GAME_CONSTANTS.MAX_DAYS) {
-            this.startBattle();
+        if (this.state.currentDay > 7) {
+            this.showEnding();
         } else {
             this.renderDay();
         }
     }
 
-    goToExploration() {
-        this.nextPhase();
-    }
-
-    restAtHome() {
-        this.state.teamMorale = Math.min(100, this.state.teamMorale + 10);
-        this.nextPhase();
-    }
-
-    startBattle() {
-        this.state.battleActive = true;
-        this.renderBattle();
-    }
-
-    renderBattle() {
-        this.gameScreen.innerHTML = `
-            <div class="game-screen">
-                <div class="header">
-                    <h2>試合当日 - 対決パート</h2>
-                </div>
-                <div class="content">
-                    <div class="battle-scene">
-                        <h3>敵チームのサポーターが現れた！</h3>
-                        <div class="battle-info">
-                            <p>あなたのチーム: ${this.state.recruitedMembers.length}人</p>
-                            <p>敵チーム: 5人</p>
-                        </div>
-                        <div class="choices">
-                            <button class="btn btn-primary" onclick="game.executeBattle()">戦闘開始</button>
-                            <button class="btn btn-secondary" onclick="game.attemptNegotiation()">交渉を試みる</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    executeBattle() {
-        // キャラクターのパラメータを使用したバトルシミュレーション
-        let playerStrength = 0;
-        this.state.recruitedMembers.forEach(memberId => {
-            const member = GAME_DATA.characters[memberId];
-            if (member && member.stats) {
-                const strength = member.stats.strength || 0;
-                const bodyFat = member.stats.bodyFat || 0;
-                const happiness = member.stats.happiness || 50;
-                const morality = member.stats.morality || 50;
-                
-                // 戦闘力 = 筋力 + 体脂肪率 + (幸福度 * -1) + (モラル * -1)
-                const combatPower = strength + (bodyFat * 0.5) + ((100 - happiness) * 0.3) + ((100 - morality) * 0.2);
-                playerStrength += combatPower;
-            }
-        });
-        
-        // 敵の強さを設定(仲間数に基づいて調整)
-        const enemyStrength = 250 + (this.state.recruitedMembers.length * 10);
-        const playerWins = playerStrength > enemyStrength;
-
-        this.gameScreen.innerHTML = `
-            <div class="game-screen">
-                <div class="header">
-                    <h2>試合当日 - 対決パート</h2>
-                </div>
-                <div class="content">
-                    <div class="battle-result">
-                        ${playerWins ? `
-                            <h3>🎉 勝利！</h3>
-                            <p>あなたのチームは敵を圧倒した！</p>
-                            <p>FCマッドドッグスの勝利は確定した。</p>
-                            <p>スタジアムは歓喜に包まれた。</p>
-                        ` : `
-                            <h3>😢 敗北...</h3>
-                            <p>敵の方が強かった。</p>
-                            <p>しかし、仲間との絆は失われていない。</p>
-                            <p>次のシーズンに向けて、また始めよう。</p>
-                        `}
-                        <div class="choices">
-                            <button class="btn btn-primary" onclick="game.showEnding()">エンディングを見る</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    attemptNegotiation() {
-        const success = Math.random() > 0.5;
-        this.gameScreen.innerHTML = `
-            <div class="game-screen">
-                <div class="header">
-                    <h2>試合当日 - 対決パート</h2>
-                </div>
-                <div class="content">
-                    <div class="negotiation-result">
-                        ${success ? `
-                            <h3>✨ 交渉成功！</h3>
-                            <p>敵チームのリーダーがあなたの言葉に耳を傾けた。</p>
-                            <p>暴力ではなく、チームへの愛情で通じ合った。</p>
-                            <p>互いに敬意を持ち、その場を去った。</p>
-                        ` : `
-                            <h3>⚠️ 交渉失敗</h3>
-                            <p>敵チームは交渉に応じなかった。</p>
-                            <p>戦闘は避けられない。</p>
-                        `}
-                        <div class="choices">
-                            ${success ? `
-                                <button class="btn btn-primary" onclick="game.showEnding()">エンディングを見る</button>
-                            ` : `
-                                <button class="btn btn-primary" onclick="game.executeBattle()">戦闘開始</button>
-                            `}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
     showEnding() {
-        const memberCount = this.state.recruitedMembers.length;
-        let endingType = 'bad';
-        let endingText = '';
+        const recruitedCount = this.state.recruitedMembers.length;
+        let ending = '';
 
-        if (memberCount === 9) {
-            endingType = 'good';
-            endingText = `
-                <h3>グッドエンディング</h3>
-                <p>全员の仲間を集め、敵を圧倒した。</p>
-                <p>FCマッドドッグスの勝利は確定した。</p>
-                <p>スタジアムは歓喜に包まれ、全员で勝利を喜んだ。</p>
-                <p>チームの未来は明るい。</p>
-            `;
-        } else if (memberCount >= 6) {
-            endingType = 'normal';
-            endingText = `
-                <h3>ノーマルエンディング</h3>
-                <p>${memberCount}人の仲間を集め、敵に勝利した。</p>
-                <p>勝利は手にしたが、心残りがある。</p>
-                <p>次のシーズンに向けて、さらに強いチームを作ろう。</p>
-            `;
+        if (recruitedCount === 9) {
+            ending = '完璧な勝利！全員を集めた。敵チームは圧倒的に敗北した。';
+        } else if (recruitedCount >= 6) {
+            ending = '大勝利！十分な仲間を集めた。敵チームを撃破した。';
+        } else if (recruitedCount >= 3) {
+            ending = '勝利！仲間の力で敵チームに勝った。';
         } else {
-            endingType = 'bad';
-            endingText = `
-                <h3>バッドエンディング</h3>
-                <p>${memberCount}人しか仲間を集められなかった。</p>
-                <p>敵に敗北してしまった。</p>
-                <p>しかし、仲間との絆は失われていない。</p>
-                <p>次のシーズンに向けて、また始めよう。</p>
-            `;
+            ending = '敗北。仲間が足りず、敵チームに敗れた。';
         }
 
         this.gameScreen.innerHTML = `
@@ -462,10 +277,32 @@ class GoGoHooligan {
                     <h2>ゲーム終了</h2>
                 </div>
                 <div class="content">
-                    <div class="ending">
-                        ${endingText}
+                    <p>${ending}</p>
+                    <p>仲間数: ${recruitedCount}/9</p>
+                    <button class="btn btn-primary" onclick="window.game.renderTitle()">タイトルに戻る</button>
+                </div>
+            </div>
+        `;
+    }
+
+    showGameInfo() {
+        this.gameScreen.innerHTML = `
+            <div class="game-screen">
+                <div class="header">
+                    <h2>ゲームについて</h2>
+                </div>
+                <div class="content">
+                    <div class="game-info">
+                        <h3>ゲーム概要</h3>
+                        <p>7日間で仲間を集め、敵チームとの対決に臨む。</p>
+                        <h3>キャラクター</h3>
+                        <p>9人のユニークなキャラクターがいる。各キャラクターは異なる役割と特殊スキルを持つ。</p>
+                        <h3>パラメータシステム</h3>
+                        <p>各キャラクターは、筋力量、体脂肪率、幸福度、モラル、学力、資産などのユニークなパラメータを持つ。</p>
+                        <h3>バトルシステム</h3>
+                        <p>対決パートでは、集めた仲間の数と質で戦う。複数の勝利条件がある。</p>
                         <div class="choices">
-                            <button class="btn btn-primary" onclick="game.renderTitle()">タイトルに戻る</button>
+                            <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
                         </div>
                     </div>
                 </div>
@@ -481,42 +318,16 @@ class GoGoHooligan {
                 </div>
                 <div class="content">
                     <div class="help-content">
-                        <h3>ゴーゴーフーリガンについて</h3>
-                        <p>このゲームは、フットボールの熱狂的なサポーター文化を題材にしたアドベンチャーゲームです。</p>
-                        <h3>ゲームの流れ</h3>
-                        <ul>
-                            <li>7日間で仲間を集める</li>
-                            <li>各日は「朝」「昼」「夜」の3時間帯に分かれている</li>
-                            <li>昼間に街を探索し、NPCと会話して勧誘する</li>
-                            <li>7日目の夜に試合当日となり、対決パートへ</li>
-                        </ul>
-                        <h3>勧誘について</h3>
-                        <p>各NPCには異なる説得方法がある。相手の背景を理解し、最適な方法を選ぼう。</p>
+                        <h3>ゲームの目的</h3>
+                        <p>7日間でできるだけ多くの仲間を集め、敵チームとの対決に勝つ。</p>
+                        <h3>ゲームの進め方</h3>
+                        <p>1. 朝：新しい一日が始まる</p>
+                        <p>2. 昼：街の場所を訪れて仲間を勧誘する</p>
+                        <p>3. 夜：敵の動きを探ったり、作戦を立てたりする</p>
+                        <h3>勧誘方法</h3>
+                        <p>愛情、理屈、力の3つの方法がある。各方法で成功率が異なる。</p>
                         <div class="choices">
-                            <button class="btn btn-primary" onclick="game.renderTitle()">タイトルに戻る</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    showGameInfo() {
-        this.gameScreen.innerHTML = `
-            <div class="game-screen">
-                <div class="header">
-                    <h2>ゲーム情報</h2>
-                </div>
-                <div class="content">
-                    <div class="game-info">
-                        <h3>キャラクター</h3>
-                        <p>10人のユニークなキャラクターがいる。各キャラクターは異なる役割と特殊スキルを持つ。</p>
-                        <h3>パラメータシステム</h3>
-                        <p>各キャラクターは、筋力量、体脂肪率、幸福度、モラル、学力、資産などのユニークなパラメータを持つ。</p>
-                        <h3>バトルシステム</h3>
-                        <p>対決パートでは、集めた仲間の数と質で戦う。複数の勝利条件がある。</p>
-                        <div class="choices">
-                            <button class="btn btn-primary" onclick="game.startGame()">ゲーム開始</button>
+                            <button class="btn btn-primary" onclick="window.game.renderTitle()">タイトルに戻る</button>
                         </div>
                     </div>
                 </div>
@@ -526,4 +337,13 @@ class GoGoHooligan {
 }
 
 // ゲーム開始
-let game = new GoGoHooligan();
+let game;
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        game = new GoGoHooligan();
+        window.game = game;
+    });
+} else {
+    game = new GoGoHooligan();
+    window.game = game;
+}
