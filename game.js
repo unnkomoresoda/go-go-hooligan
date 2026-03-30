@@ -161,7 +161,7 @@ class GoGoHooligan {
                         <p>もう仲間にできるキャラクターがいない。夜に進もう。</p>
                         <div class="choices">
                             <button class="btn btn-primary" onclick="window.game.advancePhase()">夜に進む</button>
-                            <button class="btn btn-secondary" onclick="window.game.renderAfternoon()">戻る</button>
+                            <button class="btn btn-secondary" onclick="window.game.renderDay()">戻る</button>
                         </div>
                     </div>
                 </div>
@@ -221,7 +221,7 @@ class GoGoHooligan {
                     </div>
                     <div class="content">
                         <p>${GAME_DATA.characters[characterId].name}はすでに仲間だ。</p>
-                        <button class="btn btn-primary" onclick="window.game.renderAfternoon()">戻る</button>
+                        <button class="btn btn-primary" onclick="window.game.renderDay()">戻る</button>
                     </div>
                 </div>
             `;
@@ -249,7 +249,7 @@ class GoGoHooligan {
                 </div>
                 <div class="content">
                     <p>${resultMessage}</p>
-                    <button class="btn btn-primary" onclick="window.game.renderAfternoon()">戻る</button>
+                    <button class="btn btn-primary" onclick="window.game.renderDay()">戻る</button>
                 </div>
             </div>
         `;
