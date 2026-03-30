@@ -157,7 +157,7 @@ class GoGoHooligan {
                         <p>${location.name}に着いた。</p>
                         <p>ここには、もう仲間にしたい人がいないようだ。</p>
                         <div class="choices">
-                            <button class="btn btn-primary" onclick="game.renderAfternoon()">戻る</button>
+                            <button class="btn btn-primary" onclick="game.renderDay()">戻る</button>
                         </div>
                     </div>
                 </div>
@@ -245,7 +245,7 @@ class GoGoHooligan {
                     <div class="recruitment-result">
                         <p>${message}</p>
                         <div class="choices">
-                            <button class="btn btn-primary" onclick="game.renderAfternoon()">戻る</button>
+                            <button class="btn btn-primary" onclick="game.renderDay()">戻る</button>
                         </div>
                     </div>
                 </div>
