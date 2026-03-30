@@ -1,3 +1,5 @@
+const ASSET_VERSION = 11;
+
 const GAME_DATA = {
     characters: {
         derek: {
@@ -767,7 +769,9 @@ const GAME_DATA = {
         dayActionTaken: false,
         currentEncounterId: null,
         currentLocationId: null,
+        nightConversationIds: [],
         nightConversationId: null,
+        lastNightSpeakerIds: [],
         lastNightSpeakerId: null
     },
 
@@ -815,6 +819,8 @@ let gameState = {
     finalBattleResult: null,
     currentEncounterId: null,
     currentLocationId: null,
+    nightConversationIds: [],
     nightConversationId: null,
+    lastNightSpeakerIds: [],
     lastNightSpeakerId: null
 };
