@@ -351,7 +351,7 @@ class GoGoHooligan {
                 </div>
                 <h1 class="screen-reader-title">${TITLE_NAME}</h1>
                 <h2>${TITLE_SUBTITLE}</h2>
-                <p class="tagline">昼の一手、夜の会話、試合の点差が、最後の3対3乱闘を決める。</p>
+                <p class="tagline">昼に拾った縁、夜に交わした本音、そしてスタンドの怒号が、最後の3対3乱闘を血の色に染める。</p>
                 <div class="buttons">
                     <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
                     <button class="btn btn-secondary" onclick="window.game.showHelp()">ヘルプ</button>
@@ -406,9 +406,9 @@ class GoGoHooligan {
             return `
                 <div class="morning-scene">
                     <div class="message">
-                        <p>朝日が昇った。街は試合前から騒がしく、誰が味方で誰が敵になるかはまだ決まっていない。</p>
-                        <p>Derek が告げる。昼に使える行動は一度きり。夜は仲間たちと話し、稀に別の顔が現れて新たな勧誘の機会にもなる。</p>
-                        <p>さらに夜には試合結果が出る。勝敗と点差は群衆の熱量を左右し、最後の敵人数すら増減させる。</p>
+                        <p>朝日が濁った窓を叩き、街はもう試合前のざわめきで満ちている。まだ誰が肩を並べ、誰が石を投げてくるのかも分からない。</p>
+                        <p>Derek は低い声で告げる。昼に動けるのはたった一度きりだ。その一手で誰かの心をこちらへ傾け、夜になれば仲間たちの本音を拾い、稀に思いがけない乱入者すら巻き込んでいく。</p>
+                        <p>そして毎夜、試合結果が街の温度を決める。勝敗も点差も、スタンドから溢れた熱狂も、最後の乱闘で向かい合う敵の数にまで食い込んでくる。</p>
                     </div>
                     ${this.renderCharacterPanel('derek', {
                         showDialogue: true,
@@ -425,9 +425,9 @@ class GoGoHooligan {
 
         return `
             <div class="morning-scene">
-                <p>新しい一日が始まった。昼に動けるのは一度だけだ。</p>
-                <p>${lastRecruit ? `${lastRecruit.name} を引き入れたことで夜の空気が変わった。` : '昨夜の会話と試合の熱がまだ残っている。'}</p>
-                <p>今日誰を味方にするかで、夜の会話と最終決戦の顔ぶれはまた変わる。</p>
+                <p>新しい一日が始まった。空気は少し冷えているのに、胸の奥だけは昨夜の熱をまだ引きずっている。昼に動けるのは、やはり一度だけだ。</p>
+                <p>${lastRecruit ? `${lastRecruit.name} を引き入れたことで、昨夜まで他人だった空気に確かな結び目が生まれた。` : '昨夜の会話と試合の余熱が、まだ通りの隅々に沈殿している。'}</p>
+                <p>今日どの顔と向き合うかで、夜に交わされる言葉も、最後の決戦で背中を預けられる相手もまた変わっていく。</p>
                 <div class="choices">
                     <button class="btn btn-primary" onclick="window.game.advancePhase()">昼の仲間集めへ</button>
                 </div>
@@ -439,8 +439,8 @@ class GoGoHooligan {
         if (this.state.dayActionTaken) {
             return `
                 <div class="afternoon-scene">
-                    <p>今日の昼の行動はもう終わった。これ以上の接触はできない。</p>
-                    <p>夜になれば仲間たちとの会話が始まり、稀に別の人物が割り込んでくることもある。</p>
+                    <p>今日の昼の一手はもう使い切った。これ以上こちらから誰かの懐へ踏み込むことはできない。</p>
+                    <p>あとは夜を待つだけだ。仲間たちの口から本音が零れ、運が良ければ、あるいは悪ければ、別の誰かが会話の輪へ割り込んでくるかもしれない。</p>
                     <div class="choices">
                         <button class="btn btn-primary" onclick="window.game.endAfternoonAction()">夜に進む</button>
                     </div>
@@ -462,8 +462,8 @@ class GoGoHooligan {
 
         return `
             <div class="afternoon-scene">
-                <p>昼だ。動けるのは1回だけ。訪問先を決めると、その場所にいる誰かがランダムに現れる。</p>
-                <p>現れた人物は味方にも敵にもなり得る。画像をタップすれば、全パラメータがポップアップで確認できる。</p>
+                <p>昼だ。ここから先は一度きりの勝負になる。訪問先を決めれば、その場所に染みついた匂いや噂に引かれるように、誰かひとりが姿を現す。</p>
+                <p>現れた人物は、次の夜には肩を組む相手かもしれないし、最後の決戦で睨み合う敵になるかもしれない。画像をタップすれば、表情の奥に隠れた全パラメータも見抜ける。</p>
                 <div class="location-buttons">
                     ${locationButtons}
                 </div>
@@ -528,15 +528,15 @@ class GoGoHooligan {
 
     getMatchMomentumText(resultLabel, scoreDiff) {
         if (resultLabel === '引き分け') {
-            return '互いの怒りだけが残り、路地裏の空気は重く沈んだ。';
+            return '決着はつかなかったが、互いの苛立ちだけが夜気に残り、路地裏の空気は鉛のように沈んだ。';
         }
         if (scoreDiff >= 3) {
-            return '大差の決着が街を火薬庫に変え、敵側の過激派が一気に膨れ上がる。';
+            return '大差の決着が街をそのまま火薬庫に変え、敵側の過激派は歓声に押し出されるように一気に膨れ上がる。';
         }
         if (scoreDiff === 2) {
-            return 'はっきりした差がつき、敵の群れは勝敗を口実に勢いを増した。';
+            return 'はっきりした差がつき、敵の群れは勝敗を錦の御旗にして、通りの奥から次々と姿を増していく。';
         }
-        return '僅差でも火種は十分だ。勝敗の余熱が敵の数をじわりと押し上げる。';
+        return '僅差でも火種としては十分だ。勝敗の余熱は消えず、敵の数をじわじわと押し上げていく。';
     }
 
     simulateSoccerMatch() {
@@ -629,7 +629,7 @@ class GoGoHooligan {
         return `
             <div class="night-encounter-panel">
                 <h3>夜の飛び入り勧誘</h3>
-                <p>仲間たちとの会話の最中、別の人物が顔を出した。ここで引き込めれば、明日の空気が変わる。</p>
+                <p>仲間たちとの会話が温まりきった頃、輪の外から別の人物が静かに顔を出した。ここで引き込めれば、明日の空気も最後の布陣も大きく変わる。</p>
                 ${this.renderCharacterPanel(characterId, {
                     showStory: true,
                     showDialogue: true,
@@ -676,8 +676,8 @@ class GoGoHooligan {
                 <div class="content">
                     <div class="night-scene">
                         <div class="message">
-                            <p>夜だ。昼の一手は終わり、仲間たちがそれぞれ短く本音を漏らす。</p>
-                            <p>その後には試合結果が届き、点差が大きいほど敵の群れは膨れ上がる。</p>
+                            <p>夜だ。昼に飲み込んだ言葉が、ようやく仲間たちの口から少しずつ零れ始める。短い会話でも、その一言が隊列の温度を変える。</p>
+                            <p>やがて試合結果が届き、歓声と罵声の残響が街へ流れ込む。点差が大きいほど敵の群れは膨れ上がり、最後の夜に立ちはだかる影も濃くなる。</p>
                         </div>
                         <div class="night-conversation-stack">
                             ${this.buildNightConversationPanels()}
@@ -716,8 +716,8 @@ class GoGoHooligan {
             this.showAfternoonResult({
                 characterId: null,
                 success: false,
-                message: `${location.name} を探ったが、今日は有力な人物を見つけられなかった。昼の一手はここで終わりだ。`,
-                quote: '人の流れはあったが、こちらを向く視線はなかった。'
+                message: `${location.name} を探ったが、今日は決定的な縁に届かなかった。人波は確かにあったのに、こちらへ足を止める者はいない。昼の一手はここで終わりだ。`,
+                quote: '気配だけは濃かった。だが今日は、まだ名前を呼び合う距離じゃなかった。'
             });
             return;
         }
@@ -767,10 +767,10 @@ class GoGoHooligan {
                             extraMeta: '<p>会敵状態: まだ中立</p><p>この人物は味方にも敵にもなり得る。</p>'
                         })}
                         <div class="recruitment-choices">
-                            <h4>この一度きりの接触でどう口説く？</h4>
+                            <h4>この一度きりの接触で、どう心を揺らす？</h4>
                             <div class="message">
-                                <p>文字だけでなく、相手本人のセリフと表情を見たうえで、画像タップから全パラメータも確認できる。</p>
-                                <p>説得に失敗すれば、その人物は最後の夜に敵側へ回る可能性が高まる。</p>
+                                <p>相手の声色、滲む苛立ち、視線の逃げ方まで見極めろ。画像をタップすれば、表には出ない全パラメータも読み取れる。</p>
+                                <p>ここで言葉を誤れば、その人物は最後の夜にこちらへ背を向け、敵の列の中から睨み返してくるかもしれない。</p>
                             </div>
                             <div class="recruitment-methods">
                                 ${methodButtons}
@@ -832,15 +832,15 @@ class GoGoHooligan {
             this.state.teamMorale = this.clamp(this.state.teamMorale + (context === 'night' ? 5 : 8), 0, 100);
             this.state.teamExperience += context === 'night' ? 6 : 10;
             message = context === 'night'
-                ? `${character.name} は夜の誘いに応じ、そのまま味方へ加わった。眠っていた街の空気が一段こちらへ傾く。`
-                : `${character.name} はお前の誘いに応じ、味方として列へ加わった。昼の一手は成功だ。`;
+                ? `${character.name} は夜の誘いに小さくうなずき、そのまま味方の輪へ歩み入った。眠っていた街の空気まで、ほんの少しこちらへ傾く。`
+                : `${character.name} はお前の言葉を受け止め、ついに味方の列へ並んだ。昼の一手で掴んだのは、ただの人数ではなく確かな背中だ。`;
             quote = character.dialogue.success[method] || '……悪くない。';
         } else {
             this.state.teamMorale = this.clamp(this.state.teamMorale - (context === 'night' ? 2 : 4), 0, 100);
             this.state.teamExperience += context === 'night' ? 2 : 3;
             message = context === 'night'
-                ? `${character.name} は今夜は首を縦に振らなかった。だが、会えたこと自体が次の火種になる。`
-                : `${character.name} は今回は首を縦に振らなかった。今日の昼に再挑戦はできない。夜へ切り替えるしかない。`;
+                ? `${character.name} は今夜は首を縦に振らなかった。だが、交わした視線までは消えない。その沈黙自体が次の火種になる。`
+                : `${character.name} は最後まで首を縦に振らなかった。今日の昼に再挑戦はできない。残った言葉の重みを抱えたまま、夜へ切り替えるしかない。`;
             quote = character.dialogue.failure[method] || '今は違う。';
         }
 
@@ -867,8 +867,8 @@ class GoGoHooligan {
             characterId,
             success: false,
             successRate: 0,
-            message: character ? `${character.name} は夜風に紛れて去っていった。今夜の勧誘は見送りだ。` : '今夜の勧誘は見送りだ。',
-            quote: character ? (character.dialogue.failure.logic || 'また今度だ。') : 'また今度だ。'
+            message: character ? `${character.name} は夜風に紛れるように去っていった。追えば届いたかもしれないが、今夜はあえて呼び止めない。勧誘は見送りだ。` : '今夜の勧誘は見送りだ。',
+            quote: character ? (character.dialogue.failure.logic || '今夜はまだ、その名前を呼ばれたくない。') : 'また今度だ。'
         };
         this.renderNight();
     }
@@ -1146,9 +1146,9 @@ class GoGoHooligan {
             enemyReserve: enemyUnits.slice(3),
             battleLog: [],
             sceneLog: [
-                '実況: 試合後の熱気がそのまま乱闘へなだれ込み、先発3対3が真正面からにらみ合う。',
-                '実況: 画像をタップすれば、各人物のパラメータをいつでも確認できる。',
-                `実況: ラストバトルBGM「${FINAL_BATTLE_BGM_TITLE}」が鳴り始め、通り全体の鼓動がひとつになる。`
+                '実況: 試合後の熱気がそのまま路地へ流れ込み、先発3対3は一歩も引かないまま真正面から火花を散らす。',
+                '実況: 画像をタップすれば、それぞれの抱えた力と欠落をいつでも見抜ける。',
+                `実況: ラストバトルBGM「${FINAL_BATTLE_BGM_TITLE}」が鳴り始め、通り全体の鼓動が乱闘のカウントを刻み出す。`
             ],
             round: 0,
             actionCount: 0,
@@ -1203,7 +1203,7 @@ class GoGoHooligan {
                 <div class="content">
                     <div class="battle-scene cinematic-battle live-battle-scene">
                         <div class="battle-turn-banner">${turnBanner}</div>
-                        <h3>試合後の街が爆発し、3対3の先発乱闘が始まる</h3>
+                        <h3>試合後の街はついに決壊し、3対3の先発乱闘が火蓋を切る</h3>
                         <div class="battle-lineup">
                             <div class="battle-side ally-side">
                                 <h4>味方先発3人</h4>
@@ -1223,10 +1223,10 @@ class GoGoHooligan {
                         </div>
                         <div class="battle-live-grid">
                             <div class="battle-info battle-narrative">
-                                <p>今夜の試合結果は ${matchScore}。点差で膨れた群衆が、敵の総数を ${battleState.enemyIds.length} 人まで押し上げている。</p>
+                                <p>今夜の試合結果は ${matchScore}。その点差に煽られた群衆が雪崩れ込み、敵の総数は ${battleState.enemyIds.length} 人まで膨れ上がっている。</p>
                                 <p><strong>${bgmStatusLabel}</strong></p>
-                                <p>${boss ? `${boss.name} が前線で吠える。${boss.dialogue.enemy}` : '敵チームの前線が黙って間合いを詰めてくる。'}</p>
-                                <p>${battleState.finished ? battleState.summary : 'ボタンを押すたびに一手ごとの攻防が進む。倒れた者は即交代し、極稀にクリティカルヒットが炸裂する。'}</p>
+                                <p>${boss ? `${boss.name} が前線で喉を震わせる。${boss.dialogue.enemy}` : '敵チームの前線が無言のまま間合いを詰め、靴底だけが地面を鳴らしている。'}</p>
+                                <p>${battleState.finished ? battleState.summary : 'ボタンを押すたびに、一手ごとの攻防と実況が積み上がる。倒れた者は即座に交代し、ごく稀に流れそのものをひっくり返すクリティカルヒットが炸裂する。'}</p>
                                 <p>初期戦力比較: 味方 ${battleState.playerPower} / 敵 ${battleState.enemyPower}</p>
                                 <p>${enemyBalanceNote}</p>
                             </div>
@@ -1271,7 +1271,7 @@ class GoGoHooligan {
         if (!battleState.turnQueue.length) {
             battleState.round += 1;
             battleState.turnQueue = this.buildBattleTurnQueue(battleState.allyActive, battleState.enemyActive);
-            this.recordBattleLog(battleState, sceneLog, `実況: 第${battleState.round}ラウンド。肩がぶつかり合い、前線がもう一段前へ詰まった。`);
+            this.recordBattleLog(battleState, sceneLog, `実況: 第${battleState.round}ラウンド。肩と肩がぶつかり、誰も退かないまま前線だけが半歩ずつ地獄へ近づく。`);
         }
 
         const firstActor = this.pullNextBattleUnit(battleState.turnQueue);
@@ -1454,7 +1454,7 @@ class GoGoHooligan {
             this.recordBattleLog(
                 battleState,
                 sceneLog,
-                `実況: ${unit.name} の一撃が完璧に入った。クリティカルヒット！ ${target.name} に ${outcome.damage} ダメージ。${outcome.knockedOut ? ` ${target.name} はその場で崩れ落ちた。` : ''}`
+                `実況: ${unit.name} の一撃が完璧な角度で突き刺さった。クリティカルヒット！ ${target.name} に ${outcome.damage} ダメージ。${outcome.knockedOut ? ` ${target.name} は声もなくその場に崩れ落ちた。` : ''}`
             );
             return;
         }
@@ -1462,7 +1462,7 @@ class GoGoHooligan {
         this.recordBattleLog(
             battleState,
             sceneLog,
-            `実況: ${unit.name} が踏み込み、${target.name} を打ち抜く。${outcome.damage} ダメージ。${outcome.knockedOut ? `${target.name} は前線で膝をついた。` : 'まだ踏みとどまる。'}`
+            `実況: ${unit.name} が息を殺して踏み込み、${target.name} を打ち抜く。${outcome.damage} ダメージ。${outcome.knockedOut ? `${target.name} は前線で膝をつき、ついに視線を落とした。` : 'それでもまだ踏みとどまる。'}`
         );
     }
 
@@ -1509,7 +1509,7 @@ class GoGoHooligan {
             livingAllies.forEach(ally => {
                 ally.attackBuff += 4;
             });
-            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。${target.name} を ${healAmount} 回復し、味方前線に押し返す力が戻る。`);
+            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。${target.name} を ${healAmount} 回復し、崩れかけた味方前線へもう一度立ち上がる理由を注ぎ込む。`);
             return;
         }
 
@@ -1518,7 +1518,7 @@ class GoGoHooligan {
                 ally.attackBuff += 14;
                 ally.defenseBuff += 8;
             });
-            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。味方全体の肩が上がり、押し込みが一段強くなる。`);
+            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。味方全体の肩が上がり、押し込みの圧が目に見えて一段増した。`);
             return;
         }
 
@@ -1530,7 +1530,7 @@ class GoGoHooligan {
             if (target) {
                 target.attackDebuff += 10;
             }
-            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。味方の守りが締まり、敵の踏み込みが鈍る。`);
+            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。味方の守りは一枚岩のように締まり、敵の踏み込みが露骨に鈍る。`);
             return;
         }
 
@@ -1539,7 +1539,7 @@ class GoGoHooligan {
                 enemy.attackDebuff += 12;
                 enemy.defenseBuff = Math.max(0, enemy.defenseBuff - 8);
             });
-            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。敵陣の呼吸が乱れ、隊列が明らかに崩れた。`);
+            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。敵陣の呼吸が乱れ、揃っていた隊列が見る間にばらけていく。`);
             return;
         }
 
@@ -1570,7 +1570,7 @@ class GoGoHooligan {
         this.recordBattleLog(
             battleState,
             sceneLog,
-            `実況: ${unit.name} が前へ出る。${useSkill ? '必殺の間合いだ。' : enemySkillSuppressed ? '必殺の構えに入ったが、味方の圧が踏み込みを鈍らせた。' : '拳と体重を乗せて踏み込む。'}`
+            `実況: ${unit.name} が前へ出る。${useSkill ? '空気が変わる。必殺の間合いだ。' : enemySkillSuppressed ? '必殺の構えに入ったが、味方の圧と視線が踏み込みを鈍らせた。' : '拳と体重、覚悟まで乗せて踏み込む。'}`
         );
 
         if (useSkill) {
@@ -1608,16 +1608,16 @@ class GoGoHooligan {
             ? ` 乱戦の中ではクリティカルが ${battleState.criticalMoments} 回炸裂し、歓声が一気に傾いた。`
             : '';
         const battleSummary = victory
-            ? `${aceUnit ? aceUnit.name : '味方前線'} が最後の押し込みを通し、${boss ? boss.name : '敵前線'} 側の隊列を切り裂いた。${criticalText}`
-            : `${boss ? boss.name : '敵前線'} 側の圧力と増援に押し切られた。交代を重ねても前線を取り戻せず、最後は人数差が響いた。${criticalText}`;
+            ? `${aceUnit ? aceUnit.name : '味方前線'} が最後の押し込みを通し、${boss ? boss.name : '敵前線'} 側の隊列を真っ二つに裂いた。背中を預け合って積み上げた一手一手が、ついに街の流れそのものをひっくり返した。${criticalText}`
+            : `${boss ? boss.name : '敵前線'} 側の圧力と増援に押し切られた。交代を重ねても前線を取り戻せず、最後は人数差と疲弊がじわじわと響いた。だが倒れたあとにも、仲間たちの視線はまだ次の朝を探していた。${criticalText}`;
 
         battleState.finished = true;
         battleState.victory = victory;
         battleState.summary = battleSummary;
         battleState.sceneLog = [
             victory
-                ? '実況: 最後の押し合いを制し、味方が乱闘をひっくり返した。'
-                : '実況: 最後の踏ん張りも及ばず、敵の圧が前線をのみ込んだ。',
+                ? '実況: 最後の押し合いを制し、味方が乱闘の流れそのものをひっくり返した。'
+                : '実況: 最後の踏ん張りも及ばず、敵の圧が前線をのみ込み、夜の勝敗を刻みつけた。',
             `実況: 総攻防回数は ${battleState.actionCount} 回。決着まで一手ずつ積み上げた。`
         ];
 
@@ -1667,17 +1667,17 @@ class GoGoHooligan {
         let endingText = '';
 
         if (result.victory && recruitedCount >= 8) {
-            endingTitle = '完全制圧エンド';
-            endingText = '昼に差し出した手も、夜に交わした言葉も、最後には街そのものの呼吸を変えた。勝利の朝焼けの中で、誰ひとり孤立していなかった。';
+            endingTitle = '夜明け奪還エンド';
+            endingText = '昼に差し出した手も、夜更けに交わした本音も、最後には街そのものの呼吸を変えた。勝利の朝焼けの中で、もう誰ひとり孤立していなかった。';
         } else if (result.victory) {
-            endingTitle = '辛勝エンド';
-            endingText = '倒れかけるたびに誰かが支え、一手ずつ未来をつないだ。勝利の輪の中心にあったのは、痛みよりも強い連帯だった。';
+            endingTitle = '薄明の勝利エンド';
+            endingText = '倒れかけるたびに誰かが肩を貸し、誰かが叫び、誰かが前へ出た。一手ずつつないだ未来の先にあったのは、傷だらけでも確かな勝利だった。';
         } else if (recruitedCount >= 5) {
-            endingTitle = '撤退エンド';
-            endingText = '今夜は押し切れなかった。それでも最後まで手を離さなかった仲間たちの背中に、次の朝へ向かう火が残った。';
+            endingTitle = '再起の誓いエンド';
+            endingText = '今夜は押し切れなかった。それでも最後まで手を離さなかった仲間たちの背中には、敗北よりも強い火が残った。その火は、次の夜明けを必ず呼び寄せる。';
         } else {
-            endingTitle = '壊滅エンド';
-            endingText = '人数は足りず、前線も耐え切れなかった。それでも残された悔しさは、街のどこかで次の反撃の種になっていく。';
+            endingTitle = '残り火エンド';
+            endingText = '人数は足りず、前線も耐え切れなかった。それでも路地裏に残った悔しさは消えない。潰えきらなかったその残り火が、いつか次の反撃の導火線になる。';
         }
 
         const enemySummary = result.enemyIds.map(id => this.getCharacter(id).name).join(' / ');
@@ -1687,31 +1687,31 @@ class GoGoHooligan {
                 label: 'CUT 1',
                 title: '試合後の静寂',
                 text: result.victory
-                    ? '怒号が引いた路地に、荒い息だけが残る。倒れた看板の向こうで、仲間たちは勝利の重さをやっと理解し始める。'
-                    : '怒号が遠のいたあと、路地には靴音と息遣いだけが残る。敗北の重さはある。それでも、誰も地面に顔を伏せたままではいなかった。',
+                    ? '怒号が引いた路地に、荒い息と遠ざかるサイレンだけが残る。倒れた看板の向こうで、仲間たちは勝利の重さをようやく自分の骨で理解し始める。'
+                    : '怒号が遠のいたあと、路地には靴音と息遣いだけが残る。敗北の重さは確かにある。それでも、誰も地面に顔を伏せたまま終わろうとはしなかった。',
                 quote: result.victory
-                    ? '「終わったんじゃない。ここから街を取り戻すんだ」'
-                    : '「まだ終わってない。次に立つ時は、今日より前へ出る」'
+                    ? '「終わったんじゃない。俺たちは、ここから街を取り戻していくんだ」'
+                    : '「まだ終わってない。次に立つ時は、今日より少しでも前へ出る」'
             },
             {
                 label: 'CUT 2',
                 title: '差し出された手',
                 text: result.victory
-                    ? `${ace ? ace.name : '先頭に立った仲間'} が最初に手を差し出す。その手を、倒れかけた仲間がひとりずつ握り返し、ばらばらだった輪が初めて本当のチームになる。`
-                    : `${anchorMember ? anchorMember.name : '仲間たち'} は倒れた者を肩で支え合う。勝てなかった夜でも、誰ひとり置いていかないという約束だけは、静かに固まっていく。`,
+                    ? `${ace ? ace.name : '先頭に立った仲間'} が最初に手を差し出す。その手を、倒れかけた仲間がひとりずつ握り返し、ばらばらだった輪はようやく本当のチームの形を手に入れる。`
+                    : `${anchorMember ? anchorMember.name : '仲間たち'} は倒れた者を肩で支え合う。勝てなかった夜でも、誰ひとり置いていかないという約束だけは、むしろ前より強く固まっていく。`,
                 quote: result.victory
-                    ? '「今日ここにいた全員で勝ったんだ」'
+                    ? '「今日ここにいた全員で勝ったんだ。誰かひとりの武勇じゃない」'
                     : '「負けても仲間は減らさない。それが次の勝ち筋になる」'
             },
             {
                 label: 'CUT 3',
                 title: '朝焼けの約束',
                 text: result.victory
-                    ? `${boss ? boss.name : '敵の前線'} がいた方角を見つめながら、誰かが小さく笑う。悲鳴と歓声が消えたあとの街に、ようやく人の声が戻ってくる。`
-                    : `${boss ? boss.name : '敵の前線'} が去った通りを見つめながら、誰かが拳を握り直す。夜は明けきらないが、次の一日を諦める空気ももう残っていない。`,
+                    ? `${boss ? boss.name : '敵の前線'} がいた方角を見つめながら、誰かが小さく笑う。悲鳴も歓声も消えたあとの街に、ようやく人が人として話す声が戻ってくる。`
+                    : `${boss ? boss.name : '敵の前線'} が去った通りを見つめながら、誰かが拳を握り直す。夜はまだ明けきらない。それでも次の一日を諦める空気だけは、もうどこにも残っていない。`,
                 quote: result.victory
-                    ? '「また昼が来る。その時は、もう誰もひとりで歩かせない」'
-                    : '「次の朝は、今日より多い仲間で迎える」'
+                    ? '「また昼が来る。その時はもう、誰もひとりで歩かせない」'
+                    : '「次の朝は、今日より多い仲間で迎える。絶対に」'
             }
         ];
         const cutsceneHtml = cutsceneScenes.map((scene, index) => `
@@ -1771,15 +1771,15 @@ class GoGoHooligan {
                 <div class="content">
                     <div class="game-info">
                         <h3>ゲーム概要</h3>
-                        <p>7日間で仲間を増やし、夜の会話と試合結果を経て、最後は一手ずつ進む3対3の交代制乱戦へ挑む。</p>
+                        <p>7日間で仲間を増やし、夜ごとに本音を拾い、試合結果で膨れ上がる街の熱をくぐり抜け、最後は一手ずつ進む3対3の交代制乱戦へ挑む物語だ。</p>
                         <h3>昼の行動ルール</h3>
-                        <p>昼の行動は1日1回のみ。場所を選ぶと、その場所の候補者の中から誰か1人がランダムに現れる。</p>
+                        <p>昼の行動は1日1回のみ。場所を選ぶと、その場に縁のある候補者の中から誰か1人がランダムに現れ、その一度きりの対話で運命が分かれる。</p>
                         <h3>夜の会話と追加勧誘</h3>
-                        <p>夜は複数の仲間との会話が発生し、稀に別のキャラクターが乱入して追加勧誘できる。</p>
+                        <p>夜は複数の仲間との会話が発生し、彼らの本音や覚悟が少しずつ見えてくる。稀に別のキャラクターが乱入し、運命を変える追加勧誘へつながることもある。</p>
                         <h3>サッカー試合</h3>
-                        <p>毎夜、試合結果が表示される。どちらが勝ったかと点差が示され、点差が大きいほど敵人数が増える。</p>
+                        <p>毎夜、試合結果が表示される。どちらが勝ったか、どれほど差がついたか、その余熱までもが街に流れ込み、点差が大きいほど敵人数は増えていく。</p>
                         <h3>最終決戦</h3>
-                        <p>最終戦は3対3のチームバトル。ボタンを押すごとに攻防が進み、実況描写の中で通常攻撃・必殺技・交代が一手ずつ積み上がる。稀にクリティカルヒットも出る。</p>
+                        <p>最終戦は3対3のチームバトル。ボタンを押すごとに攻防が進み、実況描写の中で通常攻撃・必殺技・交代が一手ずつ積み上がる。ごく稀にクリティカルヒットが炸裂し、流れそのものをひっくり返す。</p>
                         <div class="choices">
                             <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
                         </div>
@@ -1798,13 +1798,13 @@ class GoGoHooligan {
                 <div class="content">
                     <div class="help-content">
                         <h3>ゲームの目的</h3>
-                        <p>7日間でできるだけ多くの人物を味方へ引き込み、試合後に膨れ上がる敵集団を3対3の交代乱戦で押し返す。</p>
+                        <p>7日間でできるだけ多くの人物を味方へ引き込み、昼の縁と夜の対話を積み重ねながら、試合後に膨れ上がる敵集団を3対3の交代乱戦で押し返すことが目的だ。</p>
                         <h3>1日の流れ</h3>
                         <p>1. 朝: 状況確認</p>
-                        <p>2. 昼: 1回だけ訪問し、ランダムに現れた人物を勧誘</p>
-                        <p>3. 夜: 仲間たちと会話し、試合結果を確認。稀に別人物を追加勧誘</p>
+                        <p>2. 昼: 1回だけ訪問し、ランダムに現れた人物の心を揺らして勧誘</p>
+                        <p>3. 夜: 仲間たちと会話して本音を拾い、試合結果を確認。稀に別人物を追加勧誘</p>
                         <h3>勧誘時の表示</h3>
-                        <p>画像が表示される場面では、画像をタップすると筋力・体脂肪・幸福度・モラル・学力・資産がポップアップで表示される。</p>
+                        <p>画像が表示される場面では、画像をタップすると筋力・体脂肪・幸福度・モラル・学力・資産がポップアップで表示される。見た目だけでは読めない相手の輪郭を、そこで掴める。</p>
                         <h3>スクロール</h3>
                         <p>ページが切り替わるたび、表示位置は自動的に一番上へ戻る。</p>
                         <div class="choices">
