@@ -25,6 +25,7 @@ class GoGoHooligan {
     }
 
     startGame() {
+        this.state = JSON.parse(JSON.stringify(gameState));
         this.state.currentDay = 1;
         this.state.currentPhase = 0;
         this.renderDay();
@@ -100,15 +101,29 @@ class GoGoHooligan {
             { id: 'street', name: '🏪 商店街「ハイストリート」', description: '商店街「ハイストリート」。街は活気に満ちている。どこに行く？' }
         ];
 
-        let locationButtons = locations.map(loc => 
-            `<button class="btn btn-location" onclick="window.game.visitLocation('${loc.id}')">${loc.name}</button>`
-        ).join('');
+        const availableCharacters = Object.keys(GAME_DATA.characters).filter(
+            characterId => !this.state.recruitedMembers.includes(characterId)
+        );
+
+        let locationButtons = '';
+        if (availableCharacters.length > 0) {
+            locationButtons = locations.map(loc => 
+                `<button class="btn btn-location" onclick="window.game.visitLocation('${loc.id}')">${loc.name}</button>`
+            ).join('');
+        }
 
         return `
             <div class="afternoon-scene">
                 <p>昼間だ。街は活気に満ちている。どこに行く？</p>
-                <div class="location-buttons">
-                    ${locationButtons}
+                ${availableCharacters.length > 0 ? `
+                    <div class="location-buttons">
+                        ${locationButtons}
+                    </div>
+                ` : `
+                    <p>もう仲間にできるキャラクターがいない。夜に進もう。</p>
+                `}
+                <div class="choices">
+                    <button class="btn btn-secondary" onclick="window.game.advancePhase()">夜に進む</button>
                 </div>
             </div>
         `;
@@ -143,8 +158,11 @@ class GoGoHooligan {
                         <h2>${this.state.currentDay}日目 昼</h2>
                     </div>
                     <div class="content">
-                        <p>もう仲間にできるキャラクターがいない。</p>
-                        <button class="btn btn-primary" onclick="window.game.renderAfternoon()">戻る</button>
+                        <p>もう仲間にできるキャラクターがいない。夜に進もう。</p>
+                        <div class="choices">
+                            <button class="btn btn-primary" onclick="window.game.advancePhase()">夜に進む</button>
+                            <button class="btn btn-secondary" onclick="window.game.renderAfternoon()">戻る</button>
+                        </div>
                     </div>
                 </div>
             `;
