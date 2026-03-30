@@ -1,4 +1,6 @@
 
+const ASSET_VERSION = '20260330-img1';
+
 class GoGoHooligan {
     constructor() {
         this.state = JSON.parse(JSON.stringify(gameState));
@@ -69,7 +71,7 @@ class GoGoHooligan {
             return `
                 <div class="tutorial">
                     <div class="character-info">
-                        <img src="images/derek.jpg" alt="Derek Thompson" class="character-image">
+                        <img src="images/derek.jpg?v=${ASSET_VERSION}" alt="Derek Thompson" class="character-image">
                         <h3>Derek Thompson</h3>
                     </div>
                     <p>よお、ボス。聞いてくれ。</p>
@@ -193,10 +195,10 @@ class GoGoHooligan {
                 <div class="content">
                     <div class="character-recruitment">
                         <div class="character-card">
-                            <img src="images/${characterId}.jpg" alt="${character.name}" class="character-image">
+                            <img src="images/${characterId}.jpg?v=${ASSET_VERSION}" alt="${character.name}" class="character-image">
                             <h3>${character.name}</h3>
                             <p>年齢: ${character.age}歳</p>
-                            <p>職業: ${character.occupation}</p>
+                            <p>職業: ${character.job}</p>
                             <p>役割: ${character.role}</p>
                         </div>
                         <div class="character-story">
