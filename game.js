@@ -170,6 +170,7 @@ class GoGoHooligan {
     }
 
     renderRecruitmentScene(character, location) {
+        const characterId = Object.keys(GAME_DATA.characters).find(k => GAME_DATA.characters[k] === character);
         this.gameScreen.innerHTML = `
             <div class="game-screen">
                 <div class="header">
@@ -177,6 +178,9 @@ class GoGoHooligan {
                 </div>
                 <div class="content">
                     <div class="recruitment-scene">
+                        <div class="character-display">
+                            <img src="images/${characterId}.jpg" alt="${character.name}" class="character-image">
+                        </div>
                         <div class="character-info">
                             <h3>${character.name}</h3>
                             <p><strong>年齢:</strong> ${character.age}歳</p>

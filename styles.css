@@ -208,6 +208,24 @@ body {
     background: #f9f9f9;
     padding: 20px;
     border-radius: 5px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+}
+
+.character-display {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.character-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 10px;
+    border: 3px solid #667eea;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .character-info {
