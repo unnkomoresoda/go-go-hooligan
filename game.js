@@ -1163,6 +1163,8 @@ class GoGoHooligan {
             }
         }
 
+        battleState.turnQueue = battleState.turnQueue.filter(unit => unit && !unit.knockedOut && unit.hp > 0);
+
         if (!battleState.turnQueue.length && !this.isFinalBattleFinished(battleState)) {
             this.decayBattleEffects([...battleState.allyActive, ...battleState.enemyActive]);
             this.fillVacancies(battleState.allyActive, battleState.allyReserve, '味方', battleState, sceneLog);
