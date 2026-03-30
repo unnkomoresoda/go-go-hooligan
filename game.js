@@ -64,6 +64,10 @@ class GoGoHooligan {
 
     startGame() {
         this.resetState();
+        this.renderPrologue(0);
+    }
+
+    beginMainGame() {
         this.renderDay();
     }
 
@@ -89,6 +93,19 @@ class GoGoHooligan {
 
     getTitleArtImage() {
         return `images/title-furious-hooligan.jpg?v=${ASSET_VERSION}`;
+    }
+
+    getVictoryEndingVideoSrc() {
+        return `media/victory-ending.mp4?v=${ASSET_VERSION}`;
+    }
+
+    getPrologueImageSrc(sceneIndex) {
+        const prologueImages = [
+            'epilogue-01-suffering.png',
+            'epilogue-02-beer.png',
+            'epilogue-03-resolve.png'
+        ];
+        return `media/epilogue/${prologueImages[sceneIndex]}?v=${ASSET_VERSION}`;
     }
 
     getLocationCards() {
@@ -355,6 +372,75 @@ class GoGoHooligan {
                 <div class="buttons">
                     <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
                     <button class="btn btn-secondary" onclick="window.game.showHelp()">ヘルプ</button>
+                </div>
+            </div>
+        `);
+    }
+
+    renderPrologue(sceneIndex = 0) {
+        const prologueScenes = [
+            {
+                label: 'PROLOGUE I',
+                title: '苦悩する',
+                text: '雨に濡れたピッチの脇で、監督は額を押さえたまま動けずにいた。ひとつの夜を勝ち抜いても、街の奥ではさらに巨大な敵意が脈を打っている。その気配だけが、胸の底に重く沈んでいる。',
+                quote: '「ここで息を止めたら、次に来る波に街ごと呑まれる」'
+            },
+            {
+                label: 'PROLOGUE II',
+                title: 'ビールを飲む',
+                text: '冷えた缶をあおり、喉を焼く苦味で迷いを押し流す。歓声の残響も自己弁護も、その一口ごとに削ぎ落とされていく。残るのは、次の夜に何を背負うべきかという裸の問いだけだ。',
+                quote: '「酔うためじゃない。立ち向かう理由を、もう一度はっきりさせるためだ」'
+            },
+            {
+                label: 'PROLOGUE III',
+                title: '決意する',
+                text: 'やがて彼は顔を上げ、拳を固く握る。視線の先にあるのは勝利の余韻ではない。この街の呼吸を奪おうとする、まだ姿を見せきっていない強大な敵だ。ここから始まるのは、歓喜の続きではなく次の戦いへの行軍である。',
+                quote: '「来るなら来い。次は俺たちが、あの巨大な闇へ踏み込む」'
+            }
+        ];
+
+        const currentScene = prologueScenes[sceneIndex];
+        const isLastScene = sceneIndex === prologueScenes.length - 1;
+        const progressHtml = prologueScenes.map((scene, index) => `
+            <span class="prologue-progress-dot ${index === sceneIndex ? 'active' : ''}" aria-hidden="true"></span>
+        `).join('');
+        const previousButtonHtml = sceneIndex > 0
+            ? `<button class="btn btn-secondary" onclick="window.game.renderPrologue(${sceneIndex - 1})">前の場面へ</button>`
+            : `<button class="btn btn-secondary" onclick="window.game.renderTitle()">タイトルに戻る</button>`;
+        const nextButtonLabel = isLastScene ? 'プロローグを終えて本編へ' : '次の場面へ';
+        const nextButtonAction = isLastScene ? 'window.game.beginMainGame()' : `window.game.renderPrologue(${sceneIndex + 1})`;
+
+        this.setScreen(`
+            <div class="game-screen">
+                <div class="header">
+                    <h2>プロローグ</h2>
+                </div>
+                <div class="content">
+                    <div class="ending cinematic-ending emotional-ending prologue-screen">
+                        <div class="ending-kicker">Opening Prologue</div>
+                        <h3>強大な敵の気配</h3>
+                        <p class="ending-lead">歓喜の夜は終わっていない。それでも、次に来る戦いはもう始まっている。</p>
+                        <div class="prologue-progress" aria-label="プロローグ進行状況">
+                            ${progressHtml}
+                        </div>
+                        <article class="prologue-scene-panel">
+                            <div class="prologue-scene-media">
+                                <img src="${this.getPrologueImageSrc(sceneIndex)}" alt="${currentScene.title}" class="prologue-scene-image" onerror="this.onerror=null;this.src='${this.getTitleArtImage()}';">
+                            </div>
+                            <div class="prologue-scene-copy">
+                                <span class="prologue-scene-label">${currentScene.label}</span>
+                                <h4>${currentScene.title}</h4>
+                                <p>${currentScene.text}</p>
+                                <p class="prologue-scene-quote">${currentScene.quote}</p>
+                                ${isLastScene ? '<div class="prologue-threat-note"><strong>NEXT FOE</strong><span>雨の向こうでは、これまでとは格の違う強大な敵がこちらを待ち受けている。</span></div>' : ''}
+                            </div>
+                        </article>
+                        <div class="choices">
+                            ${previousButtonHtml}
+                            <button class="btn btn-primary" onclick="${nextButtonAction}">${nextButtonLabel}</button>
+                            <button class="btn btn-secondary" onclick="window.game.beginMainGame()">スキップして本編へ</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         `);
@@ -1724,6 +1810,20 @@ class GoGoHooligan {
                 <p class="ending-scene-quote">${scene.quote}</p>
             </article>
         `).join('');
+        const victoryEndingVideoHtml = result.victory ? `
+            <section class="ending-video-panel">
+                <div class="ending-video-copy">
+                    <span class="ending-video-kicker">Victory Ending Movie</span>
+                    <h4>歓喜の勝利</h4>
+                    <p>乱戦をくぐり抜けた夜の熱狂を、約30秒の勝利エンディング映像として再生できます。</p>
+                    <p id="ending-video-autoplay-note" class="ending-video-note">読み込み後に自動再生を試みます。再生が止まる場合はプレーヤーの再生ボタンを押してください。</p>
+                </div>
+                <video id="victory-ending-video" class="ending-video-player" controls playsinline preload="metadata">
+                    <source src="${this.getVictoryEndingVideoSrc()}" type="video/mp4">
+                    お使いのブラウザは動画再生に対応していません。
+                </video>
+            </section>
+        ` : '';
 
         this.setScreen(`
             <div class="game-screen">
@@ -1737,6 +1837,7 @@ class GoGoHooligan {
                         <p class="ending-lead">${endingText}</p>
                         <p>${result.battleSummary}</p>
                         <p class="ending-bgm-credit"><strong>ラストバトルBGM:</strong> <a href="https://suno.com/s/pdLMR2MzXY7GQPnv" target="_blank" rel="noopener noreferrer">${FINAL_BATTLE_BGM_TITLE}</a></p>
+                        ${victoryEndingVideoHtml}
                         <div class="ending-filmstrip">
                             ${cutsceneHtml}
                         </div>
@@ -1762,6 +1863,28 @@ class GoGoHooligan {
                 </div>
             </div>
         `);
+
+        if (result.victory) {
+            const endingVideo = document.getElementById('victory-ending-video');
+            const autoplayNote = document.getElementById('ending-video-autoplay-note');
+
+            if (endingVideo) {
+                endingVideo.currentTime = 0;
+                const autoplayPromise = endingVideo.play();
+
+                if (autoplayPromise && typeof autoplayPromise.then === 'function') {
+                    autoplayPromise.then(() => {
+                        if (autoplayNote) {
+                            autoplayNote.textContent = '勝利エンディング映像を再生中です。音量はプレーヤーから調整できます。';
+                        }
+                    }).catch(() => {
+                        if (autoplayNote) {
+                            autoplayNote.textContent = 'ブラウザの仕様で自動再生が止まる場合があります。再生ボタンを押すと音声付きで再生できます。';
+                        }
+                    });
+                }
+            }
+        }
     }
 
     showGameInfo() {
