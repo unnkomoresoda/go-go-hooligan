@@ -247,6 +247,1283 @@ body {
     color: #666;
 }
 
+.character-profile-panel {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+    align-items: start;
+    width: 100%;
+}
+
+.character-portrait-column {
+    display: flex;
+    justify-content: center;
+}
+
+.character-detail-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(90px, 1fr));
+    gap: 10px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(102, 126, 234, 0.15);
+}
+
+.stat-label {
+    display: block;
+    color: #667eea;
+    font-size: 0.85em;
+    margin-bottom: 6px;
+}
+
+.skill-box,
+.dialogue-box {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.skill-box {
+    border-left: 4px solid #667eea;
+}
+
+.dialogue-box {
+    border-left: 4px solid #f5576c;
+    line-height: 1.7;
+}
+
+.dialogue-box p,
+.skill-box p {
+    margin: 0 0 8px;
+    color: #444;
+}
+
+.dialogue-box p:last-child,
+.skill-box p:last-child {
+    margin-bottom: 0;
+}
+
+.mini-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.mini-stats span {
+    background: rgba(102, 126, 234, 0.08);
+    color: #555;
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 0.78em;
+}
+
+.recruitment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recruitment-choices .message {
+    margin: 12px 0 16px;
+}
+
+.character-card {
+    width: 100%;
+}
+
+.enemy-fighter-card {
+    border: 2px solid rgba(245, 87, 108, 0.35);
+}
+
+.enemy-fighter-card h4 {
+    color: #f5576c;
+}
+
+.tutorial .character-info {
+    max-width: 260px;
+    margin-bottom: 18px;
+}
+
+.tutorial .character-image,
+.morning-scene .character-image,
+.night-scene .character-image,
+.recruitment-result .character-image {
+    margin: 0 auto;
+}
+
+.recruitment-result .character-profile-panel,
+.night-scene .character-profile-panel,
+.morning-scene .character-profile-panel {
+    margin: 18px 0;
+}
+
+.recruitment-result h3 {
+    color: #667eea;
+    margin-bottom: 12px;
+}
+
+.recruitment-result > p {
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+
+.recruitment-result .character-detail-column {
+    text-align: left;
+}
+
+.recruitment-result .character-info h3 {
+    margin-bottom: 10px;
+}
+
+.battle-fighter-card .mini-stats {
+    justify-content: flex-start;
+}
+
+.battle-fighter-card .mini-stats span {
+    background: rgba(102, 126, 234, 0.12);
+}
+
+.ending p:last-of-type {
+    margin-bottom: 18px;
+}
+
+.morning-scene .message,
+.night-scene .message,
+.afternoon-scene .message {
+    margin-bottom: 18px;
+}
+
+.night-scene .character-profile-panel,
+.morning-scene .character-profile-panel {
+    background: rgba(255, 255, 255, 0.45);
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.recruitment-scene .character-profile-panel {
+    background: transparent;
+}
+
+.recruitment-scene .character-story {
+    margin-bottom: 0;
+}
+
+.recruitment-choices h4 {
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.recruitment-result .dialogue-box {
+    margin-top: 6px;
+}
+
+.recruitment-result .stats-grid,
+.night-scene .stats-grid,
+.morning-scene .stats-grid {
+    background: transparent;
+}
+
+.recruitment-result .skill-box,
+.recruitment-result .dialogue-box,
+.night-scene .skill-box,
+.night-scene .dialogue-box,
+.morning-scene .skill-box,
+.morning-scene .dialogue-box {
+    text-align: left;
+}
+
+.recruitment-result .character-info,
+.night-scene .character-info,
+.morning-scene .character-info {
+    text-align: left;
+}
+
+.recruitment-result .character-portrait-column,
+.night-scene .character-portrait-column,
+.morning-scene .character-portrait-column {
+    align-items: flex-start;
+}
+
+.recruitment-result .character-portrait-column img,
+.night-scene .character-portrait-column img,
+.morning-scene .character-portrait-column img {
+    display: block;
+}
+
+.recruitment-result .message {
+    text-align: left;
+}
+
+.recruitment-result .choices {
+    margin-top: 18px;
+}
+
+.recruitment-result .character-profile-panel {
+    text-align: left;
+}
+
+.recruitment-result .stats-grid .stat-card strong,
+.night-scene .stats-grid .stat-card strong,
+.morning-scene .stats-grid .stat-card strong {
+    color: #222;
+}
+
+.recruitment-result .stats-grid .stat-card,
+.night-scene .stats-grid .stat-card,
+.morning-scene .stats-grid .stat-card {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.recruitment-result .skill-box,
+.recruitment-result .dialogue-box {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.recruitment-result .character-info {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.recruitment-result .character-profile-panel {
+    background: #eef2ff;
+    padding: 18px;
+    border-radius: 12px;
+}
+
+.recruitment-result .character-profile-panel .character-image {
+    margin: 0;
+}
+
+.recruitment-result .character-profile-panel .character-portrait-column {
+    justify-content: center;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column {
+    gap: 12px;
+}
+
+.recruitment-result .character-profile-panel .mini-stats {
+    justify-content: flex-start;
+}
+
+.recruitment-result .character-profile-panel .mini-stats span {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.recruitment-result .character-profile-panel .stat-label {
+    color: #5161d6;
+}
+
+.recruitment-result .character-profile-panel .dialogue-box p {
+    font-weight: 500;
+}
+
+.recruitment-result .character-profile-panel .skill-box p strong,
+.recruitment-result .character-profile-panel .character-info h3 {
+    color: #4455c9;
+}
+
+.recruitment-result .character-profile-panel .character-info p {
+    color: #555;
+}
+
+.recruitment-result .character-profile-panel .skill-box,
+.recruitment-result .character-profile-panel .dialogue-box,
+.recruitment-result .character-profile-panel .character-info {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.recruitment-result .character-profile-panel .stats-grid {
+    margin: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column > * {
+    margin: 0;
+}
+
+.recruitment-result .character-profile-panel .character-story {
+    margin: 0;
+}
+
+.recruitment-result .character-profile-panel .skill-box,
+.recruitment-result .character-profile-panel .dialogue-box,
+.recruitment-result .character-profile-panel .character-story {
+    line-height: 1.7;
+}
+
+.recruitment-result .character-profile-panel .character-story p {
+    color: #555;
+}
+
+.recruitment-result .character-profile-panel .dialogue-box {
+    border-left-width: 5px;
+}
+
+.recruitment-result .character-profile-panel .skill-box {
+    border-left-width: 5px;
+}
+
+.recruitment-result .character-profile-panel .character-info {
+    border-radius: 10px;
+}
+
+.recruitment-result .character-profile-panel .stats-grid .stat-card {
+    min-height: 74px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.recruitment-result .character-profile-panel .stats-grid .stat-card strong {
+    font-size: 1.05em;
+}
+
+.recruitment-result .character-profile-panel .stats-grid .stat-label {
+    margin-bottom: 4px;
+}
+
+.recruitment-result .character-profile-panel .character-image {
+    background: #fff;
+}
+
+.recruitment-result .character-profile-panel .character-portrait-column {
+    min-width: 180px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column {
+    min-width: 0;
+}
+
+.recruitment-result .character-profile-panel .dialogue-box,
+.recruitment-result .character-profile-panel .skill-box,
+.recruitment-result .character-profile-panel .character-info {
+    overflow-wrap: anywhere;
+}
+
+.recruitment-result .character-profile-panel .dialogue-box p,
+.recruitment-result .character-profile-panel .skill-box p,
+.recruitment-result .character-profile-panel .character-info p {
+    word-break: break-word;
+}
+
+.recruitment-result .character-profile-panel .character-info p + p {
+    margin-top: 4px;
+}
+
+.recruitment-result .character-profile-panel .skill-box p + p,
+.recruitment-result .character-profile-panel .dialogue-box p + p {
+    margin-top: 6px;
+}
+
+.recruitment-result .character-profile-panel .character-info h3 {
+    font-size: 1.45em;
+}
+
+.recruitment-result .character-profile-panel .character-image {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.recruitment-result .character-profile-panel .character-portrait-column {
+    padding-top: 4px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info {
+    margin-bottom: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story {
+    margin-bottom: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    margin-bottom: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid {
+    margin-bottom: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats {
+    margin-top: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stat-card {
+    text-align: center;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stat-card strong {
+    display: block;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stat-card .stat-label {
+    display: block;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    font-size: 1rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box {
+    font-size: 0.98rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info p,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p {
+    line-height: 1.6;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    width: 100%;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid {
+    width: 100%;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story {
+    width: 100%;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story p {
+    margin: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p {
+    margin-bottom: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p + p,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p + p {
+    margin-top: 6px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box,
+.recruitment-result .character-profile-panel .character-detail-column .character-story {
+    align-self: stretch;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    padding: 15px;
+    border-left: 4px solid #f5576c;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story p {
+    color: #555;
+    line-height: 1.7;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    box-sizing: border-box;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    box-sizing: border-box;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid {
+    box-sizing: border-box;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box,
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid {
+    max-width: 100%;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info {
+    overflow: hidden;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    overflow: hidden;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid {
+    overflow: visible;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    overflow: hidden;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
+    overflow-wrap: anywhere;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info h3,
+.recruitment-result .character-profile-panel .character-detail-column .character-info p {
+    overflow-wrap: anywhere;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story p,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p {
+    overflow-wrap: anywhere;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong {
+    font-variant-numeric: tabular-nums;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stat-card {
+    min-width: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column {
+    min-width: 0;
+}
+
+.recruitment-result .character-profile-panel {
+    box-sizing: border-box;
+}
+
+.recruitment-result .character-profile-panel * {
+    box-sizing: border-box;
+}
+
+.recruitment-result .character-profile-panel .character-image {
+    width: 180px;
+    height: 220px;
+}
+
+.recruitment-result .character-profile-panel .dialogue-box {
+    font-style: normal;
+}
+
+.recruitment-result .character-profile-panel .dialogue-box p {
+    color: #333;
+}
+
+.recruitment-result .character-profile-panel .skill-box p {
+    color: #444;
+}
+
+.recruitment-result .character-profile-panel .character-story {
+    color: #555;
+}
+
+.recruitment-result .character-profile-panel .character-story p:last-child {
+    margin-bottom: 0;
+}
+
+.recruitment-result .character-profile-panel .character-info p:last-child {
+    margin-bottom: 0;
+}
+
+.recruitment-result .character-profile-panel .skill-box p:last-child,
+.recruitment-result .character-profile-panel .dialogue-box p:last-child {
+    margin-bottom: 0;
+}
+
+.recruitment-result .character-profile-panel .stats-grid .stat-card:last-child {
+    margin-bottom: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid {
+    position: relative;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    z-index: 1;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid {
+    z-index: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    backdrop-filter: blur(1px);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info {
+    backdrop-filter: blur(1px);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    backdrop-filter: blur(1px);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    border-color: rgba(102, 126, 234, 0.14);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    border-left-color: #e0566a;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box {
+    border-left-color: #5f73ea;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story {
+    border-left-color: #ef6c7d;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info h3 {
+    letter-spacing: 0.01em;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    border-radius: 10px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    min-height: 72px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong {
+    line-height: 1.2;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
+    line-height: 1.2;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
+    text-align: center;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    padding: 15px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info {
+    padding-top: 16px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info h3 {
+    margin-top: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info p {
+    margin-bottom: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info p + p {
+    margin-top: 5px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    padding: 10px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box,
+.recruitment-result .character-profile-panel .character-detail-column .character-story {
+    padding: 14px 15px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p {
+    font-size: 0.98rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p {
+    font-size: 0.95rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story p {
+    font-size: 0.97rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info p {
+    font-size: 0.95rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info h3 {
+    margin-bottom: 10px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    background-image: linear-gradient(180deg, rgba(245, 87, 108, 0.02), rgba(245, 87, 108, 0));
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box {
+    background-image: linear-gradient(180deg, rgba(102, 126, 234, 0.03), rgba(102, 126, 234, 0));
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story {
+    background-image: linear-gradient(180deg, rgba(245, 87, 108, 0.02), rgba(245, 87, 108, 0));
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info {
+    background-image: linear-gradient(180deg, rgba(102, 126, 234, 0.02), rgba(102, 126, 234, 0));
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    background-image: linear-gradient(180deg, rgba(102, 126, 234, 0.03), rgba(255, 255, 255, 0.96));
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong {
+    color: #2c2c2c;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
+    color: #4e61d8;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid {
+    gap: 10px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p {
+    white-space: normal;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p {
+    white-space: normal;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story p {
+    white-space: normal;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info p {
+    white-space: normal;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info h3 {
+    white-space: normal;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
+    white-space: normal;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    word-break: break-word;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box,
+.recruitment-result .character-profile-panel .character-detail-column .character-info {
+    word-break: break-word;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box,
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    overflow: hidden;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    justify-self: stretch;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid {
+    align-self: stretch;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box,
+.recruitment-result .character-profile-panel .character-detail-column .character-info {
+    align-self: stretch;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    align-self: stretch;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    justify-content: center;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong {
+    margin-top: 2px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info p,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p,
+.recruitment-result .character-profile-panel .character-detail-column .character-story p {
+    letter-spacing: 0.005em;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info p,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p,
+.recruitment-result .character-profile-panel .character-detail-column .character-story p,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
+    text-rendering: optimizeLegibility;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p strong,
+.recruitment-result .character-profile-panel .character-detail-column .character-info h3 {
+    font-weight: 700;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p {
+    font-weight: 500;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story p {
+    font-weight: 400;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p {
+    font-weight: 400;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info p {
+    font-weight: 400;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong {
+    font-weight: 700;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
+    font-weight: 500;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .character-info {
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    border: 1px solid rgba(102, 126, 234, 0.14);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box:hover,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box:hover,
+.recruitment-result .character-profile-panel .character-detail-column .character-story:hover,
+.recruitment-result .character-profile-panel .character-detail-column .character-info:hover,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.09);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card:hover {
+    transform: translateY(-1px);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box:hover,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box:hover,
+.recruitment-result .character-profile-panel .character-detail-column .character-story:hover,
+.recruitment-result .character-profile-panel .character-detail-column .character-info:hover {
+    transform: translateY(-1px);
+}
+
+.recruitment-result .character-profile-panel .character-image {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recruitment-result .character-profile-panel .character-image:hover {
+    transform: translateY(-2px);
+}
+
+.recruitment-result .character-profile-panel .character-image:hover {
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info h3,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p strong,
+.recruitment-result .character-profile-panel .character-detail-column .stat-label {
+    letter-spacing: 0.01em;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong {
+    font-size: 1.02rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stat-label {
+    font-size: 0.82rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info p,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p,
+.recruitment-result .character-profile-panel .character-detail-column .character-story p {
+    font-size: 0.96rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info h3 {
+    font-size: 1.35rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info h3,
+.recruitment-result .character-profile-panel .character-detail-column .character-info p,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p,
+.recruitment-result .character-profile-panel .character-detail-column .character-story p,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
+    font-family: inherit;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    position: relative;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story::before,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0));
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .character-info {
+    position: relative;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .skill-box::before,
+.recruitment-result .character-profile-panel .character-detail-column .character-info::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0));
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    position: relative;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0));
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story > *,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box > *,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box > *,
+.recruitment-result .character-profile-panel .character-detail-column .character-info > *,
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card {
+    isolation: isolate;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info,
+.recruitment-result .character-profile-panel .character-detail-column .character-story,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box,
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box {
+    isolation: isolate;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .dialogue-box p {
+    color: #353535;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-story p {
+    color: #545454;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info p,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p {
+    color: #505050;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-info h3,
+.recruitment-result .character-profile-panel .character-detail-column .skill-box p strong {
+    color: #465ad1;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong {
+    color: #2f2f2f;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
+    color: #5467dc;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .character-image {
+    object-position: center top;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats {
+    margin-top: 8px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    font-size: 0.8rem;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    white-space: nowrap;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats {
+    row-gap: 6px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats {
+    column-gap: 6px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats {
+    max-width: 100%;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    max-width: 100%;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    overflow-wrap: anywhere;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    word-break: break-word;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    text-align: center;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    border: 1px solid rgba(102, 126, 234, 0.08);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    color: #586070;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    background: rgba(102, 126, 234, 0.08);
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    font-variant-numeric: tabular-nums;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    line-height: 1.2;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    padding: 4px 8px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    border-radius: 999px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    box-sizing: border-box;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    display: inline-flex;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    align-items: center;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    justify-content: center;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    min-height: 26px;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    box-shadow: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    font-weight: 500;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    text-transform: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    letter-spacing: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    vertical-align: middle;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    position: static;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    transform: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    transition: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    opacity: 1;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    filter: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    backdrop-filter: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    isolation: auto;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    pointer-events: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    user-select: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    cursor: default;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    -webkit-user-select: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    touch-action: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    outline: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    text-decoration: none;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    flex: 0 0 auto;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    margin: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    min-width: 0;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    max-width: 100%;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    overflow: hidden;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    text-overflow: ellipsis;
+}
+
+.recruitment-result .character-profile-panel .character-detail-column .mini-stats span {
+    white-space: nowrap;
+}
+
 .character-story {
     background: white;
     padding: 15px;
@@ -540,8 +1817,13 @@ body {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
 
-    .recruitment-scene {
+    .recruitment-scene,
+    .character-profile-panel {
         grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .battle-lineup {
@@ -550,6 +1832,38 @@ body {
 
     .battle-versus {
         margin: 8px 0;
+    }
+
+    .character-image {
+        width: 170px;
+        height: 210px;
+    }
+
+    .battle-fighter-card .mini-stats,
+    .recruitment-result .character-profile-panel .mini-stats {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .character-image {
+        width: 160px;
+        height: 200px;
+    }
+
+    .character-profile-panel,
+    .recruitment-result .character-profile-panel,
+    .night-scene .character-profile-panel,
+    .morning-scene .character-profile-panel {
+        gap: 14px;
+    }
+
+    .battle-fighter-grid {
+        grid-template-columns: 1fr;
     }
 }
 
