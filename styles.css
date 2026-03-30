@@ -221,10 +221,12 @@ body {
 
 .character-image {
     width: 180px;
-    height: 180px;
+    height: 220px;
     border-radius: 10px;
     border: 3px solid #667eea;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center top;
+    background: #ffffff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -373,9 +375,11 @@ body {
 
 .battle-portrait {
     width: 100%;
-    max-width: 140px;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
+    max-width: 150px;
+    aspect-ratio: 3 / 4;
+    object-fit: contain;
+    object-position: center top;
+    background: #ffffff;
     border-radius: 10px;
     border: 3px solid #667eea;
 }
