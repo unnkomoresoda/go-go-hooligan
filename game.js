@@ -152,6 +152,10 @@ class GoGoHooligan {
                 <div class="game-screen">
                     <div class="header">
                         <h2>${this.state.currentDay}日目 昼</h2>
+                        <div class="status">
+                            <span>チーム士気: ${this.state.teamMorale}%</span>
+                            <span>仲間数: ${this.state.recruitedMembers.length}/${GAME_CONSTANTS.MAX_TEAM_SIZE}</span>
+                        </div>
                     </div>
                     <div class="content">
                         <p>${location.name}に着いた。</p>
@@ -217,12 +221,16 @@ class GoGoHooligan {
                 <div class="game-screen">
                     <div class="header">
                         <h2>${this.state.currentDay}日目 昼</h2>
+                        <div class="status">
+                            <span>チーム士気: ${this.state.teamMorale}%</span>
+                            <span>仲間数: ${this.state.recruitedMembers.length}/${GAME_CONSTANTS.MAX_TEAM_SIZE}</span>
+                        </div>
                     </div>
                     <div class="content">
                         <div class="recruitment-result">
                             <p>${character.name}は既にチームの一員だ。</p>
                             <div class="choices">
-                                <button class="btn btn-primary" onclick="game.renderAfternoon()">戻る</button>
+                                <button class="btn btn-primary" onclick="game.renderDay()">戻る</button>
                             </div>
                         </div>
                     </div>
@@ -261,12 +269,16 @@ class GoGoHooligan {
             <div class="game-screen">
                 <div class="header">
                     <h2>${this.state.currentDay}日目 昼</h2>
+                    <div class="status">
+                        <span>チーム士気: ${this.state.teamMorale}%</span>
+                        <span>仲間数: ${this.state.recruitedMembers.length}/${GAME_CONSTANTS.MAX_TEAM_SIZE}</span>
+                    </div>
                 </div>
                 <div class="content">
                     <div class="recruitment-result">
                         <p>${message}</p>
                         <div class="choices">
-                            <button class="btn btn-primary" onclick="game.renderAfternoon()">戻る</button>
+                            <button class="btn btn-primary" onclick="game.renderDay()">戻る</button>
                         </div>
                     </div>
                 </div>
