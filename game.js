@@ -210,6 +210,27 @@ class GoGoHooligan {
 
     recruitCharacter(characterId, method) {
         const character = GAME_DATA.characters[characterId];
+        
+        // 既に仲間をしている場合はスキップ
+        if (this.state.recruitedMembers.includes(characterId)) {
+            this.gameScreen.innerHTML = `
+                <div class="game-screen">
+                    <div class="header">
+                        <h2>${this.state.currentDay}日目 昼</h2>
+                    </div>
+                    <div class="content">
+                        <div class="recruitment-result">
+                            <p>${character.name}は既にチームの一員だ。</p>
+                            <div class="choices">
+                                <button class="btn btn-primary" onclick="game.renderAfternoon()">戻る</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+        
         let success = false;
         let message = '';
 
@@ -233,7 +254,7 @@ class GoGoHooligan {
 
         if (success) {
             this.state.recruitedMembers.push(characterId);
-            this.state.teamMorale += 10;
+            this.state.teamMorale = Math.min(100, this.state.teamMorale + 10);
         }
 
         this.gameScreen.innerHTML = `
@@ -311,9 +332,24 @@ class GoGoHooligan {
     }
 
     executeBattle() {
-        // 簡易的なバトルシミュレーション
-        const playerStrength = this.state.recruitedMembers.length * 50;
-        const enemyStrength = 250;
+        // キャラクターのパラメータを使用したバトルシミュレーション
+        let playerStrength = 0;
+        this.state.recruitedMembers.forEach(memberId => {
+            const member = GAME_DATA.characters[memberId];
+            if (member && member.stats) {
+                const strength = member.stats.strength || 0;
+                const bodyFat = member.stats.bodyFat || 0;
+                const happiness = member.stats.happiness || 50;
+                const morality = member.stats.morality || 50;
+                
+                // 戦闘力 = 筋力 + 体脂肪率 + (幸福度 * -1) + (モラル * -1)
+                const combatPower = strength + (bodyFat * 0.5) + ((100 - happiness) * 0.3) + ((100 - morality) * 0.2);
+                playerStrength += combatPower;
+            }
+        });
+        
+        // 敵の強さを設定(仲間数に基づいて調整)
+        const enemyStrength = 250 + (this.state.recruitedMembers.length * 10);
         const playerWins = playerStrength > enemyStrength;
 
         this.gameScreen.innerHTML = `
@@ -380,16 +416,16 @@ class GoGoHooligan {
         let endingType = 'bad';
         let endingText = '';
 
-        if (memberCount === 10) {
+        if (memberCount === 9) {
             endingType = 'good';
             endingText = `
                 <h3>グッドエンディング</h3>
-                <p>全員の仲間を集め、敵を圧倒した。</p>
+                <p>全员の仲間を集め、敵を圧倒した。</p>
                 <p>FCマッドドッグスの勝利は確定した。</p>
-                <p>スタジアムは歓喜に包まれ、全員で勝利を喜んだ。</p>
+                <p>スタジアムは歓喜に包まれ、全员で勝利を喜んだ。</p>
                 <p>チームの未来は明るい。</p>
             `;
-        } else if (memberCount >= 7) {
+        } else if (memberCount >= 6) {
             endingType = 'normal';
             endingText = `
                 <h3>ノーマルエンディング</h3>
