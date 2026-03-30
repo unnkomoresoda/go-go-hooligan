@@ -1,4 +1,3 @@
-// ゴーゴーフーリガン - ゲームデータ
 
 const GAME_DATA = {
     // キャラクター情報
@@ -203,13 +202,30 @@ const GAME_DATA = {
         }
     },
 
+    rivalBoss: {
+        name: 'Jake Hunter',
+        age: 52,
+        job: '敵サポーター集団の統率者',
+        role: '敵ボス',
+        stats: {
+            strength: 93,
+            bodyFat: 26,
+            happiness: 14,
+            morality: 6,
+            education: 28,
+            assets: 950
+        },
+        story: '敵チームの過激派を束ねるボス。武装した威圧感と冷酷さで群衆を従わせ、決戦の夜には自ら前線に立つ。'
+    },
+
     // ゲーム進行
     gameProgress: {
         currentDay: 1,
-        currentPhase: 'morning', // morning, afternoon, evening
+        currentPhase: 'morning',
         recruitedMembers: ['derek'],
         teamMorale: 100,
-        teamExperience: 0
+        teamExperience: 0,
+        dayActionTaken: false
     },
 
     // シナリオイベント
@@ -258,7 +274,6 @@ const GAME_DATA = {
     }
 };
 
-// ゲーム定数
 const GAME_CONSTANTS = {
     MAX_DAYS: 7,
     PHASES_PER_DAY: 3,
@@ -268,13 +283,14 @@ const GAME_CONSTANTS = {
     BATTLE_TURNS_MAX: 15
 };
 
-// ゲーム状態
 let gameState = {
     currentDay: 1,
-    currentPhase: 0, // 0: morning, 1: afternoon, 2: evening
+    currentPhase: 0,
     recruitedMembers: ['derek'],
     teamMorale: 100,
     teamExperience: 0,
     gameOver: false,
-    battleActive: false
+    battleActive: false,
+    dayActionTaken: false,
+    finalBattleResult: null
 };
