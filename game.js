@@ -1,14 +1,19 @@
 const TITLE_NAME = '乱暴！怒りのフーリガン！';
 const TITLE_SUBTITLE = 'Rampage! Furious Hooligans!';
+const FINAL_BATTLE_BGM_TITLE = '血塗れのダービー';
+const FINAL_BATTLE_BGM_URL = 'https://cdn1.suno.ai/2a04cd29-a3f0-4d53-9793-2fee56ee089d.mp3';
 
 class GoGoHooligan {
     constructor() {
         this.gameScreen = document.getElementById('game-screen');
+        this.battleBgm = null;
+        this.battleBgmFadeTimer = null;
         this.resetState();
         this.init();
     }
 
     resetState() {
+        this.stopBattleBgm({ reset: true, immediate: true });
         this.state = JSON.parse(JSON.stringify(gameState));
         this.state.currentDay = 1;
         this.state.currentPhase = 0;
@@ -34,6 +39,7 @@ class GoGoHooligan {
         this.state.finalBattleHighlights = [];
         this.state.finalAllyRoster = [];
         this.state.finalBattleState = null;
+        this.state.finalBattleBgmBlocked = false;
     }
 
     init() {
@@ -262,6 +268,76 @@ class GoGoHooligan {
     closeCharacterPopup() {
         document.querySelectorAll('.character-modal-overlay').forEach(element => element.remove());
         document.body.classList.remove('modal-open');
+    }
+
+    ensureBattleBgm() {
+        if (!this.battleBgm) {
+            const audio = new Audio(FINAL_BATTLE_BGM_URL);
+            audio.loop = true;
+            audio.preload = 'auto';
+            audio.volume = 0.42;
+            this.battleBgm = audio;
+        }
+        return this.battleBgm;
+    }
+
+    startBattleBgm() {
+        const audio = this.ensureBattleBgm();
+        if (!audio) {
+            return;
+        }
+        if (this.battleBgmFadeTimer) {
+            clearInterval(this.battleBgmFadeTimer);
+            this.battleBgmFadeTimer = null;
+        }
+        audio.volume = 0.42;
+        this.state.finalBattleBgmBlocked = false;
+        if (!audio.paused) {
+            return;
+        }
+        const playPromise = audio.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {
+                this.state.finalBattleBgmBlocked = true;
+                if (this.state.battleActive) {
+                    this.renderFinalBattleScene();
+                }
+            });
+        }
+    }
+
+    stopBattleBgm(options = {}) {
+        const { reset = false, immediate = false } = options;
+        if (this.battleBgmFadeTimer) {
+            clearInterval(this.battleBgmFadeTimer);
+            this.battleBgmFadeTimer = null;
+        }
+        if (!this.battleBgm) {
+            return;
+        }
+        const audio = this.battleBgm;
+        const finalizeStop = () => {
+            audio.pause();
+            if (reset) {
+                audio.currentTime = 0;
+            }
+            audio.volume = 0.42;
+        };
+
+        if (immediate || audio.paused) {
+            finalizeStop();
+            return;
+        }
+
+        const step = Math.max(0.05, audio.volume / 6);
+        this.battleBgmFadeTimer = setInterval(() => {
+            audio.volume = Math.max(0, audio.volume - step);
+            if (audio.volume <= 0.01) {
+                clearInterval(this.battleBgmFadeTimer);
+                this.battleBgmFadeTimer = null;
+                finalizeStop();
+            }
+        }, 90);
     }
 
     renderTitle() {
@@ -922,12 +998,50 @@ class GoGoHooligan {
         return memberPower + moraleBoost + unityBoost;
     }
 
-    calculateEnemyPower() {
-        const enemyIds = this.buildFinalEnemyLineup();
-        const enemyPower = enemyIds.reduce((total, enemyId) => total + this.calculateCharacterPower(enemyId, 'enemy'), 0);
+    calculateEnemyParityTuning(enemyCount = null, allyCount = null) {
+        const normalizedEnemyCount = enemyCount ?? this.buildFinalEnemyLineup().length;
+        const normalizedAllyCount = allyCount ?? this.state.recruitedMembers.length;
+        const countGap = normalizedEnemyCount - normalizedAllyCount;
+
+        if (countGap <= 0) {
+            return {
+                powerMultiplier: 0.82,
+                skillMeterGain: 34,
+                skillTriggerChance: 0.42,
+                label: '同数以下のため、敵の数的補正は大きく弱まっている'
+            };
+        }
+        if (countGap === 1) {
+            return {
+                powerMultiplier: 0.89,
+                skillMeterGain: 40,
+                skillTriggerChance: 0.48,
+                label: 'ほぼ同数のため、敵の数的補正はかなり抑えられている'
+            };
+        }
+        if (countGap === 2) {
+            return {
+                powerMultiplier: 0.95,
+                skillMeterGain: 46,
+                skillTriggerChance: 0.58,
+                label: '敵がやや多いが、補正は軽めに調整されている'
+            };
+        }
+        return {
+            powerMultiplier: 1,
+            skillMeterGain: 52,
+            skillTriggerChance: 0.68,
+            label: '人数差どおりの圧力が敵側に乗っている'
+        };
+    }
+
+    calculateEnemyPower(enemyIds = null, allyCount = null) {
+        const resolvedEnemyIds = enemyIds || this.buildFinalEnemyLineup();
+        const enemyPower = resolvedEnemyIds.reduce((total, enemyId) => total + this.calculateCharacterPower(enemyId, 'enemy'), 0);
         const mobPower = 180 + ((this.state.enemyCrowdLevel || 0) * 34);
         const dayPressure = this.state.currentDay * 14;
-        return enemyPower + mobPower + dayPressure;
+        const tuning = this.calculateEnemyParityTuning(resolvedEnemyIds.length, allyCount ?? this.state.recruitedMembers.length);
+        return Math.round((enemyPower + mobPower + dayPressure) * tuning.powerMultiplier);
     }
 
     renderBattleFighterCard(characterId, mode = 'ally') {
@@ -1003,6 +1117,7 @@ class GoGoHooligan {
         this.state.finalBattleLog = [];
         this.state.finalBattleHighlights = [];
         this.state.finalBattleState = this.initializeFinalBattleState();
+        this.startBattleBgm();
         this.renderFinalBattleScene();
     }
 
@@ -1011,16 +1126,18 @@ class GoGoHooligan {
         const allyRosterIds = [...this.state.recruitedMembers]
             .sort((a, b) => this.calculateCharacterPower(b, 'ally') - this.calculateCharacterPower(a, 'ally'));
         const enemyRosterIds = [...enemyIds];
+        const enemyBalanceTuning = this.calculateEnemyParityTuning(enemyIds.length, allyRosterIds.length);
         const allyUnits = allyRosterIds.map(id => this.createBattleUnit(id, 'ally'));
-        const enemyUnits = enemyRosterIds.map(id => this.createBattleUnit(id, 'enemy'));
+        const enemyUnits = enemyRosterIds.map(id => this.createBattleUnit(id, 'enemy', enemyBalanceTuning));
 
         return {
             enemyIds,
             bossId: enemyIds[0] || null,
             playerPower: this.calculateTeamPower(),
-            enemyPower: this.calculateEnemyPower(),
+            enemyPower: this.calculateEnemyPower(enemyIds, allyRosterIds.length),
             allyRosterIds,
             enemyRosterIds,
+            enemyBalanceTuning,
             allyUnits,
             enemyUnits,
             allyActive: allyUnits.slice(0, 3),
@@ -1030,7 +1147,8 @@ class GoGoHooligan {
             battleLog: [],
             sceneLog: [
                 '実況: 試合後の熱気がそのまま乱闘へなだれ込み、先発3対3が真正面からにらみ合う。',
-                '実況: 画像をタップすれば、各人物のパラメータをいつでも確認できる。'
+                '実況: 画像をタップすれば、各人物のパラメータをいつでも確認できる。',
+                `実況: ラストバトルBGM「${FINAL_BATTLE_BGM_TITLE}」が鳴り始め、通り全体の鼓動がひとつになる。`
             ],
             round: 0,
             actionCount: 0,
@@ -1063,9 +1181,14 @@ class GoGoHooligan {
             : '未計測';
         const allyRemaining = this.countLivingBattleUnits(battleState.allyActive, battleState.allyReserve);
         const enemyRemaining = this.countLivingBattleUnits(battleState.enemyActive, battleState.enemyReserve);
+        const currentEnemyTuning = this.getCurrentEnemyBattleTuning(battleState);
         const turnBanner = battleState.finished
             ? (battleState.victory ? '決着: 味方が押し切った' : '決着: 敵の圧力に飲まれた')
             : (battleState.actionCount > 0 ? `${battleState.actionCount}回目の攻防 / 第${Math.max(1, battleState.round)}ラウンド` : '開戦前');
+        const bgmStatusLabel = this.state.finalBattleBgmBlocked
+            ? 'BGMはブラウザ制限で停止中。攻防ボタンでもう一度再生を試みる。'
+            : `ラストバトルBGM: ${FINAL_BATTLE_BGM_TITLE}`;
+        const enemyBalanceNote = `${currentEnemyTuning.label}。敵必殺の発動率は ${Math.round(currentEnemyTuning.skillTriggerChance * 100)}% に抑えられている。`;
 
         this.setScreen(`
             <div class="game-screen">
@@ -1101,9 +1224,11 @@ class GoGoHooligan {
                         <div class="battle-live-grid">
                             <div class="battle-info battle-narrative">
                                 <p>今夜の試合結果は ${matchScore}。点差で膨れた群衆が、敵の総数を ${battleState.enemyIds.length} 人まで押し上げている。</p>
+                                <p><strong>${bgmStatusLabel}</strong></p>
                                 <p>${boss ? `${boss.name} が前線で吠える。${boss.dialogue.enemy}` : '敵チームの前線が黙って間合いを詰めてくる。'}</p>
                                 <p>${battleState.finished ? battleState.summary : 'ボタンを押すたびに一手ごとの攻防が進む。倒れた者は即交代し、極稀にクリティカルヒットが炸裂する。'}</p>
                                 <p>初期戦力比較: 味方 ${battleState.playerPower} / 敵 ${battleState.enemyPower}</p>
+                                <p>${enemyBalanceNote}</p>
                             </div>
                             <div class="battle-live-panel">
                                 <h4>直近の実況</h4>
@@ -1134,6 +1259,7 @@ class GoGoHooligan {
     advanceFinalBattle() {
         const battleState = this.state.finalBattleState || this.initializeFinalBattleState();
         this.state.finalBattleState = battleState;
+        this.startBattleBgm();
 
         if (battleState.finished) {
             this.showEnding();
@@ -1209,6 +1335,13 @@ class GoGoHooligan {
         return [...activeUnits, ...reserveUnits].filter(unit => unit && !unit.knockedOut && unit.hp > 0).length;
     }
 
+    getCurrentEnemyBattleTuning(battleState) {
+        return this.calculateEnemyParityTuning(
+            this.countLivingBattleUnits(battleState.enemyActive, battleState.enemyReserve),
+            this.countLivingBattleUnits(battleState.allyActive, battleState.allyReserve)
+        );
+    }
+
     isFinalBattleFinished(battleState) {
         return this.countLivingBattleUnits(battleState.allyActive, battleState.allyReserve) === 0
             || this.countLivingBattleUnits(battleState.enemyActive, battleState.enemyReserve) === 0;
@@ -1219,9 +1352,11 @@ class GoGoHooligan {
         sceneLog.push(message);
     }
 
-    createBattleUnit(characterId, side = 'ally') {
+    createBattleUnit(characterId, side = 'ally', tuning = null) {
         const character = this.getCharacter(characterId);
         const basePower = this.calculateCharacterPower(characterId, side);
+        const sidePowerMultiplier = side === 'enemy' ? (tuning?.powerMultiplier || 1) : 1;
+        const baseHp = 120 + (character.stats.strength * 1.7) + (character.stats.bodyFat * 1.1);
         return {
             id: characterId,
             side,
@@ -1230,10 +1365,10 @@ class GoGoHooligan {
             skillName: character.skill.name,
             skillType: character.skill.type,
             skillDescription: character.skill.description,
-            maxHp: Math.round(120 + (character.stats.strength * 1.7) + (character.stats.bodyFat * 1.1)),
-            hp: Math.round(120 + (character.stats.strength * 1.7) + (character.stats.bodyFat * 1.1)),
-            attack: Math.round(basePower * 0.36),
-            defense: Math.round((character.stats.bodyFat * 0.65) + (character.stats.education * 0.18) + (character.skill.type === 'defense' ? 16 : 0)),
+            maxHp: Math.round(baseHp * sidePowerMultiplier),
+            hp: Math.round(baseHp * sidePowerMultiplier),
+            attack: Math.max(14, Math.round(basePower * 0.36 * sidePowerMultiplier)),
+            defense: Math.max(10, Math.round(((character.stats.bodyFat * 0.65) + (character.stats.education * 0.18) + (character.skill.type === 'defense' ? 16 : 0)) * sidePowerMultiplier)),
             initiative: character.stats.happiness + (character.stats.education * 0.4) + (character.skill.type === 'attack' ? 10 : 0),
             attackBuff: 0,
             defenseBuff: 0,
@@ -1421,18 +1556,30 @@ class GoGoHooligan {
             return;
         }
 
-        unit.skillMeter += 55;
-        const useSkill = unit.skillMeter >= 100;
+        const enemyTuning = this.getCurrentEnemyBattleTuning(battleState);
+        unit.skillMeter += isAlly ? 55 : enemyTuning.skillMeterGain;
+        const skillReady = unit.skillMeter >= 100;
+        let useSkill = skillReady;
+        let enemySkillSuppressed = false;
+
+        if (!isAlly && skillReady && Math.random() > enemyTuning.skillTriggerChance) {
+            useSkill = false;
+            enemySkillSuppressed = true;
+        }
+
         this.recordBattleLog(
             battleState,
             sceneLog,
-            `実況: ${unit.name} が前へ出る。${useSkill ? '必殺の間合いだ。' : '拳と体重を乗せて踏み込む。'}`
+            `実況: ${unit.name} が前へ出る。${useSkill ? '必殺の間合いだ。' : enemySkillSuppressed ? '必殺の構えに入ったが、味方の圧が踏み込みを鈍らせた。' : '拳と体重を乗せて踏み込む。'}`
         );
 
         if (useSkill) {
             unit.skillMeter = 0;
             this.performSkillAction(unit, ownActive, enemyLine, battleState, sceneLog);
         } else {
+            if (!isAlly && enemySkillSuppressed) {
+                unit.skillMeter = 72;
+            }
             this.performBasicAttack(unit, enemyLine, battleState, sceneLog);
         }
 
@@ -1497,6 +1644,7 @@ class GoGoHooligan {
 
     showEnding() {
         this.state.battleActive = false;
+        this.stopBattleBgm({ reset: false });
         const recruitedCount = this.state.recruitedMembers.length;
         const result = this.state.finalBattleResult || {
             victory: false,
@@ -1506,29 +1654,74 @@ class GoGoHooligan {
             bossId: null,
             enemyIds: [],
             actionCount: 0,
-            criticalMoments: 0
+            criticalMoments: 0,
+            aceId: null,
+            allyRemaining: 0,
+            enemyRemaining: 0
         };
         const boss = result.bossId ? this.getCharacter(result.bossId) : null;
+        const ace = result.aceId ? this.getCharacter(result.aceId) : null;
+        const anchorMember = this.state.recruitedMembers[0] ? this.getCharacter(this.state.recruitedMembers[0]) : null;
 
         let endingTitle = '';
         let endingText = '';
 
         if (result.victory && recruitedCount >= 8) {
             endingTitle = '完全制圧エンド';
-            endingText = '昼の一手、夜の会話、試合の熱量、そのすべてを味方につけて街の空気をひっくり返した。';
+            endingText = '昼に差し出した手も、夜に交わした言葉も、最後には街そのものの呼吸を変えた。勝利の朝焼けの中で、誰ひとり孤立していなかった。';
         } else if (result.victory) {
             endingTitle = '辛勝エンド';
-            endingText = '一手ごとの攻防を積み上げ、3対3の交代乱戦をギリギリで制した。';
+            endingText = '倒れかけるたびに誰かが支え、一手ずつ未来をつないだ。勝利の輪の中心にあったのは、痛みよりも強い連帯だった。';
         } else if (recruitedCount >= 5) {
             endingTitle = '撤退エンド';
-            endingText = '善戦したが、試合の点差で膨れ上がった敵勢に飲まれた。だが、街に火種は残った。';
+            endingText = '今夜は押し切れなかった。それでも最後まで手を離さなかった仲間たちの背中に、次の朝へ向かう火が残った。';
         } else {
             endingTitle = '壊滅エンド';
-            endingText = '仲間が足りず、交代要員も尽きた。誰を口説けなかったか、その差が最後に牙をむいた。';
+            endingText = '人数は足りず、前線も耐え切れなかった。それでも残された悔しさは、街のどこかで次の反撃の種になっていく。';
         }
 
         const enemySummary = result.enemyIds.map(id => this.getCharacter(id).name).join(' / ');
         const battleHighlights = (this.state.finalBattleHighlights || []).map(line => `<li>${line}</li>`).join('');
+        const cutsceneScenes = [
+            {
+                label: 'CUT 1',
+                title: '試合後の静寂',
+                text: result.victory
+                    ? '怒号が引いた路地に、荒い息だけが残る。倒れた看板の向こうで、仲間たちは勝利の重さをやっと理解し始める。'
+                    : '怒号が遠のいたあと、路地には靴音と息遣いだけが残る。敗北の重さはある。それでも、誰も地面に顔を伏せたままではいなかった。',
+                quote: result.victory
+                    ? '「終わったんじゃない。ここから街を取り戻すんだ」'
+                    : '「まだ終わってない。次に立つ時は、今日より前へ出る」'
+            },
+            {
+                label: 'CUT 2',
+                title: '差し出された手',
+                text: result.victory
+                    ? `${ace ? ace.name : '先頭に立った仲間'} が最初に手を差し出す。その手を、倒れかけた仲間がひとりずつ握り返し、ばらばらだった輪が初めて本当のチームになる。`
+                    : `${anchorMember ? anchorMember.name : '仲間たち'} は倒れた者を肩で支え合う。勝てなかった夜でも、誰ひとり置いていかないという約束だけは、静かに固まっていく。`,
+                quote: result.victory
+                    ? '「今日ここにいた全員で勝ったんだ」'
+                    : '「負けても仲間は減らさない。それが次の勝ち筋になる」'
+            },
+            {
+                label: 'CUT 3',
+                title: '朝焼けの約束',
+                text: result.victory
+                    ? `${boss ? boss.name : '敵の前線'} がいた方角を見つめながら、誰かが小さく笑う。悲鳴と歓声が消えたあとの街に、ようやく人の声が戻ってくる。`
+                    : `${boss ? boss.name : '敵の前線'} が去った通りを見つめながら、誰かが拳を握り直す。夜は明けきらないが、次の一日を諦める空気ももう残っていない。`,
+                quote: result.victory
+                    ? '「また昼が来る。その時は、もう誰もひとりで歩かせない」'
+                    : '「次の朝は、今日より多い仲間で迎える」'
+            }
+        ];
+        const cutsceneHtml = cutsceneScenes.map((scene, index) => `
+            <article class="ending-scene-card ending-scene-${index + 1}">
+                <span class="ending-scene-label">${scene.label}</span>
+                <h4>${scene.title}</h4>
+                <p>${scene.text}</p>
+                <p class="ending-scene-quote">${scene.quote}</p>
+            </article>
+        `).join('');
 
         this.setScreen(`
             <div class="game-screen">
@@ -1536,10 +1729,15 @@ class GoGoHooligan {
                     <h2>ゲーム終了</h2>
                 </div>
                 <div class="content">
-                    <div class="ending cinematic-ending">
+                    <div class="ending cinematic-ending emotional-ending">
+                        <div class="ending-kicker">Final Cutscene</div>
                         <h3>${endingTitle}</h3>
-                        <p>${endingText}</p>
+                        <p class="ending-lead">${endingText}</p>
                         <p>${result.battleSummary}</p>
+                        <p class="ending-bgm-credit"><strong>ラストバトルBGM:</strong> <a href="https://suno.com/s/pdLMR2MzXY7GQPnv" target="_blank" rel="noopener noreferrer">${FINAL_BATTLE_BGM_TITLE}</a></p>
+                        <div class="ending-filmstrip">
+                            ${cutsceneHtml}
+                        </div>
                         <div class="ending-summary-grid">
                             <div class="ending-summary-card"><strong>最終戦力</strong><span>味方 ${result.playerPower} / 敵 ${result.enemyPower}</span></div>
                             <div class="ending-summary-card"><strong>最終仲間数</strong><span>${recruitedCount}/${this.getMaxTeamSize()}</span></div>

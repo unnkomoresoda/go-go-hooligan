@@ -2297,3 +2297,111 @@ body.modal-open {
         grid-template-columns: 1fr;
     }
 }
+
+.emotional-ending {
+    background: linear-gradient(180deg, #f7f8ff 0%, #eef1ff 42%, #ffffff 100%);
+    border: 1px solid rgba(102, 126, 234, 0.16);
+    box-shadow: 0 18px 50px rgba(60, 76, 170, 0.12);
+}
+
+.ending-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(102, 126, 234, 0.12);
+    color: #4455c9;
+    font-size: 0.82em;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.ending-lead {
+    font-size: 1.08em;
+    line-height: 1.9;
+    color: #4f5686;
+}
+
+.ending-bgm-credit {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(68, 85, 201, 0.08);
+    border-left: 4px solid #667eea;
+    border-radius: 10px;
+}
+
+.ending-bgm-credit a {
+    color: #4455c9;
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.ending-filmstrip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 24px 0 28px;
+}
+
+.ending-scene-card {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 18px 18px;
+    border-radius: 18px;
+    background: linear-gradient(160deg, rgba(68, 85, 201, 0.96) 0%, rgba(126, 75, 162, 0.92) 100%);
+    color: #f7f8ff;
+    box-shadow: 0 14px 34px rgba(72, 56, 146, 0.22);
+}
+
+.ending-scene-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 45%);
+    pointer-events: none;
+}
+
+.ending-scene-card h4,
+.ending-scene-card p {
+    position: relative;
+    z-index: 1;
+    color: inherit;
+}
+
+.ending-scene-card h4 {
+    margin-bottom: 10px;
+    font-size: 1.08em;
+}
+
+.ending-scene-card p {
+    margin-bottom: 10px;
+    line-height: 1.8;
+}
+
+.ending-scene-label {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    margin-bottom: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    font-size: 0.78em;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+}
+
+.ending-scene-quote {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .ending-filmstrip {
+        grid-template-columns: 1fr;
+    }
+}

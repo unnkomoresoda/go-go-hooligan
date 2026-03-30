@@ -1,4 +1,4 @@
-const ASSET_VERSION = 13;
+const ASSET_VERSION = 14;
 
 const GAME_DATA = {
     characters: {
