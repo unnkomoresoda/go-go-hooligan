@@ -33,6 +33,7 @@ class GoGoHooligan {
         this.state.finalBattleLog = [];
         this.state.finalBattleHighlights = [];
         this.state.finalAllyRoster = [];
+        this.state.finalBattleState = null;
     }
 
     init() {
@@ -50,6 +51,7 @@ class GoGoHooligan {
     }
 
     setScreen(html) {
+        this.closeCharacterPopup();
         this.gameScreen.innerHTML = html;
         this.scrollToTop();
     }
@@ -180,9 +182,12 @@ class GoGoHooligan {
         return `
             <div class="${panelClass}">
                 <div class="character-portrait-column">
-                    <div class="character-image-frame">
-                        <img src="${this.getCharacterImage(characterId)}" alt="${character.name}" class="character-image" onerror="this.onerror=null;this.src='images/derek.jpg?v=${ASSET_VERSION}'">
-                    </div>
+                    <button type="button" class="character-image-button" onclick="window.game.openCharacterPopup('${characterId}')" aria-label="${character.name} の詳細パラメータを表示">
+                        <div class="character-image-frame">
+                            <img src="${this.getCharacterImage(characterId)}" alt="${character.name}" class="character-image" onerror="this.onerror=null;this.src='images/derek.jpg?v=${ASSET_VERSION}'">
+                        </div>
+                        <span class="image-tap-hint">画像をタップしてパラメータを見る</span>
+                    </button>
                 </div>
                 <div class="character-detail-column">
                     <div class="character-info">
@@ -193,7 +198,9 @@ class GoGoHooligan {
                         <p>勧誘難度: ${this.getDifficultyLabel(character.recruitDifficulty)}</p>
                         ${extraMeta}
                     </div>
-                    ${this.renderStatsGrid(character.stats)}
+                    <div class="character-peek-note">
+                        <p><strong>詳細表示:</strong> 画像を押すと、筋力・体脂肪・幸福度・モラル・学力・資産をポップアップで確認できる。</p>
+                    </div>
                     <div class="skill-box">
                         <p><strong>スキル:</strong> ${character.skill.name}</p>
                         <p><strong>効果:</strong> ${character.skill.description}</p>
@@ -204,6 +211,57 @@ class GoGoHooligan {
                 </div>
             </div>
         `;
+    }
+
+    renderCharacterPopupContent(characterId) {
+        const character = this.getCharacter(characterId);
+        return `
+            <div class="character-modal-card" role="dialog" aria-modal="true" aria-labelledby="character-modal-title-${characterId}">
+                <button type="button" class="character-modal-close" onclick="window.game.closeCharacterPopup()" aria-label="閉じる">×</button>
+                <div class="character-modal-body">
+                    <div class="character-modal-portrait-column">
+                        <div class="character-image-frame character-modal-image-frame">
+                            <img src="${this.getCharacterImage(characterId)}" alt="${character.name}" class="character-image character-modal-image" onerror="this.onerror=null;this.src='images/derek.jpg?v=${ASSET_VERSION}'">
+                        </div>
+                    </div>
+                    <div class="character-modal-detail-column">
+                        <div class="character-info character-modal-info">
+                            <h3 id="character-modal-title-${characterId}">${character.name}</h3>
+                            <p>年齢: ${character.age}歳</p>
+                            <p>職業: ${character.job}</p>
+                            <p>役割: ${character.role}</p>
+                            <p>勧誘難度: ${this.getDifficultyLabel(character.recruitDifficulty)}</p>
+                        </div>
+                        ${this.renderStatsGrid(character.stats)}
+                        <div class="skill-box">
+                            <p><strong>スキル:</strong> ${character.skill.name}</p>
+                            <p><strong>効果:</strong> ${character.skill.description}</p>
+                            <p><strong>分類:</strong> ${this.getRoleBadge(character.skill.type)}</p>
+                        </div>
+                        <div class="character-story"><p>${character.story}</p></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    openCharacterPopup(characterId) {
+        this.closeCharacterPopup();
+        const overlay = document.createElement('div');
+        overlay.className = 'character-modal-overlay';
+        overlay.innerHTML = this.renderCharacterPopupContent(characterId);
+        overlay.addEventListener('click', event => {
+            if (event.target === overlay) {
+                this.closeCharacterPopup();
+            }
+        });
+        document.body.appendChild(overlay);
+        document.body.classList.add('modal-open');
+    }
+
+    closeCharacterPopup() {
+        document.querySelectorAll('.character-modal-overlay').forEach(element => element.remove());
+        document.body.classList.remove('modal-open');
     }
 
     renderTitle() {
@@ -329,7 +387,7 @@ class GoGoHooligan {
         return `
             <div class="afternoon-scene">
                 <p>昼だ。動けるのは1回だけ。訪問先を決めると、その場所にいる誰かがランダムに現れる。</p>
-                <p>現れた人物は味方にも敵にもなり得る。画像と一緒に、モラルや体脂肪まで含めた全パラメータを確認できる。</p>
+                <p>現れた人物は味方にも敵にもなり得る。画像をタップすれば、全パラメータがポップアップで確認できる。</p>
                 <div class="location-buttons">
                     ${locationButtons}
                 </div>
@@ -635,7 +693,7 @@ class GoGoHooligan {
                         <div class="recruitment-choices">
                             <h4>この一度きりの接触でどう口説く？</h4>
                             <div class="message">
-                                <p>文字だけでなく、相手本人のセリフと表情、そして全パラメータを確認できる。</p>
+                                <p>文字だけでなく、相手本人のセリフと表情を見たうえで、画像タップから全パラメータも確認できる。</p>
                                 <p>説得に失敗すれば、その人物は最後の夜に敵側へ回る可能性が高まる。</p>
                             </div>
                             <div class="recruitment-methods">
@@ -876,73 +934,287 @@ class GoGoHooligan {
         const character = this.getCharacter(characterId);
         return `
             <div class="battle-fighter-card ${mode === 'enemy' ? 'enemy-fighter-card' : ''}">
-                <div class="battle-portrait-frame">
-                    <img src="${this.getCharacterImage(characterId)}" alt="${character.name}" class="battle-portrait ${mode === 'enemy' ? 'boss-portrait' : ''}" onerror="this.onerror=null;this.src='images/derek.jpg?v=${ASSET_VERSION}'">
-                </div>
+                <button type="button" class="battle-portrait-button" onclick="window.game.openCharacterPopup('${characterId}')" aria-label="${character.name} の詳細パラメータを表示">
+                    <div class="battle-portrait-frame">
+                        <img src="${this.getCharacterImage(characterId)}" alt="${character.name}" class="battle-portrait ${mode === 'enemy' ? 'boss-portrait' : ''}" onerror="this.onerror=null;this.src='images/derek.jpg?v=${ASSET_VERSION}'">
+                    </div>
+                    <span class="image-tap-hint">画像をタップして詳細を見る</span>
+                </button>
                 <h4>${character.name}</h4>
                 <p>${character.role}</p>
-                ${this.renderMiniStats(character.stats)}
                 <p><strong>必殺:</strong> ${character.skill.name}</p>
             </div>
         `;
     }
 
+    renderBattleUnitCard(unit, mode = 'ally') {
+        if (!unit) {
+            return this.renderBattleEmptySlot(mode === 'enemy' ? '敵前衛' : '味方前衛');
+        }
+
+        const hpRate = unit.maxHp ? this.clamp(Math.round((unit.hp / unit.maxHp) * 100), 0, 100) : 0;
+        const effectiveAttack = Math.max(0, unit.attack + unit.attackBuff - unit.attackDebuff);
+        const effectiveDefense = Math.max(0, unit.defense + unit.defenseBuff);
+        return `
+            <div class="battle-fighter-card battle-unit-card ${unit.side === 'enemy' ? 'enemy-fighter-card' : ''} ${unit.knockedOut ? 'knocked-out-card' : ''}">
+                <button type="button" class="battle-portrait-button" onclick="window.game.openCharacterPopup('${unit.id}')" aria-label="${unit.name} の詳細パラメータを表示">
+                    <div class="battle-portrait-frame">
+                        <img src="${this.getCharacterImage(unit.id)}" alt="${unit.name}" class="battle-portrait ${unit.side === 'enemy' ? 'boss-portrait' : ''}" onerror="this.onerror=null;this.src='images/derek.jpg?v=${ASSET_VERSION}'">
+                    </div>
+                    <span class="image-tap-hint">画像をタップして詳細を見る</span>
+                </button>
+                <h4>${unit.name}</h4>
+                <p>${unit.role}</p>
+                <div class="battle-hp-row">
+                    <span>HP</span>
+                    <strong>${Math.max(0, unit.hp)}/${unit.maxHp}</strong>
+                </div>
+                <div class="battle-hp-bar"><span style="width:${hpRate}%"></span></div>
+                <div class="battle-unit-metrics">
+                    <span>攻 ${effectiveAttack}</span>
+                    <span>守 ${effectiveDefense}</span>
+                    <span>技 ${Math.min(100, unit.skillMeter)}%</span>
+                </div>
+                <p><strong>必殺:</strong> ${unit.skillName}</p>
+            </div>
+        `;
+    }
+
+    renderBattleEmptySlot(label) {
+        return `
+            <div class="battle-fighter-card battle-empty-slot">
+                <div class="battle-empty-mark">—</div>
+                <p>${label}</p>
+                <p>交代要員待ち</p>
+            </div>
+        `;
+    }
+
+    renderBattleReserveSummary(reserveUnits) {
+        const names = reserveUnits
+            .filter(unit => unit && !unit.knockedOut && unit.hp > 0)
+            .map(unit => unit.name);
+        return names.join(' / ') || 'なし';
+    }
+
     startFinalBattle() {
         this.state.battleActive = true;
+        this.state.finalBattleResult = null;
+        this.state.finalBattleLog = [];
+        this.state.finalBattleHighlights = [];
+        this.state.finalBattleState = this.initializeFinalBattleState();
+        this.renderFinalBattleScene();
+    }
+
+    initializeFinalBattleState() {
         const enemyIds = this.buildFinalEnemyLineup();
-        const bossId = enemyIds[0];
-        const boss = bossId ? this.getCharacter(bossId) : null;
-        const playerPower = this.calculateTeamPower();
-        const enemyPower = this.calculateEnemyPower();
-        const allyFront = this.getFrontlineAllyIds();
-        const allyReserve = this.state.recruitedMembers.filter(id => !allyFront.includes(id));
-        const enemyFront = enemyIds.slice(0, 3);
-        const enemyReserve = enemyIds.slice(3);
-        const allyCards = allyFront.map(id => this.renderBattleFighterCard(id, 'ally')).join('');
-        const enemyCards = enemyFront.map((id, index) => this.renderBattleFighterCard(id, index === 0 ? 'enemy' : 'ally')).join('');
+        const allyRosterIds = [...this.state.recruitedMembers]
+            .sort((a, b) => this.calculateCharacterPower(b, 'ally') - this.calculateCharacterPower(a, 'ally'));
+        const enemyRosterIds = [...enemyIds];
+        const allyUnits = allyRosterIds.map(id => this.createBattleUnit(id, 'ally'));
+        const enemyUnits = enemyRosterIds.map(id => this.createBattleUnit(id, 'enemy'));
+
+        return {
+            enemyIds,
+            bossId: enemyIds[0] || null,
+            playerPower: this.calculateTeamPower(),
+            enemyPower: this.calculateEnemyPower(),
+            allyRosterIds,
+            enemyRosterIds,
+            allyUnits,
+            enemyUnits,
+            allyActive: allyUnits.slice(0, 3),
+            allyReserve: allyUnits.slice(3),
+            enemyActive: enemyUnits.slice(0, 3),
+            enemyReserve: enemyUnits.slice(3),
+            battleLog: [],
+            sceneLog: [
+                '実況: 試合後の熱気がそのまま乱闘へなだれ込み、先発3対3が真正面からにらみ合う。',
+                '実況: 画像をタップすれば、各人物のパラメータをいつでも確認できる。'
+            ],
+            round: 0,
+            actionCount: 0,
+            criticalMoments: 0,
+            finished: false,
+            victory: null,
+            summary: '',
+            turnQueue: []
+        };
+    }
+
+    renderFinalBattleScene() {
+        const battleState = this.state.finalBattleState || this.initializeFinalBattleState();
+        this.state.finalBattleState = battleState;
+        const boss = battleState.bossId ? this.getCharacter(battleState.bossId) : null;
+        const allyCards = battleState.allyActive.map(unit => this.renderBattleUnitCard(unit, 'ally')).join('');
+        const enemyCards = battleState.enemyActive.map(unit => this.renderBattleUnitCard(unit, unit && unit.side === 'enemy' ? 'enemy' : 'ally')).join('');
+        const sceneLog = (battleState.sceneLog || ['実況: 群衆が息を呑み、次の攻防を待っている。'])
+            .map(line => `<li>${line}</li>`)
+            .join('');
+        const recentBattleLog = (battleState.battleLog || [])
+            .slice(-12)
+            .map(line => `<li>${line}</li>`)
+            .join('');
+        const actionLabel = battleState.finished
+            ? '決着を見る'
+            : (battleState.actionCount === 0 ? '乱闘を始める' : '次の攻防へ');
+        const matchScore = this.state.latestMatch
+            ? `${this.state.latestMatch.allyScore}-${this.state.latestMatch.rivalScore}`
+            : '未計測';
+        const allyRemaining = this.countLivingBattleUnits(battleState.allyActive, battleState.allyReserve);
+        const enemyRemaining = this.countLivingBattleUnits(battleState.enemyActive, battleState.enemyReserve);
+        const turnBanner = battleState.finished
+            ? (battleState.victory ? '決着: 味方が押し切った' : '決着: 敵の圧力に飲まれた')
+            : (battleState.actionCount > 0 ? `${battleState.actionCount}回目の攻防 / 第${Math.max(1, battleState.round)}ラウンド` : '開戦前');
 
         this.setScreen(`
             <div class="game-screen">
                 <div class="header">
                     <h2>最終決戦 3対3チームバトル</h2>
                     <div class="status">
-                        <span>味方戦力: ${playerPower}</span>
-                        <span>敵戦力: ${enemyPower}</span>
-                        <span>敵総数: ${enemyIds.length}</span>
+                        <span>味方残存: ${allyRemaining}</span>
+                        <span>敵残存: ${enemyRemaining}</span>
+                        <span>クリティカル: ${battleState.criticalMoments}</span>
                     </div>
                 </div>
                 <div class="content">
-                    <div class="battle-scene cinematic-battle">
+                    <div class="battle-scene cinematic-battle live-battle-scene">
+                        <div class="battle-turn-banner">${turnBanner}</div>
                         <h3>試合後の街が爆発し、3対3の先発乱闘が始まる</h3>
                         <div class="battle-lineup">
                             <div class="battle-side ally-side">
                                 <h4>味方先発3人</h4>
                                 <div class="battle-fighter-grid">
-                                    ${allyCards || '<p>先発不足</p>'}
+                                    ${allyCards || this.renderBattleEmptySlot('味方前衛')}
                                 </div>
-                                <p>控え: ${allyReserve.map(id => this.getCharacter(id).name).join(' / ') || 'なし'}</p>
+                                <p>控え: ${this.renderBattleReserveSummary(battleState.allyReserve)}</p>
                             </div>
                             <div class="battle-versus">激突</div>
                             <div class="battle-side enemy-side">
                                 <h4>敵先発3人</h4>
                                 <div class="battle-fighter-grid">
-                                    ${enemyCards || '<p>敵不在</p>'}
+                                    ${enemyCards || this.renderBattleEmptySlot('敵前衛')}
                                 </div>
-                                <p>敵増援: ${enemyReserve.map(id => this.getCharacter(id).name).join(' / ') || 'なし'}</p>
+                                <p>敵増援: ${this.renderBattleReserveSummary(battleState.enemyReserve)}</p>
                             </div>
                         </div>
-                        <div class="battle-info battle-narrative">
-                            <p>今夜の試合結果は ${this.state.latestMatch ? `${this.state.latestMatch.allyScore}-${this.state.latestMatch.rivalScore}` : '未計測'}。点差で膨れた群衆が、敵の総数を ${enemyIds.length} 人まで押し上げている。</p>
-                            <p>${boss ? `${boss.name} が先頭で叫ぶ。${boss.dialogue.enemy}` : '敵チームの前線が並ぶ。'}</p>
-                            <p>倒れた前衛はその場で交代。必殺技と通常攻撃が飛び交う、見栄え重視の連続乱戦だ。</p>
+                        <div class="battle-live-grid">
+                            <div class="battle-info battle-narrative">
+                                <p>今夜の試合結果は ${matchScore}。点差で膨れた群衆が、敵の総数を ${battleState.enemyIds.length} 人まで押し上げている。</p>
+                                <p>${boss ? `${boss.name} が前線で吠える。${boss.dialogue.enemy}` : '敵チームの前線が黙って間合いを詰めてくる。'}</p>
+                                <p>${battleState.finished ? battleState.summary : 'ボタンを押すたびに一手ごとの攻防が進む。倒れた者は即交代し、極稀にクリティカルヒットが炸裂する。'}</p>
+                                <p>初期戦力比較: 味方 ${battleState.playerPower} / 敵 ${battleState.enemyPower}</p>
+                            </div>
+                            <div class="battle-live-panel">
+                                <h4>直近の実況</h4>
+                                <ul class="battle-live-list">
+                                    ${sceneLog}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="battle-log-panel">
+                            <h4>${battleState.finished ? '最終決戦ログ' : '累積実況ログ'}</h4>
+                            <ul class="battle-log-list">
+                                ${recentBattleLog || '<li>まだ乱闘は始まっていない。</li>'}
+                            </ul>
                         </div>
                         <div class="choices">
-                            <button class="btn btn-primary" onclick="window.game.resolveBattle()">3対3バトル開始</button>
+                            <button class="btn btn-primary" onclick="window.game.advanceFinalBattle()">${actionLabel}</button>
                         </div>
                     </div>
                 </div>
             </div>
         `);
+    }
+
+    resolveBattle() {
+        this.advanceFinalBattle();
+    }
+
+    advanceFinalBattle() {
+        const battleState = this.state.finalBattleState || this.initializeFinalBattleState();
+        this.state.finalBattleState = battleState;
+
+        if (battleState.finished) {
+            this.showEnding();
+            return;
+        }
+
+        const sceneLog = [];
+
+        if (!battleState.turnQueue.length) {
+            battleState.round += 1;
+            battleState.turnQueue = this.buildBattleTurnQueue(battleState.allyActive, battleState.enemyActive);
+            this.recordBattleLog(battleState, sceneLog, `実況: 第${battleState.round}ラウンド。肩がぶつかり合い、前線がもう一段前へ詰まった。`);
+        }
+
+        const firstActor = this.pullNextBattleUnit(battleState.turnQueue);
+        if (firstActor) {
+            this.executeBattleTurn(firstActor, battleState, sceneLog);
+        }
+
+        if (!this.isFinalBattleFinished(battleState)) {
+            const counterActor = this.pullNextBattleUnit(
+                battleState.turnQueue,
+                firstActor && firstActor.side === 'ally' ? 'enemy' : 'ally'
+            );
+            if (counterActor) {
+                this.executeBattleTurn(counterActor, battleState, sceneLog);
+            }
+        }
+
+        if (!battleState.turnQueue.length && !this.isFinalBattleFinished(battleState)) {
+            this.decayBattleEffects([...battleState.allyActive, ...battleState.enemyActive]);
+            this.fillVacancies(battleState.allyActive, battleState.allyReserve, '味方', battleState, sceneLog);
+            this.fillVacancies(battleState.enemyActive, battleState.enemyReserve, '敵', battleState, sceneLog);
+            this.recordBattleLog(battleState, sceneLog, `実況: 第${battleState.round}ラウンド終了。両陣営とも息を荒げ、次の激突へ備える。`);
+        }
+
+        battleState.actionCount += 1;
+        battleState.sceneLog = sceneLog.length ? sceneLog : ['実況: 一瞬の間が生まれ、誰もが次の突撃をうかがっている。'];
+
+        if (this.isFinalBattleFinished(battleState) || (battleState.round >= 18 && !battleState.turnQueue.length)) {
+            this.finalizeFinalBattleState(battleState);
+        }
+
+        this.renderFinalBattleScene();
+    }
+
+    buildBattleTurnQueue(allyActive, enemyActive) {
+        return this.getLivingUnits([...allyActive, ...enemyActive])
+            .sort((a, b) => (b.initiative + Math.random() * 12) - (a.initiative + Math.random() * 12));
+    }
+
+    pullNextBattleUnit(queue, preferredSide = null) {
+        if (!queue || !queue.length) {
+            return null;
+        }
+
+        let index = -1;
+        if (preferredSide) {
+            index = queue.findIndex(unit => unit && unit.side === preferredSide && !unit.knockedOut && unit.hp > 0);
+        }
+        if (index === -1) {
+            index = queue.findIndex(unit => unit && !unit.knockedOut && unit.hp > 0);
+        }
+        if (index === -1) {
+            return null;
+        }
+        return queue.splice(index, 1)[0];
+    }
+
+    countLivingBattleUnits(activeUnits, reserveUnits) {
+        return [...activeUnits, ...reserveUnits].filter(unit => unit && !unit.knockedOut && unit.hp > 0).length;
+    }
+
+    isFinalBattleFinished(battleState) {
+        return this.countLivingBattleUnits(battleState.allyActive, battleState.allyReserve) === 0
+            || this.countLivingBattleUnits(battleState.enemyActive, battleState.enemyReserve) === 0;
+    }
+
+    recordBattleLog(battleState, sceneLog, message) {
+        battleState.battleLog.push(message);
+        sceneLog.push(message);
     }
 
     createBattleUnit(characterId, side = 'ally') {
@@ -965,7 +1237,8 @@ class GoGoHooligan {
             defenseBuff: 0,
             attackDebuff: 0,
             skillMeter: 0,
-            knockedOut: false
+            knockedOut: false,
+            criticalHits: 0
         };
     }
 
@@ -983,27 +1256,34 @@ class GoGoHooligan {
         return this.randomChoice(living);
     }
 
-    applyDamage(attacker, target, rawDamage, log) {
-        if (!target) {
-            return 0;
-        }
-        const mitigated = Math.max(8, Math.round(rawDamage - ((target.defense + target.defenseBuff) * 0.32)));
-        target.hp = Math.max(0, target.hp - mitigated);
-        if (target.hp <= 0 && !target.knockedOut) {
-            target.knockedOut = true;
-            log.push(`${attacker.name} の一撃で ${target.name} が倒れた。`);
-        }
-        return mitigated;
+    rollCriticalHit() {
+        return Math.random() < 0.01;
     }
 
-    fillVacancies(activeUnits, reserveUnits, sideLabel, log) {
+    applyDamage(attacker, target, rawDamage, options = {}) {
+        if (!target) {
+            return { damage: 0, knockedOut: false };
+        }
+        const defenseValue = options.ignoreDefense
+            ? Math.round((target.defense + target.defenseBuff) * 0.16)
+            : Math.round((target.defense + target.defenseBuff) * 0.32);
+        const mitigated = Math.max(8, Math.round(rawDamage - defenseValue));
+        target.hp = Math.max(0, target.hp - mitigated);
+        const knockedOut = target.hp <= 0 && !target.knockedOut;
+        if (knockedOut) {
+            target.knockedOut = true;
+        }
+        return { damage: mitigated, knockedOut };
+    }
+
+    fillVacancies(activeUnits, reserveUnits, sideLabel, battleState, sceneLog) {
         for (let i = 0; i < activeUnits.length; i += 1) {
             const unit = activeUnits[i];
             if (!unit || unit.knockedOut || unit.hp <= 0) {
                 const substitute = reserveUnits.shift() || null;
                 activeUnits[i] = substitute;
                 if (substitute) {
-                    log.push(`${sideLabel}交代: ${substitute.name} が前線へ飛び込んだ。`);
+                    this.recordBattleLog(battleState, sceneLog, `実況: ${sideLabel}交代。${substitute.name} が雪崩れ込むように前線へ飛び出した。`);
                 }
             }
         }
@@ -1020,32 +1300,68 @@ class GoGoHooligan {
         });
     }
 
-    performBasicAttack(unit, enemies, log) {
+    performBasicAttack(unit, enemies, battleState, sceneLog) {
         const target = this.getRandomTarget(enemies);
         if (!target) {
             return;
         }
-        const rawDamage = Math.round((unit.attack + unit.attackBuff - unit.attackDebuff) * (0.9 + Math.random() * 0.35));
-        const damage = this.applyDamage(unit, target, rawDamage, log);
-        log.push(`${unit.name} の通常攻撃。${target.name} に ${damage} ダメージ。`);
+
+        const isCritical = this.rollCriticalHit();
+        const rawDamage = Math.round(((unit.attack + unit.attackBuff - unit.attackDebuff) * (0.92 + Math.random() * 0.36)) + (unit.initiative * 0.08));
+        const adjustedDamage = isCritical ? Math.round(rawDamage * 2.25) : rawDamage;
+        const outcome = this.applyDamage(unit, target, adjustedDamage, { ignoreDefense: isCritical });
+
+        if (isCritical) {
+            unit.criticalHits += 1;
+            battleState.criticalMoments += 1;
+            this.recordBattleLog(
+                battleState,
+                sceneLog,
+                `実況: ${unit.name} の一撃が完璧に入った。クリティカルヒット！ ${target.name} に ${outcome.damage} ダメージ。${outcome.knockedOut ? ` ${target.name} はその場で崩れ落ちた。` : ''}`
+            );
+            return;
+        }
+
+        this.recordBattleLog(
+            battleState,
+            sceneLog,
+            `実況: ${unit.name} が踏み込み、${target.name} を打ち抜く。${outcome.damage} ダメージ。${outcome.knockedOut ? `${target.name} は前線で膝をついた。` : 'まだ踏みとどまる。'}`
+        );
     }
 
-    performSkillAction(unit, allies, enemies, log) {
+    performSkillAction(unit, allies, enemies, battleState, sceneLog) {
         const livingAllies = this.getLivingUnits(allies);
         const livingEnemies = this.getLivingUnits(enemies);
         const effectiveAttack = Math.max(12, unit.attack + unit.attackBuff - unit.attackDebuff);
 
         if (unit.skillType === 'attack') {
-            if (/全体|2連撃/.test(unit.skillDescription) && livingEnemies.length > 1) {
-                livingEnemies.slice(0, 3).forEach(target => {
-                    const damage = this.applyDamage(unit, target, Math.round(effectiveAttack * 0.85), log);
-                    log.push(`${unit.name} の ${unit.skillName}。${target.name} に ${damage} ダメージ。`);
-                });
-            } else {
-                const target = livingEnemies.sort((a, b) => a.hp - b.hp)[0];
-                const damage = this.applyDamage(unit, target, Math.round(effectiveAttack * 1.55), log);
-                log.push(`${unit.name} の ${unit.skillName}。${target.name} に ${damage} の大ダメージ。`);
-            }
+            const targets = /全体|2連撃/.test(unit.skillDescription) && livingEnemies.length > 1
+                ? livingEnemies.slice(0, 3)
+                : [livingEnemies.sort((a, b) => a.hp - b.hp)[0]];
+
+            targets.forEach(target => {
+                if (!target) {
+                    return;
+                }
+                const isCritical = this.rollCriticalHit();
+                const rawDamage = targets.length > 1 ? Math.round(effectiveAttack * 0.9) : Math.round(effectiveAttack * 1.65);
+                const outcome = this.applyDamage(unit, target, isCritical ? Math.round(rawDamage * 2.1) : rawDamage, { ignoreDefense: isCritical });
+                if (isCritical) {
+                    unit.criticalHits += 1;
+                    battleState.criticalMoments += 1;
+                    this.recordBattleLog(
+                        battleState,
+                        sceneLog,
+                        `実況: ${unit.name} の ${unit.skillName} が炸裂。しかもクリティカル！ ${target.name} に ${outcome.damage} ダメージ。${outcome.knockedOut ? ` ${target.name} は吹き飛ばされた。` : ''}`
+                    );
+                } else {
+                    this.recordBattleLog(
+                        battleState,
+                        sceneLog,
+                        `実況: ${unit.name} の ${unit.skillName}。${target.name} に ${outcome.damage} ダメージ。${outcome.knockedOut ? `${target.name} は耐え切れない。` : '隊列が大きく揺らぐ。'}`
+                    );
+                }
+            });
             return;
         }
 
@@ -1056,7 +1372,7 @@ class GoGoHooligan {
             livingAllies.forEach(ally => {
                 ally.attackBuff += 4;
             });
-            log.push(`${unit.name} の ${unit.skillName}。${target.name} を ${healAmount} 回復し、味方の攻勢も上げた。`);
+            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。${target.name} を ${healAmount} 回復し、味方前線に押し返す力が戻る。`);
             return;
         }
 
@@ -1065,7 +1381,7 @@ class GoGoHooligan {
                 ally.attackBuff += 14;
                 ally.defenseBuff += 8;
             });
-            log.push(`${unit.name} の ${unit.skillName}。味方全体が鼓舞され、一気に前へ出た。`);
+            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。味方全体の肩が上がり、押し込みが一段強くなる。`);
             return;
         }
 
@@ -1077,7 +1393,7 @@ class GoGoHooligan {
             if (target) {
                 target.attackDebuff += 10;
             }
-            log.push(`${unit.name} の ${unit.skillName}。味方の守りが固まり、敵の圧が鈍る。`);
+            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。味方の守りが締まり、敵の踏み込みが鈍る。`);
             return;
         }
 
@@ -1086,111 +1402,99 @@ class GoGoHooligan {
                 enemy.attackDebuff += 12;
                 enemy.defenseBuff = Math.max(0, enemy.defenseBuff - 8);
             });
-            log.push(`${unit.name} の ${unit.skillName}。敵陣の呼吸が乱れ、攻勢が崩れた。`);
+            this.recordBattleLog(battleState, sceneLog, `実況: ${unit.name} の ${unit.skillName}。敵陣の呼吸が乱れ、隊列が明らかに崩れた。`);
             return;
         }
 
-        this.performBasicAttack(unit, enemies, log);
+        this.performBasicAttack(unit, enemies, battleState, sceneLog);
     }
 
-    resolveBattle() {
-        const enemyIds = this.buildFinalEnemyLineup();
-        const allyRosterIds = [...this.state.recruitedMembers].sort((a, b) => this.calculateCharacterPower(b, 'ally') - this.calculateCharacterPower(a, 'ally'));
-        const enemyRosterIds = [...enemyIds];
+    executeBattleTurn(unit, battleState, sceneLog) {
+        const isAlly = unit.side === 'ally';
+        const ownActive = isAlly ? battleState.allyActive : battleState.enemyActive;
+        const enemyLine = isAlly ? battleState.enemyActive : battleState.allyActive;
+        const ownReserve = isAlly ? battleState.allyReserve : battleState.enemyReserve;
 
-        const allyUnits = allyRosterIds.map(id => this.createBattleUnit(id, 'ally'));
-        const enemyUnits = enemyRosterIds.map(id => this.createBattleUnit(id, 'enemy'));
-
-        const allyActive = allyUnits.slice(0, 3);
-        const allyReserve = allyUnits.slice(3);
-        const enemyActive = enemyUnits.slice(0, 3);
-        const enemyReserve = enemyUnits.slice(3);
-        const battleLog = [];
-
-        let rounds = 0;
-        while (this.getLivingUnits(allyActive).length && this.getLivingUnits(enemyActive).length && rounds < 24) {
-            rounds += 1;
-            battleLog.push(`--- Round ${rounds} ---`);
-
-            const turnOrder = this.getLivingUnits([...allyActive, ...enemyActive])
-                .sort((a, b) => (b.initiative + Math.random() * 15) - (a.initiative + Math.random() * 15));
-
-            turnOrder.forEach(unit => {
-                const isAlly = unit.side === 'ally';
-                const ownActive = isAlly ? allyActive : enemyActive;
-                const enemyLine = isAlly ? enemyActive : allyActive;
-                const ownReserve = isAlly ? allyReserve : enemyReserve;
-                const ownLabel = isAlly ? '味方' : '敵';
-
-                if (unit.knockedOut || unit.hp <= 0) {
-                    return;
-                }
-                if (!this.getLivingUnits(enemyLine).length) {
-                    return;
-                }
-
-                unit.skillMeter += 45;
-                const useSkill = unit.skillMeter >= 100;
-                if (useSkill) {
-                    unit.skillMeter = 0;
-                    this.performSkillAction(unit, ownActive, enemyLine, battleLog);
-                } else {
-                    this.performBasicAttack(unit, enemyLine, battleLog);
-                }
-
-                this.fillVacancies(enemyLine, isAlly ? enemyReserve : allyReserve, isAlly ? '敵' : '味方', battleLog);
-                this.fillVacancies(ownActive, ownReserve, ownLabel, battleLog);
-            });
-
-            this.decayBattleEffects([...allyActive, ...enemyActive]);
-            this.fillVacancies(allyActive, allyReserve, '味方', battleLog);
-            this.fillVacancies(enemyActive, enemyReserve, '敵', battleLog);
+        if (unit.knockedOut || unit.hp <= 0 || !this.getLivingUnits(enemyLine).length) {
+            return;
         }
 
-        const allyRemaining = [...this.getLivingUnits(allyActive), ...allyReserve.filter(unit => !unit.knockedOut && unit.hp > 0)];
-        const enemyRemaining = [...this.getLivingUnits(enemyActive), ...enemyReserve.filter(unit => !unit.knockedOut && unit.hp > 0)];
+        unit.skillMeter += 55;
+        const useSkill = unit.skillMeter >= 100;
+        this.recordBattleLog(
+            battleState,
+            sceneLog,
+            `実況: ${unit.name} が前へ出る。${useSkill ? '必殺の間合いだ。' : '拳と体重を乗せて踏み込む。'}`
+        );
+
+        if (useSkill) {
+            unit.skillMeter = 0;
+            this.performSkillAction(unit, ownActive, enemyLine, battleState, sceneLog);
+        } else {
+            this.performBasicAttack(unit, enemyLine, battleState, sceneLog);
+        }
+
+        this.fillVacancies(enemyLine, isAlly ? battleState.enemyReserve : battleState.allyReserve, isAlly ? '敵' : '味方', battleState, sceneLog);
+        this.fillVacancies(ownActive, ownReserve, isAlly ? '味方' : '敵', battleState, sceneLog);
+    }
+
+    finalizeFinalBattleState(battleState) {
+        const allyRemainingUnits = [...battleState.allyActive, ...battleState.allyReserve].filter(unit => unit && !unit.knockedOut && unit.hp > 0);
+        const enemyRemainingUnits = [...battleState.enemyActive, ...battleState.enemyReserve].filter(unit => unit && !unit.knockedOut && unit.hp > 0);
         let victory = false;
 
-        if (!enemyRemaining.length && allyRemaining.length) {
+        if (!enemyRemainingUnits.length && allyRemainingUnits.length) {
             victory = true;
-        } else if (!allyRemaining.length && enemyRemaining.length) {
+        } else if (!allyRemainingUnits.length && enemyRemainingUnits.length) {
             victory = false;
         } else {
-            const allyHp = allyRemaining.reduce((sum, unit) => sum + unit.hp, 0);
-            const enemyHp = enemyRemaining.reduce((sum, unit) => sum + unit.hp, 0);
+            const allyHp = allyRemainingUnits.reduce((sum, unit) => sum + unit.hp, 0);
+            const enemyHp = enemyRemainingUnits.reduce((sum, unit) => sum + unit.hp, 0);
             victory = allyHp >= enemyHp;
         }
 
-        const bossId = enemyIds[0] || null;
-        const boss = bossId ? this.getCharacter(bossId) : null;
-        const playerPower = this.calculateTeamPower();
-        const enemyPower = this.calculateEnemyPower();
-        const aceUnit = allyUnits.sort((a, b) => b.attack - a.attack)[0] || null;
+        const boss = battleState.bossId ? this.getCharacter(battleState.bossId) : null;
+        const aceUnit = [...battleState.allyUnits].sort((a, b) => (b.criticalHits || 0) - (a.criticalHits || 0) || b.attack - a.attack)[0] || null;
+        const criticalText = battleState.criticalMoments > 0
+            ? ` 乱戦の中ではクリティカルが ${battleState.criticalMoments} 回炸裂し、歓声が一気に傾いた。`
+            : '';
         const battleSummary = victory
-            ? `${aceUnit ? aceUnit.name : '味方前衛'} が決定打を入れ、${boss ? boss.name : '敵ボス'} 側の隊列を崩した。交代を重ねた末に、こちらが乱戦を制圧した。`
-            : `${boss ? boss.name : '敵ボス'} 側の圧と増援に押し切られた。試合の点差で膨れた敵人数が、最後の交代戦で差になった。`;
+            ? `${aceUnit ? aceUnit.name : '味方前線'} が最後の押し込みを通し、${boss ? boss.name : '敵前線'} 側の隊列を切り裂いた。${criticalText}`
+            : `${boss ? boss.name : '敵前線'} 側の圧力と増援に押し切られた。交代を重ねても前線を取り戻せず、最後は人数差が響いた。${criticalText}`;
 
-        this.state.finalBattleLog = battleLog;
-        this.state.finalBattleHighlights = battleLog.filter(line => !line.startsWith('---')).slice(-14);
+        battleState.finished = true;
+        battleState.victory = victory;
+        battleState.summary = battleSummary;
+        battleState.sceneLog = [
+            victory
+                ? '実況: 最後の押し合いを制し、味方が乱闘をひっくり返した。'
+                : '実況: 最後の踏ん張りも及ばず、敵の圧が前線をのみ込んだ。',
+            `実況: 総攻防回数は ${battleState.actionCount} 回。決着まで一手ずつ積み上げた。`
+        ];
+
+        this.state.finalBattleLog = battleState.battleLog;
+        this.state.finalBattleHighlights = battleState.battleLog.slice(-18);
         this.state.finalBattleResult = {
             victory,
-            playerPower,
-            enemyPower,
+            playerPower: battleState.playerPower,
+            enemyPower: battleState.enemyPower,
             battleSummary,
-            bossId,
-            enemyIds,
+            bossId: battleState.bossId,
+            enemyIds: battleState.enemyIds,
             aceId: aceUnit ? aceUnit.id : null,
-            rounds,
-            allyRosterIds,
-            enemyRosterIds,
-            allyRemaining: allyRemaining.length,
-            enemyRemaining: enemyRemaining.length
+            rounds: battleState.round,
+            actionCount: battleState.actionCount,
+            criticalMoments: battleState.criticalMoments,
+            allyRosterIds: battleState.allyRosterIds,
+            enemyRosterIds: battleState.enemyRosterIds,
+            allyRemaining: allyRemainingUnits.length,
+            enemyRemaining: enemyRemainingUnits.length
         };
-
-        this.showEnding();
+        this.state.finalBattleState = battleState;
     }
 
     showEnding() {
+        this.state.battleActive = false;
         const recruitedCount = this.state.recruitedMembers.length;
         const result = this.state.finalBattleResult || {
             victory: false,
@@ -1198,7 +1502,9 @@ class GoGoHooligan {
             enemyPower: this.calculateEnemyPower(),
             battleSummary: '最後の乱戦はまだ記録されていない。',
             bossId: null,
-            enemyIds: []
+            enemyIds: [],
+            actionCount: 0,
+            criticalMoments: 0
         };
         const boss = result.bossId ? this.getCharacter(result.bossId) : null;
 
@@ -1210,7 +1516,7 @@ class GoGoHooligan {
             endingText = '昼の一手、夜の会話、試合の熱量、そのすべてを味方につけて街の空気をひっくり返した。';
         } else if (result.victory) {
             endingTitle = '辛勝エンド';
-            endingText = '3対3の交代戦をギリギリで制した。人数差があっても、前線の噛み合いで押し返した。';
+            endingText = '一手ごとの攻防を積み上げ、3対3の交代乱戦をギリギリで制した。';
         } else if (recruitedCount >= 5) {
             endingTitle = '撤退エンド';
             endingText = '善戦したが、試合の点差で膨れ上がった敵勢に飲まれた。だが、街に火種は残った。';
@@ -1237,6 +1543,8 @@ class GoGoHooligan {
                             <div class="ending-summary-card"><strong>最終仲間数</strong><span>${recruitedCount}/${this.getMaxTeamSize()}</span></div>
                             <div class="ending-summary-card"><strong>試合で膨らんだ敵総数</strong><span>${result.enemyIds.length}人</span></div>
                             <div class="ending-summary-card"><strong>最終敵ボス</strong><span>${boss ? boss.name : '不明'}</span></div>
+                            <div class="ending-summary-card"><strong>攻防回数</strong><span>${result.actionCount}回</span></div>
+                            <div class="ending-summary-card"><strong>クリティカル</strong><span>${result.criticalMoments}回</span></div>
                         </div>
                         <p>敵前線と増援: ${enemySummary || '未確定'}</p>
                         <div class="battle-log-panel">
@@ -1263,7 +1571,7 @@ class GoGoHooligan {
                 <div class="content">
                     <div class="game-info">
                         <h3>ゲーム概要</h3>
-                        <p>7日間で仲間を増やし、夜の会話と試合結果を経て、最後は3対3の交代制乱戦へ挑む。</p>
+                        <p>7日間で仲間を増やし、夜の会話と試合結果を経て、最後は一手ずつ進む3対3の交代制乱戦へ挑む。</p>
                         <h3>昼の行動ルール</h3>
                         <p>昼の行動は1日1回のみ。場所を選ぶと、その場所の候補者の中から誰か1人がランダムに現れる。</p>
                         <h3>夜の会話と追加勧誘</h3>
@@ -1271,7 +1579,7 @@ class GoGoHooligan {
                         <h3>サッカー試合</h3>
                         <p>毎夜、試合結果が表示される。どちらが勝ったかと点差が示され、点差が大きいほど敵人数が増える。</p>
                         <h3>最終決戦</h3>
-                        <p>最終戦は3対3のチームバトル。通常攻撃と必殺技があり、倒れたら控えメンバーへ交代する。</p>
+                        <p>最終戦は3対3のチームバトル。ボタンを押すごとに攻防が進み、実況描写の中で通常攻撃・必殺技・交代が一手ずつ積み上がる。稀にクリティカルヒットも出る。</p>
                         <div class="choices">
                             <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
                         </div>
@@ -1296,7 +1604,7 @@ class GoGoHooligan {
                         <p>2. 昼: 1回だけ訪問し、ランダムに現れた人物を勧誘</p>
                         <p>3. 夜: 仲間たちと会話し、試合結果を確認。稀に別人物を追加勧誘</p>
                         <h3>勧誘時の表示</h3>
-                        <p>画像が表示される場面では、筋力・体脂肪・幸福度・モラル・学力・資産を常に確認できる。</p>
+                        <p>画像が表示される場面では、画像をタップすると筋力・体脂肪・幸福度・モラル・学力・資産がポップアップで表示される。</p>
                         <h3>スクロール</h3>
                         <p>ページが切り替わるたび、表示位置は自動的に一番上へ戻る。</p>
                         <div class="choices">
