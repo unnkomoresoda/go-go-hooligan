@@ -1,0 +1,422 @@
+/* ゴーゴーフーリガン - スタイルシート */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', 'Hiragino Sans', 'ヒラギノ角ゴ Pro', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+#game-screen {
+    min-height: 600px;
+    padding: 40px;
+}
+
+/* タイトル画面 */
+.title-screen {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.title-screen h1 {
+    font-size: 3em;
+    color: #667eea;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title-screen h2 {
+    font-size: 1.5em;
+    color: #764ba2;
+    margin-bottom: 20px;
+}
+
+.tagline {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ボタン */
+.btn {
+    padding: 12px 30px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+    border: 2px solid #667eea;
+}
+
+.btn-secondary:hover {
+    background: #667eea;
+    color: white;
+}
+
+.btn-choice {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    background: #f9f9f9;
+    color: #333;
+    border: 2px solid #ddd;
+    text-align: left;
+    padding: 15px;
+}
+
+.btn-choice:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.btn-location {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border: none;
+    text-align: left;
+    padding: 20px;
+    font-size: 1.1em;
+}
+
+.btn-location:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+}
+
+/* ゲーム画面 */
+.game-screen {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.header {
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.header h2 {
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.status {
+    display: flex;
+    gap: 30px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.content {
+    min-height: 300px;
+}
+
+/* チュートリアル */
+.tutorial {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.character-message {
+    margin-bottom: 20px;
+}
+
+.character-name {
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.message {
+    background: white;
+    padding: 15px;
+    border-left: 4px solid #667eea;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.message p {
+    margin-bottom: 10px;
+}
+
+.message p:last-child {
+    margin-bottom: 0;
+}
+
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 勧誘シーン */
+.recruitment-scene {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.character-info {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.character-info h3 {
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.character-info p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.character-story {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    border-left: 4px solid #f5576c;
+}
+
+.recruitment-choices {
+    margin-top: 20px;
+}
+
+.recruitment-choices h4 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* バトルシーン */
+.battle-scene {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.battle-scene h3 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.battle-info {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.battle-info p {
+    margin: 5px 0;
+}
+
+/* 結果画面 */
+.battle-result,
+.negotiation-result,
+.recruitment-result,
+.ending {
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.battle-result h3,
+.negotiation-result h3,
+.recruitment-result p,
+.ending h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.battle-result p,
+.negotiation-result p,
+.ending p {
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+/* チームメンバーリスト */
+.team-info {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.team-info h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.member-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.member-card {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #667eea;
+    text-align: center;
+}
+
+.member-name {
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 5px;
+}
+
+.member-role {
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* ヘルプ・ゲーム情報 */
+.help-content,
+.game-info {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.help-content h3,
+.game-info h3 {
+    color: #667eea;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.help-content h3:first-child,
+.game-info h3:first-child {
+    margin-top: 0;
+}
+
+.help-content p,
+.game-info p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.help-content ul {
+    margin-left: 20px;
+    color: #666;
+    line-height: 1.8;
+}
+
+.help-content li {
+    margin-bottom: 5px;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    #game-screen {
+        padding: 20px;
+    }
+
+    .title-screen h1 {
+        font-size: 2em;
+    }
+
+    .title-screen h2 {
+        font-size: 1.2em;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .status {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .member-list {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}
+
+/* ローディング */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
