@@ -634,7 +634,7 @@ class GoGoHooligan {
         const allyScore = this.clamp(Math.round((clubEdge - rivalEdge) / 28 + Math.random() * 2.2 + 1), 0, 5);
         const rivalScore = this.clamp(Math.round((rivalEdge - clubEdge) / 28 + Math.random() * 2.2 + 1), 0, 5);
         const scoreDiff = Math.abs(allyScore - rivalScore);
-        const crowdIncrease = this.clamp(scoreDiff, 0, 3);
+        const crowdIncrease = this.clamp(scoreDiff / 2, 0, 1.5);
         this.state.enemyCrowdLevel = this.clamp((this.state.enemyCrowdLevel || 0) + crowdIncrease, 0, 6);
 
         let resultLabel = '引き分け';
@@ -1275,6 +1275,8 @@ class GoGoHooligan {
             ? 'BGMはブラウザ制限で停止中。攻防ボタンでもう一度再生を試みる。'
             : `ラストバトルBGM: ${FINAL_BATTLE_BGM_TITLE}`;
         const enemyBalanceNote = `${currentEnemyTuning.label}。敵必殺の発動率は ${Math.round(currentEnemyTuning.skillTriggerChance * 100)}% に抑えられている。`;
+        const showBattleNarrative = battleState.actionCount === 0 && !battleState.finished;
+        const battleLiveGridStyle = showBattleNarrative ? '' : 'style="grid-template-columns: minmax(0, 1fr);"';
 
         this.setScreen(`
             <div class="game-screen">
@@ -1307,7 +1309,8 @@ class GoGoHooligan {
                                 <p>敵増援: ${this.renderBattleReserveSummary(battleState.enemyReserve)}</p>
                             </div>
                         </div>
-                        <div class="battle-live-grid">
+                        <div class="battle-live-grid" ${battleLiveGridStyle}>
+                            ${showBattleNarrative ? `
                             <div class="battle-info battle-narrative">
                                 <p>今夜の試合結果は ${matchScore}。その点差に煽られた群衆が雪崩れ込み、敵の総数は ${battleState.enemyIds.length} 人まで膨れ上がっている。</p>
                                 <p><strong>${bgmStatusLabel}</strong></p>
@@ -1316,6 +1319,7 @@ class GoGoHooligan {
                                 <p>初期戦力比較: 味方 ${battleState.playerPower} / 敵 ${battleState.enemyPower}</p>
                                 <p>${enemyBalanceNote}</p>
                             </div>
+                            ` : ''}
                             <div class="battle-live-side">
                                 <div class="choices battle-advance-choices">
                                     <button class="btn btn-primary" onclick="window.game.advanceFinalBattle()">${actionLabel}</button>
