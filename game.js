@@ -471,9 +471,6 @@ class GoGoHooligan {
                 <h1 class="screen-reader-title">${TITLE_NAME}</h1>
                 <h2>${TITLE_SUBTITLE}</h2>
                 <p class="tagline">昼に拾った縁、夜に交わした本音、そしてスタンドの怒号が、最後の3対3乱闘を血の色に染める。</p>
-                <div class="characters-showcase">
-                    <img src="images/characters.png" alt="キャラクター" class="characters-image">
-                </div>
                 ${statsHtml}
                 <div class="buttons">
                     <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
