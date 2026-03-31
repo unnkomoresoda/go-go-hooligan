@@ -4,8 +4,8 @@ const FINAL_BATTLE_BGM_TITLE = '血塗れのダービー';
 const FINAL_BATTLE_BGM_URL = 'https://cdn1.suno.ai/2a04cd29-a3f0-4d53-9793-2fee56ee089d.mp3';
 const STORY_BGM_TITLE = 'days';
 const STORY_BGM_URL = 'audio/days.mp3';
-const THEME_BGM_TITLE = 'go!go!フーリガン';
-const THEME_BGM_URL = 'audio/gogo-hooligan-theme.mp3';
+const PROLOGUE_BGM_TITLE = 'go!go!フーリガン';
+const PROLOGUE_BGM_URL = 'audio/gogo-hooligan-theme.mp3';
 const CREATOR_DONATION_URL = 'https://qr.paypay.ne.jp/p2p01_KwOxvV3CmELTJks9';
 
 // グローバルカウンター: 訪問者数追跡
@@ -188,17 +188,7 @@ class GoGoHooligan {
     }
 
     setupUserInteractionListener() {
-        const handleInteraction = () => {
-            // ユーザー操作後、BGMが停止していれば再生
-            if (this.themeBgm && this.themeBgm.paused) {
-                this.themeBgm.play().catch(err => console.log('BGM再生失敗:', err));
-            }
-            // 一度だけ実行したら、リスナーを削除
-            document.removeEventListener('click', handleInteraction);
-            document.removeEventListener('keydown', handleInteraction);
-        };
-        document.addEventListener('click', handleInteraction);
-        document.addEventListener('keydown', handleInteraction);
+        // タイトル画面では音楽なし
     }
 
     scrollToTop() {
@@ -469,6 +459,17 @@ class GoGoHooligan {
         return this.storyBgm;
     }
 
+    ensurePrologueBgm() {
+        if (!this.prologueBgm) {
+            const audio = new Audio(PROLOGUE_BGM_URL);
+            audio.loop = false;
+            audio.preload = 'auto';
+            audio.volume = 0.4;
+            this.prologueBgm = audio;
+        }
+        return this.prologueBgm;
+    }
+
     ensureBattleBgm() {
         if (!this.battleBgm) {
             const audio = new Audio(FINAL_BATTLE_BGM_URL);
@@ -547,6 +548,38 @@ class GoGoHooligan {
         }
     }
 
+    startPrologueBgm() {
+        this.stopPrologueBgm();
+        const audio = this.ensurePrologueBgm();
+        if (!audio) {
+            return;
+        }
+        audio.volume = 0.4;
+        if (audio.paused) {
+            audio.currentTime = 0;
+            const playPromise = audio.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(() => {
+                    console.log('Prologue BGM play blocked by browser');
+                });
+            }
+        }
+    }
+
+    stopPrologueBgm(options = {}) {
+        const { reset = false, immediate = false } = options;
+        if (!this.prologueBgm) {
+            return;
+        }
+        const audio = this.prologueBgm;
+        if (immediate || !audio.paused) {
+            audio.pause();
+            if (reset) {
+                audio.currentTime = 0;
+            }
+        }
+    }
+
     startBattleBgm() {
         this.stopStoryBgm({ reset: true });
         const audio = this.ensureBattleBgm();
@@ -608,12 +641,6 @@ class GoGoHooligan {
     }
 
     renderTitle() {
-        if (!this.state.titleBgmStarted) {
-            this.state.titleBgmStarted = true;
-            this.startThemeBgm();
-        } else if (this.themeBgm && this.themeBgm.paused) {
-            this.startThemeBgm();
-        }
         const stats = this.playHistory.getStats();
         const counterStats = this.globalCounter.getStats();
         const statsHtml = stats.totalPlays > 0 ? `
@@ -681,7 +708,7 @@ class GoGoHooligan {
         if (sceneIndex === 0 && !this.state.prologueBgmStarted) {
             this.state.prologueBgmStarted = true;
             this.stopThemeBgm({ reset: true });
-            this.startStoryBgm();
+            this.startPrologueBgm();
         }
         const prologueScenes = [
             {
