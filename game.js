@@ -2,6 +2,7 @@ const TITLE_NAME = '乱暴！怒りのフーリガン！';
 const TITLE_SUBTITLE = 'Rampage! Furious Hooligans!';
 const FINAL_BATTLE_BGM_TITLE = '血塗れのダービー';
 const FINAL_BATTLE_BGM_URL = 'https://cdn1.suno.ai/2a04cd29-a3f0-4d53-9793-2fee56ee089d.mp3';
+const CREATOR_DONATION_URL = 'https://qr.paypay.ne.jp/p2p01_eqdoLMm9MoSqETbL';
 
 class GoGoHooligan {
     constructor() {
@@ -58,7 +59,12 @@ class GoGoHooligan {
 
     setScreen(html) {
         this.closeCharacterPopup();
-        this.gameScreen.innerHTML = html;
+        this.gameScreen.innerHTML = `
+            <div class="page-top-utility">
+                <a href="${CREATOR_DONATION_URL}" class="btn btn-donate" target="_blank" rel="noopener noreferrer">製作者に寄付する</a>
+            </div>
+            ${html}
+        `;
         this.scrollToTop();
     }
 
