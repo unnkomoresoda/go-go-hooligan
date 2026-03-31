@@ -641,31 +641,7 @@ class GoGoHooligan {
     }
 
     renderTitle() {
-        const stats = this.playHistory.getStats();
         const counterStats = this.globalCounter.getStats();
-        const statsHtml = stats.totalPlays > 0 ? `
-            <div class="play-history-stats">
-                <h3>足跡</h3>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-label">プレイ回数</span>
-                        <span class="stat-value">${stats.totalPlays}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">クリア数</span>
-                        <span class="stat-value">${stats.totalClears}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">クリア率</span>
-                        <span class="stat-value">${stats.clearRate}%</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">連勝記録</span>
-                        <span class="stat-value">${stats.longestStreak}</span>
-                    </div>
-                </div>
-            </div>
-        ` : '';
         
         const counterHtml = `
             <div class="global-counter-stats">
@@ -694,7 +670,6 @@ class GoGoHooligan {
                 <h1 class="screen-reader-title">${TITLE_NAME}</h1>
                 <h2>${TITLE_SUBTITLE}</h2>
                 <p class="tagline">昼に拾った縁、夜に交わした本音、そしてスタンドの怒号が、最後の3対3乱闘を血の色に染める。</p>
-                ${statsHtml}
                 ${counterHtml}
                 <div class="buttons">
                     <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
