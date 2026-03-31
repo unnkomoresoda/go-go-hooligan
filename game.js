@@ -4,8 +4,7 @@ const FINAL_BATTLE_BGM_TITLE = '血塗れのダービー';
 const FINAL_BATTLE_BGM_URL = 'https://cdn1.suno.ai/2a04cd29-a3f0-4d53-9793-2fee56ee089d.mp3';
 const STORY_BGM_TITLE = 'days';
 const STORY_BGM_URL = 'audio/days.mp3';
-const PROLOGUE_BGM_TITLE = 'go!go!フーリガン';
-const PROLOGUE_BGM_URL = 'audio/gogo-hooligan-theme.mp3';
+
 const CREATOR_DONATION_URL = 'https://qr.paypay.ne.jp/p2p01_KwOxvV3CmELTJks9';
 
 // グローバルカウンター: 訪問者数追跡
@@ -222,8 +221,6 @@ class GoGoHooligan {
     }
 
     beginMainGame() {
-        this.stopPrologueBgm({ reset: true });
-        this.startStoryBgm();
         this.renderDay();
     }
 
@@ -465,17 +462,6 @@ class GoGoHooligan {
         return this.storyBgm;
     }
 
-    ensurePrologueBgm() {
-        if (!this.prologueBgm) {
-            const audio = new Audio(PROLOGUE_BGM_URL);
-            audio.loop = false;
-            audio.preload = 'auto';
-            audio.volume = 0.4;
-            this.prologueBgm = audio;
-        }
-        return this.prologueBgm;
-    }
-
     ensureBattleBgm() {
         if (!this.battleBgm) {
             const audio = new Audio(FINAL_BATTLE_BGM_URL);
@@ -546,38 +532,6 @@ class GoGoHooligan {
             return;
         }
         const audio = this.storyBgm;
-        if (immediate || !audio.paused) {
-            audio.pause();
-            if (reset) {
-                audio.currentTime = 0;
-            }
-        }
-    }
-
-    startPrologueBgm() {
-        this.stopPrologueBgm();
-        const audio = this.ensurePrologueBgm();
-        if (!audio) {
-            return;
-        }
-        audio.volume = 0.4;
-        if (audio.paused) {
-            audio.currentTime = 0;
-            const playPromise = audio.play();
-            if (playPromise && typeof playPromise.catch === 'function') {
-                playPromise.catch(() => {
-                    console.log('Prologue BGM play blocked by browser');
-                });
-            }
-        }
-    }
-
-    stopPrologueBgm(options = {}) {
-        const { reset = false, immediate = false } = options;
-        if (!this.prologueBgm) {
-            return;
-        }
-        const audio = this.prologueBgm;
         if (immediate || !audio.paused) {
             audio.pause();
             if (reset) {
@@ -670,7 +624,7 @@ class GoGoHooligan {
         if (sceneIndex === 0 && !this.state.prologueBgmStarted) {
             this.state.prologueBgmStarted = true;
             this.stopThemeBgm({ reset: true });
-            this.startPrologueBgm();
+            this.startStoryBgm();
         }
         const prologueScenes = [
             {
