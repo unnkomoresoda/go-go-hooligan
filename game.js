@@ -207,7 +207,7 @@ class GoGoHooligan {
         this.closeCharacterPopup();
         this.gameScreen.innerHTML = `
             <div class="page-top-utility">
-                <a href="${CREATOR_DONATION_URL}" class="btn btn-donate" target="_blank" rel="noopener noreferrer">製作者に寄付する</a>
+                <a href="${CREATOR_DONATION_URL}" class="btn btn-donate" target="_blank" rel="noopener noreferrer">この才能に投資する</a>
             </div>
             ${html}
         `;
