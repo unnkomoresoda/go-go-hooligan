@@ -645,24 +645,6 @@ class GoGoHooligan {
     }
 
     renderTitle() {
-        const counterStats = this.globalCounter.getStats();
-        
-        const counterHtml = `
-            <div class="global-counter-stats">
-                <h3>訪問者</h3>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-label">総訪問数</span>
-                        <span class="stat-value">${counterStats.globalCount}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">本日の訪問</span>
-                        <span class="stat-value">${counterStats.todayCount}</span>
-                    </div>
-                </div>
-            </div>
-        `;
-        
         this.setScreen(`
             <div class="title-screen furious-title-screen">
                 <div class="title-art-wrap">
@@ -674,7 +656,6 @@ class GoGoHooligan {
                 <h1 class="screen-reader-title">${TITLE_NAME}</h1>
                 <h2>${TITLE_SUBTITLE}</h2>
                 <p class="tagline">昼に拾った縁、夜に交わした本音、そしてスタンドの怒号が、最後の3対3乱闘を血の色に染める。</p>
-                ${counterHtml}
                 <div class="buttons">
                     <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
                     <button class="btn btn-secondary" onclick="window.game.showHelp()">ヘルプ</button>
