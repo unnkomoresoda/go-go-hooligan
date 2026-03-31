@@ -222,6 +222,8 @@ class GoGoHooligan {
     }
 
     beginMainGame() {
+        this.stopPrologueBgm({ reset: true });
+        this.startStoryBgm();
         this.renderDay();
     }
 
@@ -2045,9 +2047,6 @@ class GoGoHooligan {
     showEnding() {
         this.state.battleActive = false;
         this.stopBattleBgm({ reset: false });
-        if (this.state.finalBattleResult && this.state.finalBattleResult.victory) {
-            this.startThemeBgm();
-        }
         const recruitedCount = this.state.recruitedMembers.length;
         const result = this.state.finalBattleResult || {
             victory: false,
