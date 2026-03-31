@@ -596,6 +596,8 @@ class GoGoHooligan {
         if (!this.state.titleBgmStarted) {
             this.state.titleBgmStarted = true;
             this.startThemeBgm();
+        } else if (this.themeBgm && this.themeBgm.paused) {
+            this.startThemeBgm();
         }
         const stats = this.playHistory.getStats();
         const counterStats = this.globalCounter.getStats();
