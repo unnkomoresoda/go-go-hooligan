@@ -146,8 +146,12 @@ class GoGoHooligan {
         this.battleBgmFadeTimer = null;
         this.playHistory = new PlayHistory();
         this.globalCounter = new GlobalCounter();
-        this.globalCounter.fetchCount(); // ページ読み込み時にカウント取得
         this.resetState();
+        this.initAsync();
+    }
+
+    async initAsync() {
+        await this.globalCounter.fetchCount(); // ページ読み込み時にカウント取得
         this.init();
     }
 
