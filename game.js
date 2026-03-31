@@ -1092,31 +1092,35 @@ class GoGoHooligan {
         if (countGap <= 0) {
             return {
                 powerMultiplier: 0.82,
+                attackMultiplier: 0.8,
                 skillMeterGain: 34,
-                skillTriggerChance: 0.42,
+                skillTriggerChance: 0.3,
                 label: '同数以下のため、敵の数的補正は大きく弱まっている'
             };
         }
         if (countGap === 1) {
             return {
                 powerMultiplier: 0.89,
+                attackMultiplier: 0.8,
                 skillMeterGain: 40,
-                skillTriggerChance: 0.48,
+                skillTriggerChance: 0.36,
                 label: 'ほぼ同数のため、敵の数的補正はかなり抑えられている'
             };
         }
         if (countGap === 2) {
             return {
                 powerMultiplier: 0.95,
+                attackMultiplier: 0.8,
                 skillMeterGain: 46,
-                skillTriggerChance: 0.58,
+                skillTriggerChance: 0.46,
                 label: '敵がやや多いが、補正は軽めに調整されている'
             };
         }
         return {
             powerMultiplier: 1,
+            attackMultiplier: 0.8,
             skillMeterGain: 52,
-            skillTriggerChance: 0.68,
+            skillTriggerChance: 0.56,
             label: '人数差どおりの圧力が敵側に乗っている'
         };
     }
@@ -1448,6 +1452,9 @@ class GoGoHooligan {
         const character = this.getCharacter(characterId);
         const basePower = this.calculateCharacterPower(characterId, side);
         const sidePowerMultiplier = side === 'enemy' ? (tuning?.powerMultiplier || 1) : 1;
+        const attackMultiplier = side === 'enemy'
+            ? sidePowerMultiplier * (tuning?.attackMultiplier || 1)
+            : 1;
         const baseHp = 120 + (character.stats.strength * 1.7) + (character.stats.bodyFat * 1.1);
         return {
             id: characterId,
@@ -1459,7 +1466,7 @@ class GoGoHooligan {
             skillDescription: character.skill.description,
             maxHp: Math.round(baseHp * sidePowerMultiplier),
             hp: Math.round(baseHp * sidePowerMultiplier),
-            attack: Math.max(14, Math.round(basePower * 0.36 * sidePowerMultiplier)),
+            attack: Math.max(14, Math.round(basePower * 0.36 * attackMultiplier)),
             defense: Math.max(10, Math.round(((character.stats.bodyFat * 0.65) + (character.stats.education * 0.18) + (character.skill.type === 'defense' ? 16 : 0)) * sidePowerMultiplier)),
             initiative: character.stats.happiness + (character.stats.education * 0.4) + (character.skill.type === 'attack' ? 10 : 0),
             attackBuff: 0,
