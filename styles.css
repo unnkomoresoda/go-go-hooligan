@@ -53,6 +53,12 @@ body {
     box-shadow: 0 10px 22px rgba(0, 168, 89, 0.28);
 }
 
+.btn-donate-small {
+    font-size: 0.85rem;
+    padding: 12px 16px;
+    line-height: 1.4;
+}
+
 /* タイトル画面 */
 .title-screen {
     text-align: center;
