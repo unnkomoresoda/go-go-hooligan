@@ -183,7 +183,22 @@ class GoGoHooligan {
 
     init() {
         document.title = TITLE_NAME;
+        this.setupUserInteractionListener();
         this.renderTitle();
+    }
+
+    setupUserInteractionListener() {
+        const handleInteraction = () => {
+            // ユーザー操作後、BGMが停止していれば再生
+            if (this.themeBgm && this.themeBgm.paused) {
+                this.themeBgm.play().catch(err => console.log('BGM再生失敗:', err));
+            }
+            // 一度だけ実行したら、リスナーを削除
+            document.removeEventListener('click', handleInteraction);
+            document.removeEventListener('keydown', handleInteraction);
+        };
+        document.addEventListener('click', handleInteraction);
+        document.addEventListener('keydown', handleInteraction);
     }
 
     scrollToTop() {
