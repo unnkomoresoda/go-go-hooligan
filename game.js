@@ -2,6 +2,8 @@ const TITLE_NAME = '乱暴！怒りのフーリガン！';
 const TITLE_SUBTITLE = 'Rampage! Furious Hooligans!';
 const FINAL_BATTLE_BGM_TITLE = '血塗れのダービー';
 const FINAL_BATTLE_BGM_URL = 'https://cdn1.suno.ai/2a04cd29-a3f0-4d53-9793-2fee56ee089d.mp3';
+const STORY_BGM_TITLE = 'days';
+const STORY_BGM_URL = 'audio/days.mp3';
 const CREATOR_DONATION_URL = 'https://qr.paypay.ne.jp/p2p01_KwOxvV3CmELTJks9';
 
 // グローバルカウンター: 訪問者数追跡
@@ -428,6 +430,17 @@ class GoGoHooligan {
         document.body.classList.remove('modal-open');
     }
 
+    ensureStoryBgm() {
+        if (!this.storyBgm) {
+            const audio = new Audio(STORY_BGM_URL);
+            audio.loop = true;
+            audio.preload = 'auto';
+            audio.volume = 0.35;
+            this.storyBgm = audio;
+        }
+        return this.storyBgm;
+    }
+
     ensureBattleBgm() {
         if (!this.battleBgm) {
             const audio = new Audio(FINAL_BATTLE_BGM_URL);
@@ -439,7 +452,43 @@ class GoGoHooligan {
         return this.battleBgm;
     }
 
+    startStoryBgm() {
+        this.stopStoryBgm();
+        const audio = this.ensureStoryBgm();
+        if (!audio) {
+            return;
+        }
+        audio.volume = 0.35;
+        if (audio.paused) {
+            const playPromise = audio.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(() => {
+                    console.log('Story BGM play blocked by browser');
+                });
+            }
+        }
+    }
+
+    stopStoryBgm(options = {}) {
+        const { reset = false, immediate = false } = options;
+        if (this.storyBgmFadeTimer) {
+            clearInterval(this.storyBgmFadeTimer);
+            this.storyBgmFadeTimer = null;
+        }
+        if (!this.storyBgm) {
+            return;
+        }
+        const audio = this.storyBgm;
+        if (immediate || !audio.paused) {
+            audio.pause();
+            if (reset) {
+                audio.currentTime = 0;
+            }
+        }
+    }
+
     startBattleBgm() {
+        this.stopStoryBgm({ reset: true });
         const audio = this.ensureBattleBgm();
         if (!audio) {
             return;
@@ -563,6 +612,10 @@ class GoGoHooligan {
     }
 
     renderPrologue(sceneIndex = 0) {
+        if (sceneIndex === 0 && !this.state.prologueBgmStarted) {
+            this.state.prologueBgmStarted = true;
+            this.startStoryBgm();
+        }
         const prologueScenes = [
             {
                 label: 'PROLOGUE I',
@@ -1217,6 +1270,10 @@ class GoGoHooligan {
         if (this.state.currentDay > GAME_CONSTANTS.MAX_DAYS) {
             this.startFinalBattle();
             return;
+        }
+
+        if (!this.storyBgm || this.storyBgm.paused) {
+            this.startStoryBgm();
         }
 
         this.renderDay();
