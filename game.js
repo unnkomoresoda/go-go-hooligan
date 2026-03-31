@@ -4,11 +4,81 @@ const FINAL_BATTLE_BGM_TITLE = '血塗れのダービー';
 const FINAL_BATTLE_BGM_URL = 'https://cdn1.suno.ai/2a04cd29-a3f0-4d53-9793-2fee56ee089d.mp3';
 const CREATOR_DONATION_URL = 'https://qr.paypay.ne.jp/p2p01_KwOxvV3CmELTJks9';
 
+// 足跡機能: プレイ履歴管理
+class PlayHistory {
+    constructor() {
+        this.storageKey = 'gogoHooligan_playHistory';
+        this.load();
+    }
+
+    load() {
+        const data = localStorage.getItem(this.storageKey);
+        this.history = data ? JSON.parse(data) : {
+            totalPlays: 0,
+            totalClears: 0,
+            plays: [],
+            lastPlayDate: null,
+            longestStreak: 0,
+            currentStreak: 0
+        };
+    }
+
+    save() {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.history));
+    }
+
+    recordPlay() {
+        const now = new Date().toISOString();
+        this.history.totalPlays++;
+        this.history.lastPlayDate = now;
+        this.history.plays.push({ date: now, result: null });
+        this.save();
+    }
+
+    recordClear() {
+        if (this.history.plays.length > 0) {
+            this.history.plays[this.history.plays.length - 1].result = 'clear';
+            this.history.totalClears++;
+            this.history.currentStreak++;
+            if (this.history.currentStreak > this.history.longestStreak) {
+                this.history.longestStreak = this.history.currentStreak;
+            }
+        }
+        this.save();
+    }
+
+    recordDefeat() {
+        if (this.history.plays.length > 0) {
+            this.history.plays[this.history.plays.length - 1].result = 'defeat';
+            this.history.currentStreak = 0;
+        }
+        this.save();
+    }
+
+    getStats() {
+        return {
+            totalPlays: this.history.totalPlays,
+            totalClears: this.history.totalClears,
+            clearRate: this.history.totalPlays > 0 ? Math.round((this.history.totalClears / this.history.totalPlays) * 100) : 0,
+            lastPlayDate: this.history.lastPlayDate,
+            longestStreak: this.history.longestStreak,
+            currentStreak: this.history.currentStreak,
+            recentPlays: this.history.plays.slice(-10)
+        };
+    }
+
+    clearHistory() {
+        localStorage.removeItem(this.storageKey);
+        this.load();
+    }
+}
+
 class GoGoHooligan {
     constructor() {
         this.gameScreen = document.getElementById('game-screen');
         this.battleBgm = null;
         this.battleBgmFadeTimer = null;
+        this.playHistory = new PlayHistory();
         this.resetState();
         this.init();
     }
@@ -69,6 +139,7 @@ class GoGoHooligan {
     }
 
     startGame() {
+        this.playHistory.recordPlay();
         this.resetState();
         this.renderPrologue(0);
     }
@@ -364,6 +435,31 @@ class GoGoHooligan {
     }
 
     renderTitle() {
+        const stats = this.playHistory.getStats();
+        const statsHtml = stats.totalPlays > 0 ? `
+            <div class="play-history-stats">
+                <h3>足跡</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">プレイ回数</span>
+                        <span class="stat-value">${stats.totalPlays}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">クリア数</span>
+                        <span class="stat-value">${stats.totalClears}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">クリア率</span>
+                        <span class="stat-value">${stats.clearRate}%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">連勝記録</span>
+                        <span class="stat-value">${stats.longestStreak}</span>
+                    </div>
+                </div>
+            </div>
+        ` : '';
+        
         this.setScreen(`
             <div class="title-screen furious-title-screen">
                 <div class="title-art-wrap">
@@ -375,6 +471,10 @@ class GoGoHooligan {
                 <h1 class="screen-reader-title">${TITLE_NAME}</h1>
                 <h2>${TITLE_SUBTITLE}</h2>
                 <p class="tagline">昼に拾った縁、夜に交わした本音、そしてスタンドの怒号が、最後の3対3乱闘を血の色に染める。</p>
+                <div class="characters-showcase">
+                    <img src="images/characters.png" alt="キャラクター" class="characters-image">
+                </div>
+                ${statsHtml}
                 <div class="buttons">
                     <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
                     <button class="btn btn-secondary" onclick="window.game.showHelp()">ヘルプ</button>
@@ -1719,6 +1819,11 @@ class GoGoHooligan {
         battleState.finished = true;
         battleState.victory = victory;
         battleState.summary = battleSummary;
+        if (victory) {
+            this.playHistory.recordClear();
+        } else {
+            this.playHistory.recordDefeat();
+        }
         battleState.sceneLog = [
             victory
                 ? '実況: 最後の押し合いを制し、味方が乱闘の流れそのものをひっくり返した。'

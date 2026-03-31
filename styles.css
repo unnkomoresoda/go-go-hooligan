@@ -1943,6 +1943,68 @@ body {
     border: 0;
 }
 
+/* 足跡機能: プレイ履歴計統 */
+.play-history-stats {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+    border: 2px solid rgba(102, 126, 234, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 24px 0;
+}
+
+.play-history-stats h3 {
+    color: #667eea;
+    font-size: 1.2em;
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+}
+
+.stat-item {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #667eea;
+}
+
+/* キャラクター画像ショーケース */
+.characters-showcase {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0;
+}
+
+.characters-image {
+    width: min(100%, 640px);
+    max-height: 400px;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.95);
+}
+
 .character-image-frame,
 .battle-portrait-frame {
     display: flex;
