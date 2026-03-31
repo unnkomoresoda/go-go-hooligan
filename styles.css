@@ -1988,6 +1988,22 @@ body {
     color: #667eea;
 }
 
+/* 訪問者カウンター */
+.global-counter-stats {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.08) 0%, rgba(255, 152, 0, 0.08) 100%);
+    border: 2px solid rgba(255, 152, 0, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+}
+
+.global-counter-stats h3 {
+    color: #ff9800;
+    font-size: 1.2em;
+    margin-bottom: 16px;
+    text-align: left;
+}
+
 /* キャラクター画像ショーケース */
 .characters-showcase {
     display: flex;

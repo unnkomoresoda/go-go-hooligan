@@ -4,6 +4,68 @@ const FINAL_BATTLE_BGM_TITLE = '血塗れのダービー';
 const FINAL_BATTLE_BGM_URL = 'https://cdn1.suno.ai/2a04cd29-a3f0-4d53-9793-2fee56ee089d.mp3';
 const CREATOR_DONATION_URL = 'https://qr.paypay.ne.jp/p2p01_KwOxvV3CmELTJks9';
 
+// グローバルカウンター: 訪問者数追跡
+class GlobalCounter {
+    constructor() {
+        this.counterKey = 'gogoHooligan_globalCounter';
+        this.apiUrl = 'https://api.countapi.xyz/hit/gogoHooligan/visits';
+        this.cacheKey = 'gogoHooligan_counterCache';
+        this.cacheDuration = 3600000; // 1時間
+        this.globalCount = 0;
+        this.todayCount = 0;
+    }
+
+    async fetchCount() {
+        try {
+            // キャッシュを確認
+            const cached = localStorage.getItem(this.cacheKey);
+            if (cached) {
+                const { data, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp < this.cacheDuration) {
+                    this.globalCount = data.globalCount || 0;
+                    this.todayCount = data.todayCount || 0;
+                    return;
+                }
+            }
+
+            // APIを召び出してカウントを取得
+            const response = await fetch(this.apiUrl);
+            if (response.ok) {
+                const data = await response.json();
+                this.globalCount = data.value || 0;
+                
+                // 本日の訪問数を推定（粗い推定）
+                const today = new Date().toDateString();
+                const lastDate = localStorage.getItem('gogoHooligan_lastCountDate');
+                if (lastDate === today) {
+                    this.todayCount = parseInt(localStorage.getItem('gogoHooligan_todayCount') || '0') + 1;
+                } else {
+                    this.todayCount = 1;
+                    localStorage.setItem('gogoHooligan_lastCountDate', today);
+                }
+                localStorage.setItem('gogoHooligan_todayCount', this.todayCount.toString());
+
+                // キャッシュに保存
+                localStorage.setItem(this.cacheKey, JSON.stringify({
+                    data: { globalCount: this.globalCount, todayCount: this.todayCount },
+                    timestamp: Date.now()
+                }));
+            }
+        } catch (error) {
+            console.log('カウンター取得失敗:', error);
+            this.globalCount = 0;
+            this.todayCount = 0;
+        }
+    }
+
+    getStats() {
+        return {
+            globalCount: this.globalCount,
+            todayCount: this.todayCount
+        };
+    }
+}
+
 // 足跡機能: プレイ履歴管理
 class PlayHistory {
     constructor() {
@@ -79,6 +141,8 @@ class GoGoHooligan {
         this.battleBgm = null;
         this.battleBgmFadeTimer = null;
         this.playHistory = new PlayHistory();
+        this.globalCounter = new GlobalCounter();
+        this.globalCounter.fetchCount(); // ページ読み込み時にカウント取得
         this.resetState();
         this.init();
     }
@@ -436,6 +500,7 @@ class GoGoHooligan {
 
     renderTitle() {
         const stats = this.playHistory.getStats();
+        const counterStats = this.globalCounter.getStats();
         const statsHtml = stats.totalPlays > 0 ? `
             <div class="play-history-stats">
                 <h3>足跡</h3>
@@ -460,6 +525,22 @@ class GoGoHooligan {
             </div>
         ` : '';
         
+        const counterHtml = `
+            <div class="global-counter-stats">
+                <h3>訪問者</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">総訪問数</span>
+                        <span class="stat-value">${counterStats.globalCount}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">本日の訪問</span>
+                        <span class="stat-value">${counterStats.todayCount}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        
         this.setScreen(`
             <div class="title-screen furious-title-screen">
                 <div class="title-art-wrap">
@@ -472,6 +553,7 @@ class GoGoHooligan {
                 <h2>${TITLE_SUBTITLE}</h2>
                 <p class="tagline">昼に拾った縁、夜に交わした本音、そしてスタンドの怒号が、最後の3対3乱闘を血の色に染める。</p>
                 ${statsHtml}
+                ${counterHtml}
                 <div class="buttons">
                     <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
                     <button class="btn btn-secondary" onclick="window.game.showHelp()">ヘルプ</button>
