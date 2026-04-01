@@ -258,7 +258,7 @@ class GoGoHooligan {
     }
 
     getTitleArtImage() {
-        return `images/title-furious-hooligan.jpg?v=${ASSET_VERSION}`;
+        return `images/title-hero.png?v=${ASSET_VERSION}`;
     }
 
     getVictoryEndingVideoSrc() {
