@@ -148,6 +148,10 @@ class GoGoHooligan {
         this.themeBgmCreatedCount = 0;  // Audio 生成回数（singleton 検出用）
         this.defeatEndingBgm = null;  // 敗北エンド BGM
         this.defeatEndingBgmCreatedCount = 0;  // 敗北エンド BGM 生成回数（singleton 検出用）
+        this.victoryEndingBgm = null;  // 勝利エンド BGM
+        this.victoryEndingBgmCreatedCount = 0;  // 勝利エンド BGM 生成回数（singleton 検出用）
+        this.endingBgmStarted = false;  // エンディング曲再生フラグ
+        this.currentEndingBgmType = null;  // 現在再生中のエンディング曲タイプ
         this.playHistory = new PlayHistory();
         this.globalCounter = new GlobalCounter();
         this.resetState();
@@ -222,6 +226,7 @@ class GoGoHooligan {
     startGame() {
         this.stopThemeMusic();
         this.stopDefeatEndingBgm();
+        this.resetAudioFlags();
         this.playHistory.recordPlay();
         this.resetState();
         this.renderPrologue(0);
@@ -563,6 +568,7 @@ class GoGoHooligan {
         if (!audio.paused) {
             return;
         }
+        console.log('[AUDIO] play final battle bgm');
         const playPromise = audio.play();
         if (playPromise && typeof playPromise.catch === 'function') {
             playPromise.catch(() => {
@@ -656,6 +662,23 @@ class GoGoHooligan {
         this.toggleTitleBgm(btn);
     }
 
+    stopAllBgm() {
+        console.log('[AUDIO] stop all bgm');
+        const bgms = [
+            this.battleBgm,
+            this.themeBgm,
+            this.storyBgm,
+            this.defeatEndingBgm,
+            this.victoryEndingBgm
+        ];
+        
+        bgms.forEach((audio) => {
+            if (!audio) return;
+            audio.pause();
+            audio.currentTime = 0;
+        });
+    }
+
     stopThemeMusic() {
         if (this.themeBgm) {
             this.themeBgm.pause();
@@ -675,6 +698,34 @@ class GoGoHooligan {
             console.error('[TitleBGM] 二重警告:', state);
         }
         return state;
+    }
+
+    initVictoryEndingBgm() {
+        if (!this.victoryEndingBgm) {
+            this.victoryEndingBgmCreatedCount++;
+            if (this.victoryEndingBgmCreatedCount > 1) {
+                console.error(`[勝利エンドBGM] 二重警告: ${this.victoryEndingBgmCreatedCount}個目の Audio インスタンスを生成しようとしています。スタックトレース:`, new Error().stack);
+            }
+            const audio = new Audio('audio/victory-ending.mp3');
+            audio.loop = false;
+            audio.volume = 0.5;
+            audio.preload = 'auto';
+            this.victoryEndingBgm = audio;
+        }
+    }
+
+    initDefeatEndingBgm() {
+        if (!this.defeatEndingBgm) {
+            this.defeatEndingBgmCreatedCount++;
+            if (this.defeatEndingBgmCreatedCount > 1) {
+                console.error(`[敗北エンドBGM] 二重警告: ${this.defeatEndingBgmCreatedCount}個目の Audio インスタンスを生成しようとしています。スタックトレース:`, new Error().stack);
+            }
+            const audio = new Audio('audio/defeat-ending.mp3');
+            audio.loop = false;
+            audio.volume = 0.5;
+            audio.preload = 'auto';
+            this.defeatEndingBgm = audio;
+        }
     }
 
     ensureDefeatEndingBgm() {
@@ -728,9 +779,46 @@ class GoGoHooligan {
         return state;
     }
 
+    async playEndingBgmOnce(type) {
+        if (this.endingBgmStarted && this.currentEndingBgmType === type) {
+            return;
+        }
+
+        this.stopAllBgm();
+
+        let targetBgm = null;
+
+        if (type === 'victory') {
+            this.initVictoryEndingBgm();
+            targetBgm = this.victoryEndingBgm;
+        } else if (type === 'defeat') {
+            this.initDefeatEndingBgm();
+            targetBgm = this.defeatEndingBgm;
+        }
+
+        if (!targetBgm) return;
+
+        this.endingBgmStarted = true;
+        this.currentEndingBgmType = type;
+
+        try {
+            targetBgm.currentTime = 0;
+            await targetBgm.play();
+            console.log(`[AUDIO] play ${type} ending bgm`);
+        } catch (error) {
+            console.error(`エンディングBGM再生失敗: ${type}`, error);
+        }
+    }
+
+    resetAudioFlags() {
+        this.endingBgmStarted = false;
+        this.currentEndingBgmType = null;
+    }
+
     renderTitle() {
         // 敗北エンド BGM を停止
         this.stopDefeatEndingBgm();
+        this.resetAudioFlags();
         
         this.setScreen(`
             <div class="title-screen furious-title-screen">
@@ -2132,12 +2220,15 @@ class GoGoHooligan {
 
     showEnding() {
         this.state.battleActive = false;
-        this.stopBattleBgm({ reset: false });
+        this.stopBattleBgm({ reset: true, immediate: true });
         
-        // 敗北時に敗北エンド BGM を再生
         const result = this.state.finalBattleResult || { victory: false };
-        if (!result.victory) {
-            this.startDefeatEndingBgm();
+        
+        // エンディング曲をὊ1回だけ再生
+        if (result.victory) {
+            this.playEndingBgmOnce('victory');
+        } else {
+            this.playEndingBgmOnce('defeat');
         }
         
         const recruitedCount = this.state.recruitedMembers.length;
