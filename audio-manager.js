@@ -10,8 +10,9 @@
 
 class AudioManager {
     constructor() {
-        // GitHub Pages 対応: ベースパスを取得
-        const basePath = window.location.pathname.includes('/go-go-hooligan/') ? '/go-go-hooligan' : '';
+        // GitHub Pages 対応: ベースパスを自動検出
+        // <base> タグから取得、またはパス名から推測
+        const basePath = this.getBasePath();
         
         // 音声ファイルマップ
         this.audioFiles = {
@@ -26,6 +27,9 @@ class AudioManager {
                 defeat: `${basePath}/audio/voice/defeat.mp3`,
             }
         };
+
+        console.log('[AudioManager] Audio files initialized with base path:', basePath);
+        console.log('[AudioManager] Button SE path:', this.audioFiles.se.button);
 
         // 再生中の Audio 要素
         this.currentSE = null;
@@ -45,6 +49,44 @@ class AudioManager {
     /**
      * モバイルデバイスか判定
      */
+    /**
+     * ベースパスを取得（GitHub Pages project site 対応）
+     * @returns {string} ベースパス（例: '/go-go-hooligan'）
+     */
+    getBasePath() {
+        // 1. <base> タグから取得を試みる
+        const baseTag = document.querySelector('base');
+        if (baseTag && baseTag.href) {
+            try {
+                const url = new URL(baseTag.href);
+                const pathname = url.pathname.replace(/\/$/, ''); // 末尾スラッシュ削除
+                if (pathname && pathname !== '/') {
+                    console.log('[AudioManager] Base path from <base> tag:', pathname);
+                    return pathname;
+                }
+            } catch (e) {
+                console.warn('[AudioManager] Failed to parse <base> href:', e);
+            }
+        }
+
+        // 2. window.location.pathname から推測
+        const pathname = window.location.pathname;
+        console.log('[AudioManager] Current pathname:', pathname);
+        
+        if (pathname.includes('/go-go-hooligan')) {
+            // /go-go-hooligan/ または /go-go-hooligan を含む場合
+            const match = pathname.match(/^(\/go-go-hooligan)/);
+            if (match) {
+                console.log('[AudioManager] Base path detected from pathname:', match[1]);
+                return match[1];
+            }
+        }
+
+        // 3. ローカル開発環境の場合は空文字列
+        console.log('[AudioManager] Using empty base path (local or root deployment)');
+        return '';
+    }
+
     detectMobile() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
