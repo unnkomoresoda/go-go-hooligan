@@ -1230,7 +1230,8 @@ body {
 }
 
 .recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong {
-    color: #e74c3c;
+    color: #c94747;
+    opacity: 1;
 }
 
 .recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
@@ -1544,7 +1545,8 @@ body {
 }
 
 .recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card strong {
-    color: #e74c3c;
+    color: #c94747;
+    opacity: 1;
 }
 
 .recruitment-result .character-profile-panel .character-detail-column .stats-grid .stat-card .stat-label {
