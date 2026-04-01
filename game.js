@@ -145,6 +145,7 @@ class GoGoHooligan {
         this.battleBgmFadeTimer = null;
         this.themeBgm = null;
         this.themeBgmPlaying = false;
+        this.themeBgmCreatedCount = 0;  // Audio 生成回数（singleton 検出用）
         this.playHistory = new PlayHistory();
         this.globalCounter = new GlobalCounter();
         this.resetState();
@@ -606,6 +607,10 @@ class GoGoHooligan {
 
     ensureThemeMusicAudio() {
         if (!this.themeBgm) {
+            this.themeBgmCreatedCount++;
+            if (this.themeBgmCreatedCount > 1) {
+                console.error(`[TitleBGM] 二重警告: ${this.themeBgmCreatedCount}個目の Audio インスタンスを生成しようとしています。スタックトレース:`, new Error().stack);
+            }
             const audio = new Audio('audio/gogo-hooligan-theme.mp3');
             audio.loop = false;
             audio.volume = 0.3;
@@ -614,15 +619,14 @@ class GoGoHooligan {
         return this.themeBgm;
     }
 
-    toggleThemeMusic() {
+    toggleTitleBgm(buttonEl) {
         const audio = this.ensureThemeMusicAudio();
         if (!audio) return;
 
         if (this.themeBgmPlaying && !audio.paused) {
             audio.pause();
             this.themeBgmPlaying = false;
-            const btn = document.getElementById('theme-music-btn');
-            if (btn) btn.textContent = '🎵 テーマ曲を再生';
+            if (buttonEl) buttonEl.textContent = '🎵 テーマ曲を再生';
         } else {
             audio.currentTime = 0;
             const playPromise = audio.play();
@@ -630,8 +634,7 @@ class GoGoHooligan {
                 playPromise
                     .then(() => {
                         this.themeBgmPlaying = true;
-                        const btn = document.getElementById('theme-music-btn');
-                        if (btn) btn.textContent = '⏸ テーマ曲を停止';
+                        if (buttonEl) buttonEl.textContent = '⏸ テーマ曲を停止';
                     })
                     .catch(error => {
                         console.log('テーマ曲の再生に失敗:', error);
@@ -639,10 +642,15 @@ class GoGoHooligan {
                     });
             } else {
                 this.themeBgmPlaying = true;
-                const btn = document.getElementById('theme-music-btn');
-                if (btn) btn.textContent = '⏸ テーマ曲を停止';
+                if (buttonEl) buttonEl.textContent = '⏸ テーマ曲を停止';
             }
         }
+    }
+
+    // 後方互換性のため
+    toggleThemeMusic() {
+        const btn = document.getElementById('theme-music-btn');
+        this.toggleTitleBgm(btn);
     }
 
     stopThemeMusic() {
@@ -651,6 +659,19 @@ class GoGoHooligan {
             this.themeBgm.currentTime = 0;
             this.themeBgmPlaying = false;
         }
+    }
+
+    checkTitleBgmState() {
+        const playingCount = this.themeBgm && !this.themeBgm.paused ? 1 : 0;
+        const state = {
+            createdCount: this.themeBgmCreatedCount,
+            playingCount: playingCount,
+            duplicated: this.themeBgmCreatedCount > 1
+        };
+        if (state.duplicated) {
+            console.error('[TitleBGM] 二重警告:', state);
+        }
+        return state;
     }
 
     renderTitle() {
@@ -2269,8 +2290,10 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         game = new GoGoHooligan();
         window.game = game;
+        window.__checkTitleBgmState = () => game.checkTitleBgmState();
     });
 } else {
     game = new GoGoHooligan();
     window.game = game;
+    window.__checkTitleBgmState = () => game.checkTitleBgmState();
 }
