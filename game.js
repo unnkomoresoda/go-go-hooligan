@@ -2170,10 +2170,13 @@ class GoGoHooligan {
             enemySkillSuppressed = true;
         }
 
+        // 攻撃音を再生
+        this.audioManager.playSE('attack');
+        
         this.recordBattleLog(
             battleState,
             sceneLog,
-            `実況: ${unit.name} が前へ出る。${useSkill ? '空気が変わる。必殺の間合いだ。' : enemySkillSuppressed ? '必殺の構えに入ったが、味方の圧と視線が踏み込みを鈍らせた。' : '拳と体重、覚悟まで乗せて踏み込む。'}`
+            `実況: ${unit.name} が前へ出る。${useSkill ? '空気が変わる。必殺の間合いだ。' : enemySkillSuppressed ? '必殺の構えに入ったが、味方の圧と視線が踏み込みを銅らせた。' : '拳と体重、覩悟まで乗せて踏み込む。'}`
         );
 
         if (useSkill) {
@@ -2271,9 +2274,15 @@ class GoGoHooligan {
         if (result.victory) {
             console.log('[FLOW] Calling playEndingBgmOnce(victory)');
             this.playEndingBgmOnce('victory');
+            // 勝利ボイスを再生
+            console.log('[AUDIO] Playing victory voice');
+            this.audioManager.playVoice('victory');
         } else {
             console.log('[FLOW] Calling playEndingBgmOnce(defeat)');
             this.playEndingBgmOnce('defeat');
+            // 敗北ボイスを再生
+            console.log('[AUDIO] Playing defeat voice');
+            this.audioManager.playVoice('defeat');
         }
         console.log('[FLOW] showEnding() completed')
         
