@@ -141,6 +141,7 @@ class PlayHistory {
 class GoGoHooligan {
     constructor() {
         this.gameScreen = document.getElementById('game-screen');
+        this.audioManager = new AudioManager();
         this.battleBgm = null;
         this.battleBgmFadeTimer = null;
         this.themeBgm = null;
@@ -200,7 +201,16 @@ class GoGoHooligan {
     }
 
     setupUserInteractionListener() {
-        // タイトル画面では音楽なし
+        // タイトル画面では音声なし
+        
+        // ボタンクリック時に効果音を再生
+        this.gameScreen.addEventListener('click', (event) => {
+            const button = event.target.closest('button');
+            if (button) {
+                console.log('[Game] Button clicked, playing SE');
+                this.audioManager.playSE('button');
+            }
+        });
     }
 
     scrollToTop() {

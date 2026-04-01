@@ -10,17 +10,20 @@
 
 class AudioManager {
     constructor() {
+        // GitHub Pages 対応: ベースパスを取得
+        const basePath = window.location.pathname.includes('/go-go-hooligan/') ? '/go-go-hooligan' : '';
+        
         // 音声ファイルマップ
         this.audioFiles = {
             se: {
-                title: 'audio/se/title.mp3',
-                button: 'audio/se/button.mp3',
-                recruitSuccess: 'audio/se/recruit-success.mp3',
-                attack: 'audio/se/attack.mp3',
+                title: `${basePath}/audio/se/title.mp3`,
+                button: `${basePath}/audio/se/button.mp3`,
+                recruitSuccess: `${basePath}/audio/se/recruit-success.mp3`,
+                attack: `${basePath}/audio/se/attack.mp3`,
             },
             voice: {
-                victory: 'audio/voice/victory.mp3',
-                defeat: 'audio/voice/defeat.mp3',
+                victory: `${basePath}/audio/voice/victory.mp3`,
+                defeat: `${basePath}/audio/voice/defeat.mp3`,
             }
         };
 
@@ -82,19 +85,28 @@ class AudioManager {
 
         const filePath = this.audioFiles.se[name];
         if (!filePath) {
-            console.warn(`SE not found: ${name}`);
+            console.warn(`[AudioManager] SE not found: ${name}`);
             return;
         }
 
         try {
             const audio = new Audio(filePath);
             audio.volume = this.volumeSE;
-            audio.play().catch(() => {
-                // 再生失敗時は無視（モバイルの制約対応）
-            });
+            console.log(`[AudioManager] Playing SE: ${name} (${filePath})`);
+            
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log(`[AudioManager] SE playing: ${name}`);
+                    })
+                    .catch((error) => {
+                        console.error(`[AudioManager] Failed to play SE '${name}':`, error.name, error.message);
+                    });
+            }
             this.currentSE = audio;
         } catch (e) {
-            console.error(`Failed to play SE: ${name}`, e);
+            console.error(`[AudioManager] Exception playing SE: ${name}`, e);
         }
     }
 
@@ -114,19 +126,28 @@ class AudioManager {
 
         const filePath = this.audioFiles.voice[name];
         if (!filePath) {
-            console.warn(`Voice not found: ${name}`);
+            console.warn(`[AudioManager] Voice not found: ${name}`);
             return;
         }
 
         try {
             const audio = new Audio(filePath);
             audio.volume = this.volumeVoice;
-            audio.play().catch(() => {
-                // 再生失敗時は無視（モバイルの制約対応）
-            });
+            console.log(`[AudioManager] Playing Voice: ${name} (${filePath})`);
+            
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log(`[AudioManager] Voice playing: ${name}`);
+                    })
+                    .catch((error) => {
+                        console.error(`[AudioManager] Failed to play voice '${name}':`, error.name, error.message);
+                    });
+            }
             this.currentVoice = audio;
         } catch (e) {
-            console.error(`Failed to play voice: ${name}`, e);
+            console.error(`[AudioManager] Exception playing voice: ${name}`, e);
         }
     }
 
