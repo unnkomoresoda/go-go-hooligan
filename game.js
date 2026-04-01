@@ -682,7 +682,12 @@ class GoGoHooligan {
             if (!audio) return;
             audio.pause();
             audio.currentTime = 0;
+            audio.volume = 0;
         });
+        
+        // battleBgmをnullに設定して参照をクリア
+        this.battleBgm = null;
+        console.log('[AUDIO] battleBgm reference cleared');
     }
 
     stopThemeMusic() {
@@ -817,8 +822,9 @@ class GoGoHooligan {
 
         try {
             targetBgm.currentTime = 0;
+            targetBgm.volume = 0.42;  // ボリュームを設定
             await targetBgm.play();
-            console.log(`[AUDIO] play ${type} ending bgm`);
+            console.log(`[AUDIO] play ${type} ending bgm with volume 0.42`);
         } catch (error) {
             console.error(`エンディングBGM再生失敗: ${type}`, error);
         }
@@ -2235,8 +2241,15 @@ class GoGoHooligan {
     showEnding() {
         console.log('[FLOW] showEnding() called');
         this.state.battleActive = false;
-        console.log('[FLOW] Calling stopBattleBgm()');
-        this.stopBattleBgm({ reset: true, immediate: true });
+        
+        // 最終決戦BGMを即座に停止
+        if (this.battleBgm) {
+            console.log('[AUDIO] Direct stop: battleBgm.pause()');
+            this.battleBgm.pause();
+            this.battleBgm.currentTime = 0;
+            this.battleBgm.volume = 0.42;
+        }
+        
         console.log('[FLOW] stopBattleBgm() completed');
         
         const result = this.state.finalBattleResult || { victory: false };
