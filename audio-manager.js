@@ -10,26 +10,29 @@
 
 class AudioManager {
     constructor() {
-        // GitHub Pages 対応: ベースパスを自動検出
-        // <base> タグから取得、またはパス名から推測
-        const basePath = this.getBasePath();
+        // GitHub Pages 対応: <base> タグがある場合は相対パスを使用
+        // <base> タグがない場合は、ベースパスを付与
+        this.hasBaseTag = !!document.querySelector('base');
         
-        // 音声ファイルマップ
+        // 音声ファイルマップ（相対パスのみ）
         this.audioFiles = {
             se: {
-                title: `${basePath}/audio/se/title.mp3`,
-                button: `${basePath}/audio/se/button.mp3`,
-                recruitSuccess: `${basePath}/audio/se/recruit-success.mp3`,
-                attack: `${basePath}/audio/se/attack.mp3`,
+                title: 'audio/se/title.mp3',
+                button: 'audio/se/button.mp3',
+                recruitSuccess: 'audio/se/recruit-success.mp3',
+                attack: 'audio/se/attack.mp3',
             },
             voice: {
-                victory: `${basePath}/audio/voice/victory.mp3`,
-                defeat: `${basePath}/audio/voice/defeat.mp3`,
+                victory: 'audio/voice/victory.mp3',
+                defeat: 'audio/voice/defeat.mp3',
             }
         };
 
-        console.log('[AudioManager] Audio files initialized with base path:', basePath);
-        console.log('[AudioManager] Button SE path:', this.audioFiles.se.button);
+        console.log('[AudioManager] Initialized');
+        console.log('[AudioManager] Has <base> tag:', this.hasBaseTag);
+        if (!this.hasBaseTag) {
+            console.log('[AudioManager] Will use absolute paths with base path detection');
+        }
 
         // 再生中の Audio 要素
         this.currentSE = null;
@@ -47,46 +50,45 @@ class AudioManager {
     }
 
     /**
-     * モバイルデバイスか判定
+     * ファイルパスを取得（<base> タグの有無に応じて処理）
+     * @param {string} relativePath - 相対パス（例: 'audio/se/button.mp3'）
+     * @returns {string} 最終的なパス
      */
+    getFilePath(relativePath) {
+        if (this.hasBaseTag) {
+            // <base> タグがあれば、相対パスをそのまま返す
+            // ブラウザが <base> を基準に解決する
+            return relativePath;
+        } else {
+            // <base> タグがなければ、ベースパスを付与
+            const basePath = this.getBasePath();
+            return basePath ? `${basePath}/${relativePath}` : relativePath;
+        }
+    }
+
     /**
-     * ベースパスを取得（GitHub Pages project site 対応）
+     * ベースパスを取得（<base> タグがない場合のみ）
      * @returns {string} ベースパス（例: '/go-go-hooligan'）
      */
     getBasePath() {
-        // 1. <base> タグから取得を試みる
-        const baseTag = document.querySelector('base');
-        if (baseTag && baseTag.href) {
-            try {
-                const url = new URL(baseTag.href);
-                const pathname = url.pathname.replace(/\/$/, ''); // 末尾スラッシュ削除
-                if (pathname && pathname !== '/') {
-                    console.log('[AudioManager] Base path from <base> tag:', pathname);
-                    return pathname;
-                }
-            } catch (e) {
-                console.warn('[AudioManager] Failed to parse <base> href:', e);
-            }
-        }
-
-        // 2. window.location.pathname から推測
         const pathname = window.location.pathname;
         console.log('[AudioManager] Current pathname:', pathname);
         
         if (pathname.includes('/go-go-hooligan')) {
-            // /go-go-hooligan/ または /go-go-hooligan を含む場合
             const match = pathname.match(/^(\/go-go-hooligan)/);
             if (match) {
-                console.log('[AudioManager] Base path detected from pathname:', match[1]);
+                console.log('[AudioManager] Base path detected:', match[1]);
                 return match[1];
             }
         }
 
-        // 3. ローカル開発環境の場合は空文字列
-        console.log('[AudioManager] Using empty base path (local or root deployment)');
+        console.log('[AudioManager] Using empty base path');
         return '';
     }
 
+    /**
+     * モバイルデバイスか判定
+     */
     detectMobile() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
@@ -125,11 +127,13 @@ class AudioManager {
             this.currentSE.currentTime = 0;
         }
 
-        const filePath = this.audioFiles.se[name];
-        if (!filePath) {
+        const relativePath = this.audioFiles.se[name];
+        if (!relativePath) {
             console.warn(`[AudioManager] SE not found: ${name}`);
             return;
         }
+
+        const filePath = this.getFilePath(relativePath);
 
         try {
             const audio = new Audio(filePath);
@@ -166,11 +170,13 @@ class AudioManager {
             this.currentVoice.currentTime = 0;
         }
 
-        const filePath = this.audioFiles.voice[name];
-        if (!filePath) {
+        const relativePath = this.audioFiles.voice[name];
+        if (!relativePath) {
             console.warn(`[AudioManager] Voice not found: ${name}`);
             return;
         }
+
+        const filePath = this.getFilePath(relativePath);
 
         try {
             const audio = new Audio(filePath);

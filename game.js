@@ -1,5 +1,7 @@
 const TITLE_NAME = '乱暴！怒りのフーリガン！';
 const TITLE_SUBTITLE = 'Rampage! Furious Hooligans!';
+const THEME_BGM_TITLE = 'Go-Go Hooligan Theme';
+const THEME_BGM_URL = 'audio/gogo-hooligan-theme.mp3';
 const FINAL_BATTLE_BGM_TITLE = '血塗れのダービー';
 const FINAL_BATTLE_BGM_URL = 'https://cdn1.suno.ai/2a04cd29-a3f0-4d53-9793-2fee56ee089d.mp3';
 const STORY_BGM_TITLE = 'days';
