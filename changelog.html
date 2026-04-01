@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バージョン変更情報 - 乱暴！怒りのフーリガン！</title>
+    <link rel="stylesheet" href="styles.css?v=24">
+    <style>
+        .changelog-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .changelog-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .changelog-header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+        }
+
+        .changelog-header p {
+            color: #999;
+            font-size: 0.95em;
+        }
+
+        .changelog-back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            padding: 10px 15px;
+            background-color: #333;
+            color: #e0e0e0;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .changelog-back-link:hover {
+            background-color: #444;
+        }
+
+        .version-entry {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border-left: 4px solid #c94747;
+            border-radius: 4px;
+        }
+
+        .version-entry h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+            color: #e0e0e0;
+        }
+
+        .version-date {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .version-changes {
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        .version-changes ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .version-changes li {
+            margin-bottom: 8px;
+        }
+
+        .version-changes strong {
+            color: #c94747;
+        }
+
+        .changelog-footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #999;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-screen">
+            <div class="changelog-container">
+                <a href="index.html" class="changelog-back-link">← ゲームに戻る</a>
+
+                <div class="changelog-header">
+                    <h1>バージョン変更情報</h1>
+                    <p>乱暴！怒りのフーリガン！ の更新履歴</p>
+                </div>
+
+                <div class="version-entry">
+                    <h2>v1.5.0</h2>
+                    <div class="version-date">2026年4月2日</div>
+                    <div class="version-changes">
+                        <strong>新機能</strong>
+                        <ul>
+                            <li>効果音・ボイスシステムを実装</li>
+                            <li>最終決戦での攻撃音を追加</li>
+                            <li>勝利・敗北ボイスを追加</li>
+                            <li>バージョン変更情報ページを追加</li>
+                        </ul>
+                        <strong>改善</strong>
+                        <ul>
+                            <li>GitHub Pages project site での音声ファイル読み込みを修正</li>
+                            <li>AudioManager のベースパス検出ロジックを改善</li>
+                            <li>&lt;base&gt; タグ対応で相対パス解決を最適化</li>
+                        </ul>
+                        <strong>バグ修正</strong>
+                        <ul>
+                            <li>THEME_BGM_URL が未定義だった問題を修正</li>
+                            <li>音声ファイルパスの二重解決問題を修正</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="version-entry">
+                    <h2>v1.4.0</h2>
+                    <div class="version-date">2026年3月28日</div>
+                    <div class="version-changes">
+                        <strong>新機能</strong>
+                        <ul>
+                            <li>最終決戦 UI を水平スクロールカルーセルに変更</li>
+                            <li>キャラクター詳細ページのスタイル改善</li>
+                        </ul>
+                        <strong>改善</strong>
+                        <ul>
+                            <li>モバイル表示の最適化（64vw、最大 230px）</li>
+                            <li>画像サイズの最適化（max-height: 160px）</li>
+                            <li>タイトルページのヒーロー画像を新しいアートワークに変更</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="version-entry">
+                    <h2>v1.3.0</h2>
+                    <div class="version-date">2026年3月15日</div>
+                    <div class="version-changes">
+                        <strong>新機能</strong>
+                        <ul>
+                            <li>最終決戦システムを実装</li>
+                            <li>3対3チームバトルメカニクス</li>
+                            <li>クリティカルヒットシステム</li>
+                        </ul>
+                        <strong>改善</strong>
+                        <ul>
+                            <li>バトルログシステムの改善</li>
+                            <li>敵チームの難易度調整機能</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="version-entry">
+                    <h2>v1.2.0</h2>
+                    <div class="version-date">2026年2月28日</div>
+                    <div class="version-changes">
+                        <strong>新機能</strong>
+                        <ul>
+                            <li>キャラクター勧誘システム</li>
+                            <li>昼間のアクション選択メカニクス</li>
+                            <li>夜間の会話イベント</li>
+                        </ul>
+                        <strong>改善</strong>
+                        <ul>
+                            <li>ゲーム進行フローの改善</li>
+                            <li>UI/UX の最適化</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="version-entry">
+                    <h2>v1.1.0</h2>
+                    <div class="version-date">2026年2月10日</div>
+                    <div class="version-changes">
+                        <strong>新機能</strong>
+                        <ul>
+                            <li>キャラクター詳細ページ</li>
+                            <li>プレイ履歴トラッキング</li>
+                            <li>グローバルカウンター機能</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="version-entry">
+                    <h2>v1.0.0</h2>
+                    <div class="version-date">2026年1月15日</div>
+                    <div class="version-changes">
+                        <strong>初回リリース</strong>
+                        <ul>
+                            <li>ゲーム基本システムの実装</li>
+                            <li>キャラクター管理システム</li>
+                            <li>ゲーム進行ロジック</li>
+                            <li>モバイル対応 UI</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="changelog-footer">
+                    <p>最終更新: 2026年4月2日</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

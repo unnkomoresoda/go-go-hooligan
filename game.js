@@ -868,8 +868,17 @@ class GoGoHooligan {
                     <button class="btn btn-secondary" onclick="window.game.showHelp()">ヘルプ</button>
                     <button class="btn btn-music" id="theme-music-btn" onclick="window.game.toggleThemeMusic()">🎵 テーマ曲を再生</button>
                 </div>
+                <div class="title-footer">
+                    <a href="changelog.html" class="version-link">バージョン情報</a>
+                </div>
+                <div class="credits-footer">
+                    <p>© 2026 世界のモレソダ</p>
+                </div>
             </div>
         `);
+        
+        // タイトル SE を再生
+        this.audioManager.playSE('title');
     }
 
     renderPrologue(sceneIndex = 0) {

@@ -2962,3 +2962,63 @@ body.modal-open {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* Title Footer and Credits */
+.title-footer {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 2;
+}
+
+.version-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #999;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.version-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ccc;
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.credits-footer {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 2;
+    font-size: 0.75em;
+    color: #666;
+}
+
+.credits-footer p {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .title-footer {
+        bottom: 70px;
+    }
+
+    .version-link {
+        font-size: 0.85em;
+        padding: 6px 12px;
+    }
+
+    .credits-footer {
+        bottom: 15px;
+        font-size: 0.7em;
+    }
+}
