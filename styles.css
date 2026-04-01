@@ -57,20 +57,60 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #00c853 0%, #00a152 100%);
-    color: #000;
+    gap: 10px;
+    min-height: 56px;
+    padding: 14px 22px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #2dbd67 0%, #1f9f53 55%, #187c42 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    text-align: center;
     text-decoration: none;
-    box-shadow: 0 8px 18px rgba(0, 168, 89, 0.2);
-    font-size: 0.5rem;
-    padding: 6px 10px;
-    line-height: 1.1;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        filter 0.16s ease,
+        background 0.16s ease;
     white-space: nowrap;
 }
 
+.btn-donate,
+.btn-donate:link,
+.btn-donate:visited,
+.btn-donate:hover,
+.btn-donate:active {
+    color: #fff;
+    text-decoration: none;
+}
+
 .btn-donate:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgba(0, 168, 89, 0.28);
+    transform: translateY(-1px);
+    filter: brightness(1.04);
+    box-shadow:
+        0 14px 28px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.14);
+}
+
+.btn-donate:active {
+    transform: translateY(1px) scale(0.995);
+    box-shadow:
+        0 6px 14px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.16);
+}
+
+.btn-donate:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.75);
+    outline-offset: 3px;
 }
 
 .btn-donate-small {
@@ -2002,6 +2042,10 @@ body {
 
     .btn-donate {
         width: 100%;
+        max-width: 420px;
+        min-height: 58px;
+        padding: 15px 20px;
+        font-size: 15px;
     }
 
     .status {
