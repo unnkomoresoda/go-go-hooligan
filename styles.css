@@ -2324,6 +2324,10 @@ body {
     margin-bottom: 6px;
 }
 
+.ending-summary-card span {
+    color: #4455c9;
+}
+
 .battle-log-panel {
     margin-top: 20px;
     background: rgba(255, 255, 255, 0.98);
