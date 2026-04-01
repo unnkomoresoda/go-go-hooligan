@@ -350,12 +350,12 @@ class GoGoHooligan {
     renderStatsGrid(stats) {
         return `
             <div class="stats-grid">
-                <div class="stat-card"><span class="stat-label">筋力</span><strong>${stats.strength}</strong></div>
-                <div class="stat-card"><span class="stat-label">体脂肪</span><strong>${stats.bodyFat}</strong></div>
-                <div class="stat-card"><span class="stat-label">幸福度</span><strong>${stats.happiness}</strong></div>
-                <div class="stat-card"><span class="stat-label">モラル</span><strong>${stats.morality}</strong></div>
-                <div class="stat-card"><span class="stat-label">学力</span><strong>${stats.education}</strong></div>
-                <div class="stat-card"><span class="stat-label">資産</span><strong>${stats.assets}</strong></div>
+                <div class="stat-card"><span class="stat-label">筋力</span><strong style="color: #c94747 !important;">${stats.strength}</strong></div>
+                <div class="stat-card"><span class="stat-label">体脂肪</span><strong style="color: #c94747 !important;">${stats.bodyFat}</strong></div>
+                <div class="stat-card"><span class="stat-label">幸福度</span><strong style="color: #c94747 !important;">${stats.happiness}</strong></div>
+                <div class="stat-card"><span class="stat-label">モラル</span><strong style="color: #c94747 !important;">${stats.morality}</strong></div>
+                <div class="stat-card"><span class="stat-label">学力</span><strong style="color: #c94747 !important;">${stats.education}</strong></div>
+                <div class="stat-card"><span class="stat-label">資産</span><strong style="color: #c94747 !important;">${stats.assets}</strong></div>
             </div>
         `;
     }
