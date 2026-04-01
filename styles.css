@@ -2253,6 +2253,12 @@ body {
     margin: 0;
 }
 
+.night-encounter-panel .character-image,
+.night-recruit-result .character-image {
+    width: 280px;
+    height: 350px;
+}
+
 .ending-summary-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
