@@ -196,45 +196,7 @@ class GoGoHooligan {
     init() {
         document.title = TITLE_NAME;
         this.setupUserInteractionListener();
-        this.setupBattleCarouselDebug();
         this.renderTitle();
-    }
-
-    setupBattleCarouselDebug() {
-        // デバッグ: スクロールイベントをログ
-        const carousels = document.querySelectorAll('.battle-carousel');
-        carousels.forEach((el, index) => {
-            el.addEventListener('scroll', () => {
-                console.log('[battle-carousel-scroll]', index, 'scrollLeft:', el.scrollLeft, 'scrollWidth:', el.scrollWidth, 'clientWidth:', el.clientWidth);
-            }, { passive: true });
-        });
-
-        // デバッグ: タッチイベントをログ
-        carousels.forEach((el, index) => {
-            el.addEventListener('touchstart', (e) => {
-                console.log('[battle-carousel-touchstart]', index, 'touches:', e.touches.length);
-            }, { passive: true });
-            el.addEventListener('touchmove', (e) => {
-                console.log('[battle-carousel-touchmove]', index, 'scrollLeft:', el.scrollLeft);
-            }, { passive: true });
-        });
-
-        // グローバルデバッグ関数
-        window.__battleCarouselCheck = () => {
-            return [...document.querySelectorAll('.battle-carousel')].map((el, i) => ({
-                index: i,
-                className: el.className,
-                scrollWidth: el.scrollWidth,
-                clientWidth: el.clientWidth,
-                scrollLeft: el.scrollLeft,
-                overflowX: getComputedStyle(el).overflowX,
-                touchAction: getComputedStyle(el).touchAction,
-                pointerEvents: getComputedStyle(el).pointerEvents,
-                display: getComputedStyle(el).display,
-                flex: getComputedStyle(el).flex,
-            }));
-        };
-        console.log('Battle carousel debug setup complete. Use window.__battleCarouselCheck() to inspect.');
     }
 
     setupUserInteractionListener() {
@@ -1828,22 +1790,16 @@ class GoGoHooligan {
                         <h3>試合後の街はついに決壊し、3対3の先発乱闘が火蓋を切る</h3>
                         <div class="battle-lineup">
                             <div class="battle-side ally-side">
-                                <div class="carousel-header">
-                                    <h4>味方先発3人</h4>
-                                    <span class="carousel-hint">← 左右にスワィップ →</span>
-                                </div>
-                                <div class="battle-carousel" id="ally-carousel">
+                                <h4>味方先発3人</h4>
+                                <div class="battle-fighter-grid">
                                     ${allyCards || this.renderBattleEmptySlot('味方前衛')}
                                 </div>
                                 <p>控え: ${this.renderBattleReserveSummary(battleState.allyReserve)}</p>
                             </div>
                             <div class="battle-versus">激突</div>
                             <div class="battle-side enemy-side">
-                                <div class="carousel-header">
-                                    <h4>敵先発3人</h4>
-                                    <span class="carousel-hint">← 左右にスワィップ →</span>
-                                </div>
-                                <div class="battle-carousel" id="enemy-carousel">
+                                <h4>敵先発3人</h4>
+                                <div class="battle-fighter-grid">
                                     ${enemyCards || this.renderBattleEmptySlot('敵前衛')}
                                 </div>
                                 <p>敵増援: ${this.renderBattleReserveSummary(battleState.enemyReserve)}</p>
