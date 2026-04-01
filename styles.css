@@ -62,9 +62,10 @@ body {
     color: #fff;
     text-decoration: none;
     box-shadow: 0 8px 18px rgba(0, 168, 89, 0.2);
-    font-size: 0.65rem;
-    padding: 8px 12px;
-    line-height: 1.2;
+    font-size: 0.5rem;
+    padding: 6px 10px;
+    line-height: 1.1;
+    white-space: nowrap;
 }
 
 .btn-donate:hover {
