@@ -59,7 +59,7 @@ body {
     justify-content: center;
     gap: 8px;
     background: linear-gradient(135deg, #00c853 0%, #00a152 100%);
-    color: #fff;
+    color: #000;
     text-decoration: none;
     box-shadow: 0 8px 18px rgba(0, 168, 89, 0.2);
     font-size: 0.5rem;
@@ -301,7 +301,7 @@ body {
     width: 100%;
     margin: 10px 0;
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: #fff;
+    color: #000;
     border: none;
     text-align: left;
     padding: 20px;
