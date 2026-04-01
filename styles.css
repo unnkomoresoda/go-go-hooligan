@@ -280,17 +280,19 @@ body {
     display: block;
     width: 100%;
     margin: 10px 0;
-    background: #f9f9f9;
-    color: #333;
-    border: 2px solid #ddd;
+    background: #2a2a2a;
+    color: #fff;
+    border: 2px solid #555;
     text-align: left;
     padding: 15px;
+    font-weight: 500;
 }
 
 .btn-choice:hover {
-    background: #667eea;
+    background: #c00;
     color: white;
-    border-color: #667eea;
+    border-color: #ff4444;
+    box-shadow: 0 0 15px rgba(200, 0, 0, 0.3);
 }
 
 .btn-location {
