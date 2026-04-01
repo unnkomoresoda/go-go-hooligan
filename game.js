@@ -582,23 +582,29 @@ class GoGoHooligan {
 
     stopBattleBgm(options = {}) {
         const { reset = false, immediate = false } = options;
+        console.log('[AUDIO] stopBattleBgm() called with options:', { reset, immediate });
         if (this.battleBgmFadeTimer) {
             clearInterval(this.battleBgmFadeTimer);
             this.battleBgmFadeTimer = null;
         }
         if (!this.battleBgm) {
+            console.log('[AUDIO] battleBgm is null, returning');
             return;
         }
         const audio = this.battleBgm;
+        console.log('[AUDIO] battleBgm state: paused=' + audio.paused + ', volume=' + audio.volume);
         const finalizeStop = () => {
+            console.log('[AUDIO] finalizeStop() called');
             audio.pause();
             if (reset) {
                 audio.currentTime = 0;
             }
             audio.volume = 0.42;
+            console.log('[AUDIO] battleBgm stopped');
         };
 
         if (immediate || audio.paused) {
+            console.log('[AUDIO] Immediate stop or already paused');
             finalizeStop();
             return;
         }
@@ -780,11 +786,16 @@ class GoGoHooligan {
     }
 
     async playEndingBgmOnce(type) {
+        console.log('[AUDIO] playEndingBgmOnce() called with type:', type);
+        console.log('[AUDIO] endingBgmStarted:', this.endingBgmStarted, 'currentEndingBgmType:', this.currentEndingBgmType);
         if (this.endingBgmStarted && this.currentEndingBgmType === type) {
+            console.log('[AUDIO] One-shot guard: already playing', type, 'ending bgm');
             return;
         }
 
+        console.log('[AUDIO] Calling stopAllBgm()');
         this.stopAllBgm();
+        console.log('[AUDIO] stopAllBgm() completed');
 
         let targetBgm = null;
 
@@ -796,7 +807,10 @@ class GoGoHooligan {
             targetBgm = this.defeatEndingBgm;
         }
 
-        if (!targetBgm) return;
+        if (!targetBgm) {
+            console.log('[AUDIO] targetBgm is null, returning');
+            return;
+        }
 
         this.endingBgmStarted = true;
         this.currentEndingBgmType = type;
@@ -2219,17 +2233,24 @@ class GoGoHooligan {
     }
 
     showEnding() {
+        console.log('[FLOW] showEnding() called');
         this.state.battleActive = false;
+        console.log('[FLOW] Calling stopBattleBgm()');
         this.stopBattleBgm({ reset: true, immediate: true });
+        console.log('[FLOW] stopBattleBgm() completed');
         
         const result = this.state.finalBattleResult || { victory: false };
+        console.log('[FLOW] result.victory:', result.victory);
         
         // エンディング曲をὊ1回だけ再生
         if (result.victory) {
+            console.log('[FLOW] Calling playEndingBgmOnce(victory)');
             this.playEndingBgmOnce('victory');
         } else {
+            console.log('[FLOW] Calling playEndingBgmOnce(defeat)');
             this.playEndingBgmOnce('defeat');
         }
+        console.log('[FLOW] showEnding() completed')
         
         const recruitedCount = this.state.recruitedMembers.length;
         if (!result.playerPower) {
