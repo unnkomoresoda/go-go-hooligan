@@ -136,7 +136,7 @@ body {
 
 .title-screen h2 {
     font-size: clamp(1.2em, 3vw, 1.8em);
-    color: #ccc;
+    color: #000;
     margin-bottom: 30px;
     font-weight: 300;
     letter-spacing: 1px;
@@ -342,7 +342,7 @@ body {
     display: flex;
     gap: 30px;
     font-size: 0.9em;
-    color: #666;
+    color: #000;
 }
 
 .content {
@@ -429,7 +429,7 @@ body {
 
 .character-info p {
     margin: 5px 0;
-    color: #666;
+    color: #000;
 }
 
 .character-profile-panel {
@@ -511,7 +511,7 @@ body {
 
 .mini-stats span {
     background: rgba(102, 126, 234, 0.08);
-    color: #555;
+    color: #000;
     border-radius: 999px;
     padding: 4px 8px;
     font-size: 0.78em;
@@ -563,7 +563,7 @@ body {
 }
 
 .recruitment-result > p {
-    color: #666;
+    color: #000;
     line-height: 1.7;
     margin-bottom: 16px;
 }
@@ -724,7 +724,7 @@ body {
 }
 
 .recruitment-result .character-profile-panel .character-info p {
-    color: #555;
+    color: #000;
 }
 
 .recruitment-result .character-profile-panel .skill-box,
@@ -752,7 +752,7 @@ body {
 }
 
 .recruitment-result .character-profile-panel .character-story p {
-    color: #555;
+    color: #000;
 }
 
 .recruitment-result .character-profile-panel .dialogue-box {
@@ -917,7 +917,7 @@ body {
 }
 
 .recruitment-result .character-profile-panel .character-detail-column .character-story p {
-    color: #555;
+    color: #000;
     line-height: 1.7;
 }
 
@@ -1016,7 +1016,7 @@ body {
 }
 
 .recruitment-result .character-profile-panel .character-story {
-    color: #555;
+    color: #000;
 }
 
 .recruitment-result .character-profile-panel .character-story p:last-child {
@@ -1741,7 +1741,7 @@ body {
 .afternoon-scene p,
 .night-scene p {
     margin-bottom: 12px;
-    color: #555;
+    color: #000;
 }
 
 .location-buttons {
@@ -1831,7 +1831,7 @@ body {
 }
 
 .battle-fighter-card p {
-    color: #666;
+    color: #000;
     font-size: 0.92em;
 }
 
@@ -1891,7 +1891,7 @@ body {
 .battle-result p,
 .negotiation-result p,
 .ending p {
-    color: #666;
+    color: #000;
     margin-bottom: 10px;
     line-height: 1.6;
 }
@@ -1931,7 +1931,7 @@ body {
 
 .member-role {
     font-size: 0.9em;
-    color: #666;
+    color: #000;
 }
 
 /* ヘルプ・ゲーム情報 */
@@ -1956,14 +1956,14 @@ body {
 
 .help-content p,
 .game-info p {
-    color: #666;
+    color: #000;
     line-height: 1.6;
     margin-bottom: 10px;
 }
 
 .help-content ul {
     margin-left: 20px;
-    color: #666;
+    color: #000;
     line-height: 1.8;
 }
 
@@ -2139,7 +2139,7 @@ body {
 .stat-label {
     display: block;
     font-size: 0.85em;
-    color: #666;
+    color: #000;
     margin-bottom: 8px;
 }
 
