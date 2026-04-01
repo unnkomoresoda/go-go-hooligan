@@ -406,14 +406,14 @@ body {
 }
 
 .character-image {
-    width: 180px;
-    height: 220px;
-    border-radius: 10px;
+    width: 240px;
+    height: 300px;
+    border-radius: 12px;
     border: 3px solid #667eea;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center top;
     background: #ffffff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
 }
 
 .character-info {
@@ -435,8 +435,8 @@ body {
 
 .character-profile-panel {
     display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 20px;
+    grid-template-columns: 280px 1fr;
+    gap: 25px;
     align-items: start;
     width: 100%;
 }
@@ -2030,8 +2030,13 @@ body {
     }
 
     .character-image {
-        width: 170px;
-        height: 210px;
+        width: 200px;
+        height: 250px;
+    }
+    
+    .character-profile-panel {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .battle-fighter-card .mini-stats,
@@ -2046,8 +2051,8 @@ body {
     }
 
     .character-image {
-        width: 160px;
-        height: 200px;
+        width: 140px;
+        height: 180px;
     }
 
     .character-profile-panel,
@@ -2413,7 +2418,9 @@ body.modal-open {
 
 .character-modal-image {
     width: 100%;
-    max-height: 420px;
+    max-height: 520px;
+    object-fit: cover;
+    object-position: center top;
 }
 
 .character-modal-info h3 {
