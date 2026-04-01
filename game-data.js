@@ -1,4 +1,4 @@
-const ASSET_VERSION = 19;
+const ASSET_VERSION = 20;
 
 const GAME_DATA = {
     characters: {
@@ -757,6 +757,48 @@ const GAME_DATA = {
                 ],
                 enemy: '「こちらに回らなかったこと、夜明けの前に後悔させてやる。」'
             }
+        },
+        bruno: {
+            name: 'Bruno Garcia',
+            age: 52,
+            job: '元ボクサー',
+            role: '破壊者',
+            stats: {
+                strength: 88,
+                bodyFat: 30,
+                happiness: 50,
+                morality: 40,
+                education: 35,
+                assets: 800
+            },
+            skill: {
+                name: '鉄拳制裁',
+                description: '敵単体に大ダメージ',
+                type: 'attack'
+            },
+            story: 'かつてリングの上で名を馳せた元ボクサー。今は酒場の主人として街を仕切っている。酒と煙の香り、そして拳に残る感触を忘れられない。',
+            recruitDifficulty: 'hard',
+            preferredMethod: 'force',
+            secondaryMethod: 'logic',
+            enemyThreat: 85,
+            dialogue: {
+                intro: '「何の用だ？俺の店でトラブルを起こさないでくれよ。」',
+                success: {
+                    love: 'お前らの情熱が気に入った。俺も一緒に暴れてやる。',
+                    logic: '計算され尽くした戦略か……悪くないな。乗ってやる。',
+                    force: 'それだけの力があれば信じてもいい。俺の拳も貸そう。'
+                },
+                failure: {
+                    love: '人情にほだされるほど俺は甘くない。出直してこい。',
+                    logic: '理屈だけじゃ俺の心は動かん。',
+                    force: 'その程度の腕では俺を納得させられん。'
+                },
+                night: [
+                    '夜の街に流れるジャズが好きでな。酒と煙の香りがたまらないんだ。',
+                    '昔はリングの上で叫んだものだが、今はこの店が俺のリングさ。'
+                ],
+                enemy: '俺の店を荒らす奴は許さない。叩き潰してやる。'
+            }
         }
     },
 
@@ -791,7 +833,7 @@ const GAME_DATA = {
         street: {
             name: '商店街「ハイストリート」',
             description: '市民も裏稼業も交差する、噂と利害の密集地帯。',
-            characters: ['michael', 'kevin', 'margaret', 'sophie', 'graham', 'malcolm'],
+            characters: ['michael', 'kevin', 'margaret', 'sophie', 'graham', 'malcolm', 'bruno'],
             recruitmentTopic: '理屈と生活'
         }
     }
