@@ -1855,14 +1855,7 @@ body {
 }
 
 .battle-fighter-grid {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 8px 0 14px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
+    display: none;
 }
 
 .battle-carousel {
@@ -1870,88 +1863,50 @@ body {
     gap: 12px;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 8px 0 14px;
+    padding: 8px 16px 16px;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
     scroll-behavior: smooth;
-    flex: 1;
-    position: relative;
 }
 
-.battle-carousel::before,
-.battle-carousel::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 40px;
-    pointer-events: none;
-    z-index: 10;
+.battle-carousel::-webkit-scrollbar {
+    height: 6px;
 }
 
-.battle-carousel::before {
-    left: 0;
-    background: linear-gradient(to right, rgba(26, 26, 26, 0.6), transparent);
+.battle-carousel::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
 }
 
-.battle-carousel::after {
-    right: 0;
-    background: linear-gradient(to left, rgba(26, 26, 26, 0.6), transparent);
+.battle-carousel::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.3);
+    border-radius: 3px;
 }
 
-.carousel-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: relative;
-    margin: 12px 0;
-}
-
-.carousel-arrow {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(102, 126, 234, 0.2);
-    border: 2px solid rgba(102, 126, 234, 0.5);
-    color: #667eea;
-    font-size: 1.4em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    z-index: 5;
-}
-
-.carousel-arrow:hover {
-    background: rgba(102, 126, 234, 0.4);
-    border-color: #667eea;
-    transform: scale(1.1);
-}
-
-.carousel-arrow:active {
-    transform: scale(0.95);
+.battle-carousel::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.5);
 }
 
 .carousel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
 .carousel-hint {
-    font-size: 0.85em;
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 500;
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
     letter-spacing: 0.05em;
 }
 
 .battle-fighter-card {
-    flex: 0 0 auto;
+    flex: 0 0 78%;
+    min-width: 240px;
+    max-width: 280px;
     scroll-snap-align: start;
-    width: min(72vw, 260px);
     background: rgba(255, 255, 255, 0.92);
     color: #333;
     border-radius: 10px;
@@ -2180,6 +2135,10 @@ body {
     .recruitment-result .character-profile-panel .mini-stats {
         justify-content: center;
     }
+
+    .battle-fighter-card {
+        flex-basis: 260px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2200,17 +2159,13 @@ body {
     }
 
     .battle-fighter-card {
-        width: min(85vw, 240px);
-    }
-
-    .carousel-arrow {
-        width: 36px;
-        height: 36px;
-        font-size: 1.2em;
+        flex-basis: 70%;
+        min-width: 220px;
+        max-width: 260px;
     }
 
     .carousel-hint {
-        font-size: 0.8em;
+        font-size: 0.75em;
     }
 }
 
