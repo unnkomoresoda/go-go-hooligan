@@ -196,7 +196,45 @@ class GoGoHooligan {
     init() {
         document.title = TITLE_NAME;
         this.setupUserInteractionListener();
+        this.setupBattleCarouselDebug();
         this.renderTitle();
+    }
+
+    setupBattleCarouselDebug() {
+        // デバッグ: スクロールイベントをログ
+        const carousels = document.querySelectorAll('.battle-carousel');
+        carousels.forEach((el, index) => {
+            el.addEventListener('scroll', () => {
+                console.log('[battle-carousel-scroll]', index, 'scrollLeft:', el.scrollLeft, 'scrollWidth:', el.scrollWidth, 'clientWidth:', el.clientWidth);
+            }, { passive: true });
+        });
+
+        // デバッグ: タッチイベントをログ
+        carousels.forEach((el, index) => {
+            el.addEventListener('touchstart', (e) => {
+                console.log('[battle-carousel-touchstart]', index, 'touches:', e.touches.length);
+            }, { passive: true });
+            el.addEventListener('touchmove', (e) => {
+                console.log('[battle-carousel-touchmove]', index, 'scrollLeft:', el.scrollLeft);
+            }, { passive: true });
+        });
+
+        // グローバルデバッグ関数
+        window.__battleCarouselCheck = () => {
+            return [...document.querySelectorAll('.battle-carousel')].map((el, i) => ({
+                index: i,
+                className: el.className,
+                scrollWidth: el.scrollWidth,
+                clientWidth: el.clientWidth,
+                scrollLeft: el.scrollLeft,
+                overflowX: getComputedStyle(el).overflowX,
+                touchAction: getComputedStyle(el).touchAction,
+                pointerEvents: getComputedStyle(el).pointerEvents,
+                display: getComputedStyle(el).display,
+                flex: getComputedStyle(el).flex,
+            }));
+        };
+        console.log('Battle carousel debug setup complete. Use window.__battleCarouselCheck() to inspect.');
     }
 
     setupUserInteractionListener() {
