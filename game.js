@@ -146,6 +146,8 @@ class GoGoHooligan {
         this.themeBgm = null;
         this.themeBgmPlaying = false;
         this.themeBgmCreatedCount = 0;  // Audio 生成回数（singleton 検出用）
+        this.defeatEndingBgm = null;  // 敗北エンド BGM
+        this.defeatEndingBgmCreatedCount = 0;  // 敗北エンド BGM 生成回数（singleton 検出用）
         this.playHistory = new PlayHistory();
         this.globalCounter = new GlobalCounter();
         this.resetState();
@@ -219,6 +221,7 @@ class GoGoHooligan {
 
     startGame() {
         this.stopThemeMusic();
+        this.stopDefeatEndingBgm();
         this.playHistory.recordPlay();
         this.resetState();
         this.renderPrologue(0);
@@ -674,7 +677,61 @@ class GoGoHooligan {
         return state;
     }
 
+    ensureDefeatEndingBgm() {
+        if (!this.defeatEndingBgm) {
+            this.defeatEndingBgmCreatedCount++;
+            if (this.defeatEndingBgmCreatedCount > 1) {
+                console.error(`[敗北エンドBGM] 二重警告: ${this.defeatEndingBgmCreatedCount}個目の Audio インスタンスを生成しようとしています。スタックトレース:`, new Error().stack);
+            }
+            const audio = new Audio('audio/defeat-ending.mp3');
+            audio.loop = false;
+            audio.volume = 0.5;
+            this.defeatEndingBgm = audio;
+        }
+        return this.defeatEndingBgm;
+    }
+
+    startDefeatEndingBgm() {
+        // 他の BGM を停止
+        this.stopThemeMusic();
+        this.stopBattleBgm();
+
+        const audio = this.ensureDefeatEndingBgm();
+        if (!audio) return;
+
+        audio.currentTime = 0;
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log('敗北エンド BGM の再生に失敗:', error);
+            });
+        }
+    }
+
+    stopDefeatEndingBgm() {
+        if (this.defeatEndingBgm) {
+            this.defeatEndingBgm.pause();
+            this.defeatEndingBgm.currentTime = 0;
+        }
+    }
+
+    checkDefeatEndingBgmState() {
+        const playingCount = this.defeatEndingBgm && !this.defeatEndingBgm.paused ? 1 : 0;
+        const state = {
+            createdCount: this.defeatEndingBgmCreatedCount,
+            playingCount: playingCount,
+            duplicated: this.defeatEndingBgmCreatedCount > 1
+        };
+        if (state.duplicated) {
+            console.error('[敗北エンドBGM] 二重警告:', state);
+        }
+        return state;
+    }
+
     renderTitle() {
+        // 敗北エンド BGM を停止
+        this.stopDefeatEndingBgm();
+        
         this.setScreen(`
             <div class="title-screen furious-title-screen">
                 <div class="title-art-wrap">
@@ -2076,20 +2133,26 @@ class GoGoHooligan {
     showEnding() {
         this.state.battleActive = false;
         this.stopBattleBgm({ reset: false });
+        
+        // 敗北時に敗北エンド BGM を再生
+        const result = this.state.finalBattleResult || { victory: false };
+        if (!result.victory) {
+            this.startDefeatEndingBgm();
+        }
+        
         const recruitedCount = this.state.recruitedMembers.length;
-        const result = this.state.finalBattleResult || {
-            victory: false,
-            playerPower: this.calculateTeamPower(),
-            enemyPower: this.calculateEnemyPower(),
-            battleSummary: '最後の乱戦はまだ記録されていない。',
-            bossId: null,
-            enemyIds: [],
-            actionCount: 0,
-            criticalMoments: 0,
-            aceId: null,
-            allyRemaining: 0,
-            enemyRemaining: 0
-        };
+        if (!result.playerPower) {
+            result.playerPower = this.calculateTeamPower();
+            result.enemyPower = this.calculateEnemyPower();
+            result.battleSummary = '最後の乱戦はまだ記録されていない。';
+            result.bossId = null;
+            result.enemyIds = [];
+            result.actionCount = 0;
+            result.criticalMoments = 0;
+            result.aceId = null;
+            result.allyRemaining = 0;
+            result.enemyRemaining = 0;
+        }
         const boss = result.bossId ? this.getCharacter(result.bossId) : null;
         const ace = result.aceId ? this.getCharacter(result.aceId) : null;
         const anchorMember = this.state.recruitedMembers[0] ? this.getCharacter(this.state.recruitedMembers[0]) : null;
@@ -2291,9 +2354,11 @@ if (document.readyState === 'loading') {
         game = new GoGoHooligan();
         window.game = game;
         window.__checkTitleBgmState = () => game.checkTitleBgmState();
+        window.__checkDefeatEndingBgmState = () => game.checkDefeatEndingBgmState();
     });
 } else {
     game = new GoGoHooligan();
     window.game = game;
     window.__checkTitleBgmState = () => game.checkTitleBgmState();
+    window.__checkDefeatEndingBgmState = () => game.checkDefeatEndingBgmState();
 }
