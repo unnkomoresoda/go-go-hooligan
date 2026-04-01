@@ -1790,17 +1790,31 @@ class GoGoHooligan {
                         <h3>試合後の街はついに決壊し、3対3の先発乱闘が火蓋を切る</h3>
                         <div class="battle-lineup">
                             <div class="battle-side ally-side">
-                                <h4>味方先発3人</h4>
-                                <div class="battle-fighter-grid">
-                                    ${allyCards || this.renderBattleEmptySlot('味方前衛')}
+                                <div class="carousel-header">
+                                    <h4>味方先発3人</h4>
+                                    <span class="carousel-hint">← 左右にスワイプ →</span>
+                                </div>
+                                <div class="carousel-wrapper">
+                                    <button class="carousel-arrow carousel-arrow-left" onclick="window.game.scrollCarousel('ally', -1)" aria-label="味方を左へスクロール">‹</button>
+                                    <div class="battle-carousel" id="ally-carousel">
+                                        ${allyCards || this.renderBattleEmptySlot('味方前衛')}
+                                    </div>
+                                    <button class="carousel-arrow carousel-arrow-right" onclick="window.game.scrollCarousel('ally', 1)" aria-label="味方を右へスクロール">›</button>
                                 </div>
                                 <p>控え: ${this.renderBattleReserveSummary(battleState.allyReserve)}</p>
                             </div>
                             <div class="battle-versus">激突</div>
                             <div class="battle-side enemy-side">
-                                <h4>敵先発3人</h4>
-                                <div class="battle-fighter-grid">
-                                    ${enemyCards || this.renderBattleEmptySlot('敵前衛')}
+                                <div class="carousel-header">
+                                    <h4>敵先発3人</h4>
+                                    <span class="carousel-hint">← 左右にスワイプ →</span>
+                                </div>
+                                <div class="carousel-wrapper">
+                                    <button class="carousel-arrow carousel-arrow-left" onclick="window.game.scrollCarousel('enemy', -1)" aria-label="敵を左へスクロール">‹</button>
+                                    <div class="battle-carousel" id="enemy-carousel">
+                                        ${enemyCards || this.renderBattleEmptySlot('敵前衛')}
+                                    </div>
+                                    <button class="carousel-arrow carousel-arrow-right" onclick="window.game.scrollCarousel('enemy', 1)" aria-label="敵を右へスクロール">›</button>
                                 </div>
                                 <p>敵増援: ${this.renderBattleReserveSummary(battleState.enemyReserve)}</p>
                             </div>
@@ -1842,6 +1856,20 @@ class GoGoHooligan {
 
     resolveBattle() {
         this.advanceFinalBattle();
+    }
+
+    scrollCarousel(side, direction) {
+        const carouselId = side === 'ally' ? 'ally-carousel' : 'enemy-carousel';
+        const carousel = document.getElementById(carouselId);
+        if (!carousel) return;
+        
+        const cardWidth = carousel.querySelector('.battle-fighter-card')?.offsetWidth || 260;
+        const scrollAmount = (cardWidth + 12) * direction;
+        
+        carousel.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
     }
 
     advanceFinalBattle() {
