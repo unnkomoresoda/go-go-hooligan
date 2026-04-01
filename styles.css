@@ -123,6 +123,20 @@ body {
     color: white;
 }
 
+.btn-music {
+    background: #ff6b9d;
+    color: white;
+    border: 2px solid #ff6b9d;
+    font-size: 0.95em;
+    padding: 10px 20px;
+}
+
+.btn-music:hover {
+    background: #ff5588;
+    border-color: #ff5588;
+    transform: scale(1.05);
+}
+
 .btn-choice {
     display: block;
     width: 100%;

@@ -143,6 +143,8 @@ class GoGoHooligan {
         this.gameScreen = document.getElementById('game-screen');
         this.battleBgm = null;
         this.battleBgmFadeTimer = null;
+        this.themeBgm = null;
+        this.themeBgmPlaying = false;
         this.playHistory = new PlayHistory();
         this.globalCounter = new GlobalCounter();
         this.resetState();
@@ -215,12 +217,14 @@ class GoGoHooligan {
     }
 
     startGame() {
+        this.stopThemeMusic();
         this.playHistory.recordPlay();
         this.resetState();
         this.renderPrologue(0);
     }
 
     beginMainGame() {
+        this.stopThemeMusic();
         this.renderDay();
     }
 
@@ -600,6 +604,55 @@ class GoGoHooligan {
         }, 90);
     }
 
+    ensureThemeMusicAudio() {
+        if (!this.themeBgm) {
+            const audio = new Audio('audio/gogo-hooligan-theme.mp3');
+            audio.loop = false;
+            audio.volume = 0.3;
+            this.themeBgm = audio;
+        }
+        return this.themeBgm;
+    }
+
+    toggleThemeMusic() {
+        const audio = this.ensureThemeMusicAudio();
+        if (!audio) return;
+
+        if (this.themeBgmPlaying && !audio.paused) {
+            audio.pause();
+            this.themeBgmPlaying = false;
+            const btn = document.getElementById('theme-music-btn');
+            if (btn) btn.textContent = '🎵 テーマ曲を再生';
+        } else {
+            audio.currentTime = 0;
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        this.themeBgmPlaying = true;
+                        const btn = document.getElementById('theme-music-btn');
+                        if (btn) btn.textContent = '⏸ テーマ曲を停止';
+                    })
+                    .catch(error => {
+                        console.log('テーマ曲の再生に失敗:', error);
+                        this.themeBgmPlaying = false;
+                    });
+            } else {
+                this.themeBgmPlaying = true;
+                const btn = document.getElementById('theme-music-btn');
+                if (btn) btn.textContent = '⏸ テーマ曲を停止';
+            }
+        }
+    }
+
+    stopThemeMusic() {
+        if (this.themeBgm) {
+            this.themeBgm.pause();
+            this.themeBgm.currentTime = 0;
+            this.themeBgmPlaying = false;
+        }
+    }
+
     renderTitle() {
         this.setScreen(`
             <div class="title-screen furious-title-screen">
@@ -615,6 +668,7 @@ class GoGoHooligan {
                 <div class="buttons">
                     <button class="btn btn-primary" onclick="window.game.startGame()">ゲーム開始</button>
                     <button class="btn btn-secondary" onclick="window.game.showHelp()">ヘルプ</button>
+                    <button class="btn btn-music" id="theme-music-btn" onclick="window.game.toggleThemeMusic()">🎵 テーマ曲を再生</button>
                 </div>
             </div>
         `);
