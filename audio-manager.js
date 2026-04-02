@@ -263,33 +263,33 @@ class AudioManager {
      * 最終決戦画面用の重い / 硬い音
      */
     playBattleButtonSE() {
-        console.log('[battle-se] playBattleButtonSE entered');
+        console.log('[battle-se] entered');
         // AudioContext 初期化
         this.initAudioContext();
 
         // バトルボタン SE を初期化（再利用）
         if (!this.battleButtonSe) {
-            console.log('[battle-se] initializing battleButtonSe');
+            
             const relativePath = this.audioFiles.se.battleButton;
-            console.log('[battle-se] relativePath:', relativePath);
+            
             if (!relativePath) {
-                console.warn('[battle-se] Battle button SE not found in audioFiles');
+                console.warn('[battle-se] not found in audioFiles');
                 return;
             }
             const filePath = this.getFilePath(relativePath);
-            console.log('[battle-se] filePath:', filePath);
+            
             this.battleButtonSe = new Audio(filePath);
             this.battleButtonSe.volume = 0.65; // ストーリー用より少し大きい
             this.battleButtonSe.preload = 'auto';
-            console.log('[battle-se] Audio created, src:', this.battleButtonSe.src, 'volume:', this.battleButtonSe.volume);
+            
         } else {
-            console.log('[battle-se] reusing existing battleButtonSe, src:', this.battleButtonSe.src);
+            
         }
 
         try {
             // 短い SE なので currentTime をリセット
             this.battleButtonSe.currentTime = 0;
-            console.log('[battle-se] about to play, src:', this.battleButtonSe?.src);
+            console.log('[battle-se] src:', this.battleButtonSe?.src);
             const playPromise = this.battleButtonSe.play();
             if (playPromise !== undefined) {
                 playPromise
@@ -297,10 +297,10 @@ class AudioManager {
                         console.log('[battle-se] play success');
                     })
                     .catch((error) => {
-                        console.error('[battle-se] play failed', error.name, error.message, 'src:', this.battleButtonSe?.src);
+                        console.error('[battle-se] play failed', error.name, error.message);
                     });
             } else {
-                console.log('[battle-se] play() returned undefined');
+                
             }
         } catch (e) {
             console.error('[battle-se] runtime error', e);

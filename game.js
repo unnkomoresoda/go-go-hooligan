@@ -1930,13 +1930,12 @@ class GoGoHooligan {
     }
 
     advanceFinalBattle() {
-        console.log('[next-phase] advanceFinalBattle clicked');
+        console.log('[next-phase] clicked');
         const battleState = this.state.finalBattleState || this.initializeFinalBattleState();
         this.state.finalBattleState = battleState;
         // 最終決戦画面用のバトルボタン SE を再生
-        console.log('[next-phase] calling playBattleButtonSE');
+        console.log('[next-phase] calling battle se');
         this.audioManager.playBattleButtonSE();
-        console.log('[next-phase] playBattleButtonSE called, battleButtonSe:', this.audioManager.battleButtonSe?.src);
         this.startBattleBgm();
 
         if (battleState.finished) {
