@@ -4,8 +4,13 @@ const THEME_BGM_TITLE = 'Go-Go Hooligan Theme';
 const THEME_BGM_URL = 'audio/gogo-hooligan-theme.mp3';
 const FINAL_BATTLE_BGM_TITLE = '血塗れのダービー';
 const FINAL_BATTLE_BGM_URL = 'https://cdn1.suno.ai/2a04cd29-a3f0-4d53-9793-2fee56ee089d.mp3';
-const STORY_BGM_TITLE = 'days';
-const STORY_BGM_URL = 'audio/days.mp3';
+// プロローグ専用BGM
+const PROLOGUE_BGM_TITLE = 'days';
+const PROLOGUE_BGM_URL = 'audio/days.mp3';
+
+// 通常ストーリーBGM
+const STORY_BGM_TITLE = 'Midnight Streets';
+const STORY_BGM_URL = 'audio/midnight-streets.mp3';
 
 const CREATOR_DONATION_URL = 'https://qr.paypay.ne.jp/p2p01_KwOxvV3CmELTJks9';
 
@@ -476,6 +481,19 @@ class GoGoHooligan {
         return this.themeBgm;
     }
 
+    // プロローグBGM管理
+    ensurePrologueBgm() {
+        if (!this.prologueBgm) {
+            const audio = new Audio(PROLOGUE_BGM_URL);
+            audio.loop = true;
+            audio.preload = 'auto';
+            audio.volume = 0.35;
+            this.prologueBgm = audio;
+        }
+        return this.prologueBgm;
+    }
+
+    // 通常ストーリーBGM管理
     ensureStoryBgm() {
         if (!this.storyBgm) {
             const audio = new Audio(STORY_BGM_URL);
@@ -530,8 +548,45 @@ class GoGoHooligan {
         }
     }
 
+    startPrologueBgm() {
+        this.stopPrologueBgm();
+        this.stopStoryBgm();
+        const audio = this.ensurePrologueBgm();
+        if (!audio) {
+            return;
+        }
+        audio.volume = 0.35;
+        if (audio.paused) {
+            const playPromise = audio.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(() => {
+                    console.log('[AUDIO] Prologue BGM play blocked by browser');
+                });
+            }
+        }
+    }
+
+    stopPrologueBgm(options = {}) {
+        const { reset = false, immediate = false } = options;
+        if (this.prologueBgmFadeTimer) {
+            clearInterval(this.prologueBgmFadeTimer);
+            this.prologueBgmFadeTimer = null;
+        }
+        if (!this.prologueBgm) {
+            return;
+        }
+        const audio = this.prologueBgm;
+        if (immediate || !audio.paused) {
+            audio.pause();
+            if (reset) {
+                audio.currentTime = 0;
+            }
+        }
+    }
+
     startStoryBgm() {
         this.stopStoryBgm();
+        this.stopPrologueBgm();
         const audio = this.ensureStoryBgm();
         if (!audio) {
             return;
@@ -541,7 +596,7 @@ class GoGoHooligan {
             const playPromise = audio.play();
             if (playPromise && typeof playPromise.catch === 'function') {
                 playPromise.catch(() => {
-                    console.log('Story BGM play blocked by browser');
+                    console.log('[AUDIO] Story BGM play blocked by browser');
                 });
             }
         }
@@ -567,6 +622,7 @@ class GoGoHooligan {
 
     startBattleBgm() {
         this.stopStoryBgm({ reset: true });
+        this.stopPrologueBgm({ reset: true });
         const audio = this.ensureBattleBgm();
         if (!audio) {
             return;
@@ -843,7 +899,8 @@ class GoGoHooligan {
     }
 
     resetAudioFlags() {
-        this.endingBgmStarted = false;
+        this.state.prologueBgmStarted = false;
+        this.stopPrologueBgm({ reset: true });
         this.currentEndingBgmType = null;
     }
 
@@ -885,7 +942,7 @@ class GoGoHooligan {
         if (sceneIndex === 0 && !this.state.prologueBgmStarted) {
             this.state.prologueBgmStarted = true;
             this.stopThemeBgm({ reset: true });
-            this.startStoryBgm();
+            this.startPrologueBgm();
         }
         const prologueScenes = [
             {
