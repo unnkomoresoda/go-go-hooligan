@@ -2967,7 +2967,7 @@ body.modal-open {
 /* Title Footer and Credits */
 .title-footer {
     position: absolute;
-    bottom: 80px;
+    bottom: 20px;
     left: 0;
     right: 0;
     text-align: center;
@@ -2994,7 +2994,7 @@ body.modal-open {
 
 .credits-footer {
     position: absolute;
-    bottom: 20px;
+    bottom: 5px;
     left: 0;
     right: 0;
     text-align: center;
@@ -3009,7 +3009,7 @@ body.modal-open {
 
 @media (max-width: 768px) {
     .title-footer {
-        bottom: 70px;
+        bottom: 20px;
     }
 
     .version-link {
@@ -3018,7 +3018,7 @@ body.modal-open {
     }
 
     .credits-footer {
-        bottom: 15px;
+        bottom: 5px;
         font-size: 0.7em;
     }
 }
