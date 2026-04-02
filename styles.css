@@ -2966,10 +2966,8 @@ body.modal-open {
 
 /* Title Footer and Credits */
 .title-footer {
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    right: 0;
+    position: relative;
+    margin-top: 60px;
     text-align: center;
     z-index: 2;
 }
@@ -2993,10 +2991,8 @@ body.modal-open {
 }
 
 .credits-footer {
-    position: absolute;
-    bottom: 5px;
-    left: 0;
-    right: 0;
+    position: relative;
+    margin-top: 10px;
     text-align: center;
     z-index: 2;
     font-size: 0.75em;
@@ -3009,7 +3005,7 @@ body.modal-open {
 
 @media (max-width: 768px) {
     .title-footer {
-        bottom: 20px;
+        margin-top: 40px;
     }
 
     .version-link {
@@ -3018,7 +3014,7 @@ body.modal-open {
     }
 
     .credits-footer {
-        bottom: 5px;
+        margin-top: 8px;
         font-size: 0.7em;
     }
 }
