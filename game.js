@@ -214,6 +214,11 @@ class GoGoHooligan {
         this.gameScreen.addEventListener('click', (event) => {
             const button = event.target.closest('button');
             if (button) {
+                // 最終決戦画面のボタンは除外（advanceFinalBattle内で battle SE を鳴らす）
+                if (button.closest('.battle-scene') || button.closest('.battle-advance-choices')) {
+                    console.log('[Game] Battle button clicked, SE handled by battle handler');
+                    return;
+                }
                 console.log('[Game] Button clicked, playing SE');
                 this.audioManager.playSE('button');
             }
