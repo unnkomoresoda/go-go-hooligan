@@ -19,6 +19,7 @@ class AudioManager {
             se: {
                 title: 'audio/se/title.mp3',
                 button: 'audio/se/button.mp3',
+                battleButton: 'audio/se/battle-button.mp3',
                 recruitSuccess: 'audio/se/recruit-success.mp3',
                 attack: 'audio/se/attack.mp3',
             },
@@ -37,6 +38,7 @@ class AudioManager {
         // 再生中の Audio 要素
         this.currentSE = null;
         this.currentVoice = null;
+        this.battleButtonSe = null;
 
         // 音量設定（0-1）
         this.volumeSE = 0.5;
@@ -254,6 +256,45 @@ class AudioManager {
             return this.currentVoice && !this.currentVoice.paused;
         }
         return false;
+    }
+
+    /**
+     * バトルボタン効果音を再生
+     * 最終決戦画面用の重い / 硬い音
+     */
+    playBattleButtonSE() {
+        // AudioContext 初期化
+        this.initAudioContext();
+
+        // バトルボタン SE を初期化（再利用）
+        if (!this.battleButtonSe) {
+            const relativePath = this.audioFiles.se.battleButton;
+            if (!relativePath) {
+                console.warn('[AudioManager] Battle button SE not found');
+                return;
+            }
+            const filePath = this.getFilePath(relativePath);
+            this.battleButtonSe = new Audio(filePath);
+            this.battleButtonSe.volume = 0.65; // ストーリー用より少し大きい
+            this.battleButtonSe.preload = 'auto';
+        }
+
+        try {
+            // 短い SE なので currentTime をリセット
+            this.battleButtonSe.currentTime = 0;
+            const playPromise = this.battleButtonSe.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log('[AudioManager] Battle button SE playing');
+                    })
+                    .catch((error) => {
+                        console.error('[AudioManager] Failed to play battle button SE:', error.name, error.message);
+                    });
+            }
+        } catch (e) {
+            console.error('[AudioManager] Exception playing battle button SE', e);
+        }
     }
 
     /**

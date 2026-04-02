@@ -1927,6 +1927,8 @@ class GoGoHooligan {
     advanceFinalBattle() {
         const battleState = this.state.finalBattleState || this.initializeFinalBattleState();
         this.state.finalBattleState = battleState;
+        // 最終決戦画面用のバトルボタン SE を再生
+        this.audioManager.playBattleButtonSE();
         this.startBattleBgm();
 
         if (battleState.finished) {
