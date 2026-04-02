@@ -251,6 +251,8 @@ class GoGoHooligan {
 
     beginMainGame() {
         this.stopThemeMusic();
+        this.stopPrologueBgm({ reset: true });
+        this.startStoryBgm();
         this.renderDay();
     }
 
