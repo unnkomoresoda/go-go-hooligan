@@ -1857,9 +1857,15 @@ body {
 }
 
 .battle-fighter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
     gap: 12px;
+    padding: 8px 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    scroll-behavior: smooth;
 }
 
 .battle-carousel {
@@ -1876,10 +1882,11 @@ body {
 
 .battle-fighter-card {
     flex: 0 0 auto;
-    width: auto;
-    max-width: none;
-    min-width: auto;
-    scroll-snap-align: auto;
+    width: 64vw;
+    min-width: 195px;
+    max-width: 230px;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
     background: rgba(255, 255, 255, 0.92);
     color: #333;
     border-radius: 8px;
@@ -2110,7 +2117,9 @@ body {
     }
 
     .battle-fighter-card {
-        flex-basis: 260px;
+        width: 64vw;
+        min-width: 195px;
+        max-width: 230px;
     }
 }
 
