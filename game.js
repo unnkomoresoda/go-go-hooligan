@@ -12,7 +12,7 @@ const PROLOGUE_BGM_URL = 'audio/days.mp3';
 const STORY_BGM_TITLE = 'Midnight Streets';
 const STORY_BGM_URL = 'audio/midnight-streets.mp3';
 
-const CREATOR_DONATION_URL = 'https://qr.paypay.ne.jp/p2p01_KwOxvV3CmELTJks9';
+const CREATOR_DONATION_URL = 'https://qr.paypay.ne.jp/p2p01_H6SkhH4nZQcm1V1b';
 
 // グローバルカウンター: 訪問者数追跡
 class GlobalCounter {
